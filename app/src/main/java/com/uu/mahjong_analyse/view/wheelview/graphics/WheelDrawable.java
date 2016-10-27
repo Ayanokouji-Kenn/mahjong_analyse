@@ -38,7 +38,7 @@ public class WheelDrawable extends Drawable {
 
     protected WheelView.WheelViewStyle mStyle;
 
-    private Paint mBgPaint;
+    private Paint mBgPaint; 
 
     public WheelDrawable(int width, int height, WheelView.WheelViewStyle style) {
         mWidth = width;
