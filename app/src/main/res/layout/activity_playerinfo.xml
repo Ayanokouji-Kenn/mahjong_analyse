@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_toolbar" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp">
+
+        <TextView
+
+            android:id="@+id/tv_richi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:text="立直率：" />
+
+        <TextView
+            android:id="@+id/tv_ihhatsu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="一发率：" />
+
+        <TextView
+            android:id="@+id/tv_helv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="和了率：" />
+
+        <TextView
+            android:id="@+id/tv_chonglv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="放铳率：" />
+
+        <TextView
+            android:id="@+id/tv_richi_he"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="立直和了率：" />
+
+
+        <TextView
+            android:id="@+id/tv_he_avg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="平均和了点：" />
+
+        <TextView
+            android:id="@+id/tv_chong_avg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="平均放铳点：" />
+
+        <TextView
+            android:id="@+id/tv_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="一位率：" />
+
+        <TextView
+            android:id="@+id/tv_second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="二位率：" />
+
+        <TextView
+            android:id="@+id/tv_third"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="三位率：" />
+
+        <TextView
+            android:id="@+id/tv_last"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="四位率：" />
+
+        <TextView
+            android:id="@+id/tv_shunwei"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="平均顺位：" />
+
+        <TextView
+            android:id="@+id/tv_score_avg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="场均得点：" />
+
+        <TextView
+            android:id="@+id/tv_nomanguan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="满贯未满：" />
+
+        <TextView
+            android:id="@+id/tv_manguan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="满贯：" />
+
+        <TextView
+            android:id="@+id/tv_tiaoman"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="跳满：" />
+
+        <TextView
+            android:id="@+id/tv_beiman"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="倍满：" />
+
+        <TextView
+            android:id="@+id/tv_sanbeiman"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="三倍满：" />
+
+        <TextView
+            android:id="@+id/tv_yikuman"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="役满：" />
+
+        <TextView
+            android:id="@+id/tv_deal_sum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="对战局数：" />
+
+        <TextView
+            android:id="@+id/tv_game_sum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="对战场次：" />
+
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MainActivity">
+    <item
+        android:id="@+id/scan_game"
+        android:orderInCategory="100"
+        android:title="查看记录"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/test"
+        android:orderInCategory="100"
+        android:title="test"
+        app:showAsAction="always" />
+</menu>

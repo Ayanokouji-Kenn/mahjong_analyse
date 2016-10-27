@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <include layout="@layout/layout_toolbar"
+        android:id="@+id/layout_toolbar"/>
+
+    <RelativeLayout
+        android:layout_below="@id/layout_toolbar"
+        android:id="@+id/rl_table"
+        android:layout_centerHorizontal="true"
+        android:layout_width="300dp"
+        android:layout_height="300dp">
+
+    <com.romainpiel.shimmer.ShimmerTextView
+        android:id="@+id/tv_east"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="东"
+        android:textSize="26sp"/>
+    <com.romainpiel.shimmer.ShimmerTextView
+        android:id="@+id/tv_south"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="南"
+        android:textSize="26sp"/>
+    <com.romainpiel.shimmer.ShimmerTextView
+        android:id="@+id/tv_west"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:text="西"
+        android:textSize="26sp"/>
+    <com.romainpiel.shimmer.ShimmerTextView
+        android:id="@+id/tv_north"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="北"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="26sp"/>
+    </RelativeLayout>
+    <Button
+        android:background="@drawable/shape_round_corner_rec"
+        android:id="@+id/btn"
+        android:layout_below="@id/rl_table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开局"
+        android:textSize="26sp"
+        android:textColor="#fff"/>
+
+
+
+</RelativeLayout>

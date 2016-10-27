@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_toolbar" />
+    <CheckBox
+        android:id="@+id/cb_richi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="立直" />
+
+    <CheckBox
+        android:id="@+id/cb_ihhatsu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="一发" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp">
+
+        <RadioButton
+            android:id="@+id/rb_tsumo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="自摸" />
+
+        <RadioButton
+            android:id="@+id/rb_ronn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="荣和" />
+
+    </RadioGroup>
+
+    <TextView
+        android:padding="16dp"
+        android:id="@+id/tv_chong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="放铳人：" />
+
+    <TextView
+        android:padding="16dp"
+        android:id="@+id/tv_fan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="番数:"
+        />
+
+    <android.support.design.widget.TextInputLayout
+        android:hint="请输入得点"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <android.support.design.widget.TextInputEditText
+        android:padding="16dp"
+        android:id="@+id/et_point"
+        android:inputType="number"
+        android:textColor="@color/colorAccent"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+
+        />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="确定"
+        android:background="@drawable/shape_round_corner_rec"
+        android:textSize="24sp"/>
+</LinearLayout>

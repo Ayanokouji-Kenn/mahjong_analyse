@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="270dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="end"
+    android:background="@color/colorAccent">
+
+    <RadioGroup
+        android:id="@+id/rightmenu_rg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/rb_east1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:button="@null"
+            android:padding="10dp"
+            android:text="东一"
+            android:textColor="@color/selector_rightmenu_color"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/rb_east2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:button="@null"
+            android:padding="10dp"
+            android:text="东二"
+            android:textColor="@color/selector_rightmenu_color"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/rb_east3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:button="@null"
+            android:padding="10dp"
+            android:text="东三"
+            android:textColor="@color/selector_rightmenu_color"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/rb_east4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:button="@null"
+            android:padding="10dp"
+            android:text="东四"
+            android:textColor="@color/selector_rightmenu_color"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/rb_south1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:button="@null"
+            android:padding="10dp"
+            android:text="南一"
+            android:textColor="@color/selector_rightmenu_color"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/rb_south2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:button="@null"
+            android:padding="10dp"
+            android:text="南二"
+            android:textColor="@color/selector_rightmenu_color"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/rb_south3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:button="@null"
+            android:padding="10dp"
+            android:text="南三"
+            android:textColor="@color/selector_rightmenu_color"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/rb_south4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:button="@null"
+            android:padding="10dp"
+            android:text="南四"
+            android:textColor="@color/selector_rightmenu_color"
+            android:textSize="20sp" />
+
+
+    </RadioGroup>
+</RelativeLayout>
