@@ -276,6 +276,10 @@ public class WheelViewDialog<T> implements View.OnClickListener {
         return this;
     }
 
+    public boolean isShowing() {
+        return mDialog.isShowing();
+    }
+
     /**
      * 隐藏
      */
@@ -297,5 +301,13 @@ public class WheelViewDialog<T> implements View.OnClickListener {
 
     public interface OnDialogItemClickListener<T> {
         void onItemClick(int position, T s);
+    }
+
+    public void setStyle(WheelView.WheelViewStyle style) {
+        mWheelView.setStyle(style);
+    }
+
+    public WheelView.WheelViewStyle getStyle() {
+        return mWheelView.getStyle();
     }
 }

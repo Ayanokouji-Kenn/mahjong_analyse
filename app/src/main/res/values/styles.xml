@@ -6,7 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColorPrimary">#fff</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:actionMenuTextColor">@color/white</item>
         <!--将popupmenu样式设置进主题里,但还是要代码中引入setPopupTheme-->
         <item name="actionOverflowMenuStyle">@style/PopupMenu</item>
     </style>
@@ -33,4 +34,5 @@
         <item name="overlapAnchor">false</item>
     </style>
 
+    <color name="white">#FFFFFF</color>
 </resources>

@@ -19,6 +19,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -84,6 +85,7 @@ public class WheelItem extends FrameLayout {
         mText.setIncludeFontPadding(false);
         mText.setGravity(Gravity.CENTER);
         mText.setTextColor(Color.BLACK);
+        mText.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
         LayoutParams textParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         layout.addView(mText, textParams);
     }

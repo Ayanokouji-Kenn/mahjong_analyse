@@ -200,11 +200,11 @@ public class MainActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
-            case R.id.scan_game:
+            case R.id.toolbar_game_record:
                 openPage(true,-1,GameRecordActivity.class);
                 return true;
-            case R.id.test:
-                Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
+            case R.id.toolbar_persional_record:
+                openPage(true,-1,PlayerInfoActivity.class);
                 break;
 
         }

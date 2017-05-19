@@ -77,8 +77,12 @@ public class AddNewGameActivity extends BaseActivity {
 
     public void showDialog(final View view) {
         final WheelViewDialog dialog = new WheelViewDialog(this);
-        dialog.setTitle("wheelview dialog").setItems(datas).setButtonText("确定").setDialogStyle(Color
-                .parseColor("#fc97a9")).setCount(5).show();
+        dialog.setTitle("wheelview dialog")
+                .setItems(datas)
+                .setButtonText("确定")
+                .setDialogStyle(getResources().getColor(R.color.colorPrimary))
+                .setCount(5)
+                .show();
         dialog.setOnDialogItemClickListener(new WheelViewDialog.OnDialogItemClickListener() {
             @Override
             public void onItemClick(int position, Object s) {
