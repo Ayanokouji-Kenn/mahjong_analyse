@@ -6,6 +6,7 @@ import android.text.method.CharacterPickerDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.CommonApi;
@@ -101,6 +102,10 @@ public class PlayerInfoActivity extends BaseActivity {
             case R.id.tv_select:
                 if( mSelectPlayerDialog==null) {
                     List<String> players = DBDao.getPlayers();
+                    if(players.size() == 0) {
+                        Toast.makeText(this, "暂未存储过对局", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     mSelectPlayerDialog = new WheelViewDialog<>(this);
                     mSelectPlayerDialog.setItems(players)
                             .setCount(5)

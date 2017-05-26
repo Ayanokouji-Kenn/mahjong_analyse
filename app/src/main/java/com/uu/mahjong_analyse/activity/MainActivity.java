@@ -1,8 +1,6 @@
 package com.uu.mahjong_analyse.activity;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
@@ -10,8 +8,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,9 +20,8 @@ import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.Constant;
-import com.uu.mahjong_analyse.Utils.MyApplication;
+import com.uu.mahjong_analyse.base.MyApplication;
 import com.uu.mahjong_analyse.base.BaseActivity;
-import com.uu.mahjong_analyse.bean.PlayerRecord;
 import com.uu.mahjong_analyse.db.DBDao;
 import com.uu.mahjong_analyse.fragment.LeftMenuFragment;
 
@@ -206,10 +201,7 @@ public class MainActivity extends BaseActivity {
             case R.id.toolbar_persional_record:
                 openPage(true,-1,PlayerInfoActivity.class);
                 break;
-
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 

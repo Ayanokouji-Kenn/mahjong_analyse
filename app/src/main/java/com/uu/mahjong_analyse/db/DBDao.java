@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.uu.mahjong_analyse.Utils.Constant;
-import com.uu.mahjong_analyse.Utils.MyApplication;
+import com.uu.mahjong_analyse.base.MyApplication;
 import com.uu.mahjong_analyse.bean.GameRecord;
 import com.uu.mahjong_analyse.bean.PlayerRecord;
 

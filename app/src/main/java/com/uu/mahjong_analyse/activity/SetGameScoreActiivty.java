@@ -1,8 +1,11 @@
 package com.uu.mahjong_analyse.activity;
 
-import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.speech.RecognitionListener;
+import android.speech.SpeechRecognizer;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -16,28 +19,27 @@ import android.widget.Toast;
 
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.CommonApi;
-import com.uu.mahjong_analyse.Utils.MyApplication;
+import com.uu.mahjong_analyse.base.MyApplication;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.bean.PlayerRecord;
 import com.uu.mahjong_analyse.db.DBDao;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
 /**
  * @auther Nagisa.
  * @date 2016/7/2.
+ * 设置每一局的和牌点数
  */
-public class SetGameScoreActiivty extends BaseActivity {
+public class SetGameScoreActiivty extends BaseActivity{
 
     @BindView(R.id.et_east)
     TextInputEditText mEtEast;

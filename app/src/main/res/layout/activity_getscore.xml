@@ -11,14 +11,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="立直" />
+        android:text="@string/richi" />
 
     <CheckBox
         android:id="@+id/cb_ihhatsu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:text="一发" />
+        android:text="@string/ihhatsu" />
 
     <RadioGroup
         android:layout_width="wrap_content"
@@ -31,14 +31,14 @@
             android:id="@+id/rb_tsumo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="自摸" />
+            android:text="@string/tsumo" />
 
         <RadioButton
             android:id="@+id/rb_ronn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:text="荣和" />
+            android:text="@string/ronn" />
 
     </RadioGroup>
 
@@ -72,12 +72,16 @@
         />
     </android.support.design.widget.TextInputLayout>
 
+  <TextView
+      android:id="@+id/tv_voice"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
     <Button
         android:layout_gravity="center_horizontal"
         android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="确定"
+        android:text="确定/长按语音"
         android:background="@drawable/shape_round_corner_rec"
         android:textSize="24sp"/>
 </LinearLayout>

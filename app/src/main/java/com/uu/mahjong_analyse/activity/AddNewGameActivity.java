@@ -1,10 +1,6 @@
 package com.uu.mahjong_analyse.activity;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
@@ -18,13 +14,11 @@ import android.widget.Toast;
 
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.CommonApi;
-import com.uu.mahjong_analyse.Utils.MyApplication;
+import com.uu.mahjong_analyse.base.MyApplication;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.db.DBDao;
 import com.uu.mahjong_analyse.view.wheelview.widget.WheelViewDialog;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -77,7 +71,7 @@ public class AddNewGameActivity extends BaseActivity {
 
     public void showDialog(final View view) {
         final WheelViewDialog dialog = new WheelViewDialog(this);
-        dialog.setTitle("wheelview dialog")
+        dialog.setTitle(getString(R.string.choose_player))
                 .setItems(datas)
                 .setButtonText("确定")
                 .setDialogStyle(getResources().getColor(R.color.colorPrimary))

@@ -85,7 +85,6 @@ public class WheelItem extends FrameLayout {
         mText.setIncludeFontPadding(false);
         mText.setGravity(Gravity.CENTER);
         mText.setTextColor(Color.BLACK);
-        mText.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
         LayoutParams textParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         layout.addView(mText, textParams);
     }

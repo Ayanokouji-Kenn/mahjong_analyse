@@ -3,4 +3,9 @@
     <string name="action_settings">Settings</string>
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
+    <string name="choose_player">选择玩家</string>
+    <string name="richi">立直</string>
+    <string name="ihhatsu">一发</string>
+    <string name="ronn">荣和</string>
+    <string name="tsumo">自摸</string>
 </resources>
