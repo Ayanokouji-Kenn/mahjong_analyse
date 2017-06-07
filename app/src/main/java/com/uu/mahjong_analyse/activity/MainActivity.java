@@ -161,7 +161,7 @@ public class MainActivity extends BaseActivity {
             //把对局的四个人名字传过来，如果数据库中没有，就为他们建表,并将所有值变成0；
             for(int i = 0; i < mPlayers.length; i++) {
                 if(DBDao.selectPlayer(mPlayers[i].toString()) == null) {
-                    DBDao.insertPlayer(Constant.TABLE_PLAYER_RECORD, mPlayers[i].toString());
+                    DBDao.insertPlayer(Constant.Table.TABLE_PLAYER_RECORD, mPlayers[i].toString());
                 }
             }
             mTvEast.setText(MyApplication.param.get("east"));
@@ -201,6 +201,10 @@ public class MainActivity extends BaseActivity {
             case R.id.toolbar_persional_record:
                 openPage(true,-1,PlayerInfoActivity.class);
                 break;
+            case R.id.toolbar_modify_record:
+                openPage(true,-1,ModifyDbActivity.class);
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -7,6 +7,11 @@
         android:orderInCategory="100"
         android:title="对局记录"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/toolbar_modify_record"
+        android:orderInCategory="100"
+        android:title="修改记录"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/toolbar_persional_record"
