@@ -1,11 +1,7 @@
 package com.uu.mahjong_analyse.activity;
 
-import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.speech.RecognitionListener;
-import android.speech.SpeechRecognizer;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -19,12 +15,12 @@ import android.widget.Toast;
 
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.CommonApi;
-import com.uu.mahjong_analyse.base.MyApplication;
+import com.uu.mahjong_analyse.Utils.Constant;
+import com.uu.mahjong_analyse.Utils.SPUtils;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.bean.PlayerRecord;
 import com.uu.mahjong_analyse.db.DBDao;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -64,16 +60,16 @@ public class SetGameScoreActiivty extends BaseActivity{
 
     @Override
     public void initData() {
-        mEastPlayer = DBDao.selectPlayer(MyApplication.param.get("east"));
-        mWestPlayer = DBDao.selectPlayer(MyApplication.param.get("west"));
-        mSouthPlayer = DBDao.selectPlayer(MyApplication.param.get("south"));
-        mNorthPlayer = DBDao.selectPlayer(MyApplication.param.get("north"));
+        mEastPlayer = DBDao.selectPlayer( SPUtils.getString(Constant.EAST,""));
+        mWestPlayer = DBDao.selectPlayer( SPUtils.getString(Constant.WEST,""));
+        mSouthPlayer = DBDao.selectPlayer(SPUtils.getString(Constant.SOUTH,""));
+        mNorthPlayer = DBDao.selectPlayer(SPUtils.getString(Constant.NORTH,""));
 
 
-        names[0] = MyApplication.param.get("east");
-        names[1] = MyApplication.param.get("west");
-        names[2] = MyApplication.param.get("south");
-        names[3] = MyApplication.param.get("north");
+        names[0] = SPUtils.getString(Constant.EAST,"");
+        names[1] = SPUtils.getString(Constant.WEST,"");
+        names[2] = SPUtils.getString(Constant.SOUTH,"");
+        names[3] = SPUtils.getString(Constant.NORTH,"");
 
     }
 

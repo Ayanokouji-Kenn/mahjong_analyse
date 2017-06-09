@@ -4,27 +4,28 @@ import android.app.Application;
 import android.content.Context;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * Created by Nagisa on 2016/6/25.
  */
 public class MyApplication extends Application {
-    public static Context instance;
-    public static HashMap<String, String> param = new HashMap<>();
+    private static Context instance;
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = getApplicationContext();
         SpeechUtility.createUtility(this, SpeechConstant.APPID +"=59279059");
+    }
+
+    public static Context getInstance() {
+        return instance;
     }
 
     /**

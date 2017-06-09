@@ -1,26 +1,29 @@
 package com.uu.mahjong_analyse.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.Constant;
-import com.uu.mahjong_analyse.base.MyApplication;
+import com.uu.mahjong_analyse.Utils.SPUtils;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.db.DBDao;
 import com.uu.mahjong_analyse.fragment.LeftMenuFragment;
@@ -55,29 +58,41 @@ public class MainActivity extends BaseActivity {
     Button mBtn;
     @BindView(R.id.rightmenu_rg)
     RadioGroup rightmenu_radiogroup;
-
+    @BindView(R.id.tv_east_point)
+    TextView tvEastPoint;
+    @BindView(R.id.tv_south_point)
+    TextView tvSouthPoint;
+    @BindView(R.id.tv_west_point)
+    TextView tvWestPoint;
+    @BindView(R.id.tv_north_point)
+    TextView tvNorthPoint;
+    @BindView(R.id.tv_chang)
+    TextView tvChang;
+    @BindView(R.id.tv_gong)
+    TextView tvGong;        //供托
     private String[] mPlayers;
     private LeftMenuFragment mLeftMenuFragment;
     private Shimmer mShimmer;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_main);
 
-        super.onCreate(savedInstanceState);
-
-
-    }
 
     @Override
     public void initData() {
         mShimmer = new Shimmer();
-
+        changMap.append(1,"东一");
+        changMap.append(2,"东二");
+        changMap.append(3,"东三");
+        changMap.append(4,"东四");
+        changMap.append(5,"南一");
+        changMap.append(6,"南二");
+        changMap.append(7,"南三");
+        changMap.append(8,"南四");
     }
 
     @Override
     public void initView() {
+        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         setTitle("麻将统计分析工具");
@@ -89,12 +104,14 @@ public class MainActivity extends BaseActivity {
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         mLeftMenuFragment = new LeftMenuFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fl_leftmenu, mLeftMenuFragment).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().add(R.id.fl_leftmenu, mLeftMenuFragment)
+                .commitAllowingStateLoss();
     }
 
 
-
     private int chang = 1;  //1-8 代表东1到南4；
+    private SparseArray<String> changMap = new SparseArray<>();
+
     public void initEvent() {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,25 +173,25 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_PLAYERS && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_PLAYERS && resultCode == RESULT_OK) {
             mPlayers = (String[]) data.getCharSequenceArrayExtra("players");
             //把对局的四个人名字传过来，如果数据库中没有，就为他们建表,并将所有值变成0；
-            for(int i = 0; i < mPlayers.length; i++) {
-                if(DBDao.selectPlayer(mPlayers[i].toString()) == null) {
-                    DBDao.insertPlayer(Constant.Table.TABLE_PLAYER_RECORD, mPlayers[i].toString());
+            for (int i = 0; i < mPlayers.length; i++) {
+                if (DBDao.selectPlayer(mPlayers[i]) == null) {
+                    DBDao.insertPlayer(Constant.Table.TABLE_PLAYER_RECORD, mPlayers[i]);
                 }
             }
-            mTvEast.setText(MyApplication.param.get("east"));
-            mTvWest.setText(MyApplication.param.get("west"));
-            mTvSouth.setText(MyApplication.param.get("south"));
-            mTvNorth.setText(MyApplication.param.get("north"));
+            mTvEast.setText(SPUtils.getString(Constant.EAST, ""));
+            mTvWest.setText(SPUtils.getString(Constant.WEST, ""));
+            mTvSouth.setText(SPUtils.getString(Constant.SOUTH, ""));
+            mTvNorth.setText(SPUtils.getString(Constant.NORTH, ""));
 
 
             mLeftMenuFragment.mLeftmenuDatas.clear();
-            mLeftMenuFragment.mLeftmenuDatas.add("东家：" + MyApplication.param.get("east"));
-            mLeftMenuFragment.mLeftmenuDatas.add("西家：" + MyApplication.param.get("west"));
-            mLeftMenuFragment.mLeftmenuDatas.add("南家：" + MyApplication.param.get("south"));
-            mLeftMenuFragment.mLeftmenuDatas.add("北家：" + MyApplication.param.get("north"));
+            mLeftMenuFragment.mLeftmenuDatas.add("东家：" + SPUtils.getString(Constant.EAST, ""));
+            mLeftMenuFragment.mLeftmenuDatas.add("西家：" + SPUtils.getString(Constant.WEST, ""));
+            mLeftMenuFragment.mLeftmenuDatas.add("南家：" + SPUtils.getString(Constant.SOUTH, ""));
+            mLeftMenuFragment.mLeftmenuDatas.add("北家：" + SPUtils.getString(Constant.NORTH, ""));
             mLeftMenuFragment.mLeftMenuAdapter.notifyDataSetChanged();
         }
     }
@@ -196,13 +213,13 @@ public class MainActivity extends BaseActivity {
         //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
             case R.id.toolbar_game_record:
-                openPage(true,-1,GameRecordActivity.class);
+                openPage(true, -1, GameRecordActivity.class);
                 return true;
             case R.id.toolbar_persional_record:
-                openPage(true,-1,PlayerInfoActivity.class);
+                openPage(true, -1, PlayerInfoActivity.class);
                 break;
             case R.id.toolbar_modify_record:
-                openPage(true,-1,ModifyDbActivity.class);
+                openPage(true, -1, ModifyDbActivity.class);
                 break;
 
         }
@@ -217,69 +234,100 @@ public class MainActivity extends BaseActivity {
 
     private boolean isStart = false;
 
-    @OnClick({R.id.tv_east, R.id.tv_south, R.id.tv_west, R.id.tv_north, R.id.btn})
+    @OnClick({R.id.tv_east, R.id.tv_south, R.id.tv_west, R.id.tv_north, R.id.btn,R.id.ll_chang})
     public void onClick(View view) {
         Intent intent = new Intent(this, GetScoreActivity.class);
-        String east = MyApplication.param.get("east");
-        String south = MyApplication.param.get("south");
-        String north = MyApplication.param.get("north");
-        String west = MyApplication.param.get("west");
+        String east = SPUtils.getString(Constant.EAST, "");
+        String south = SPUtils.getString(Constant.SOUTH, "");
+        String north = SPUtils.getString(Constant.NORTH, "");
+        String west = SPUtils.getString(Constant.WEST, "");
         switch (view.getId()) {
+            case R.id.ll_chang:
+                boolean[] checkArray = {false,false,false,false};
+                new AlertDialog.Builder(mContext).setMultiChoiceItems(mPlayers, checkArray
+                        , new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                switch (which) {
+                                    //东西南北
+                                    case 0:
+                                        if (isChecked) {
+                                            // TODO: 2017/6/9  
+                                        }
+                                        break;
+                                    case 1:
+                                        break;
+                                    case 2:
+                                        break;
+                                    case 3:
+                                        break;
+
+                                }
+                            }
+                        })
+                .setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                break;
             case R.id.tv_east:
-                if(TextUtils.isEmpty(east)) {
+                if (TextUtils.isEmpty(east)) {
                     Toast.makeText(this, "人都还没选呢，点个JJ", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 intent.putExtra("player", east);
-                if(isStart) {
+                if (isStart) {
                     openPage(true, REQUEST_GET_SCORE, intent);
                 }
                 break;
             case R.id.tv_south:
 
-                if(TextUtils.isEmpty(south)) {
+                if (TextUtils.isEmpty(south)) {
                     Toast.makeText(this, "人都还没选呢，点个JJ", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 intent.putExtra("player", south);
-                intent.putExtra("player", south);
-                if(isStart) {
+                if (isStart) {
                     openPage(true, REQUEST_GET_SCORE, intent);
                 }
                 break;
             case R.id.tv_west:
 
-                if(TextUtils.isEmpty(west)) {
+                if (TextUtils.isEmpty(west)) {
                     Toast.makeText(this, "人都还没选呢，点个JJ", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 intent.putExtra("player", west);
-                intent.putExtra("player", west);
-                if(isStart) {
+                if (isStart) {
                     openPage(true, REQUEST_GET_SCORE, intent);
                 }
                 break;
             case R.id.tv_north:
 
-                if(TextUtils.isEmpty(north)) {
+                if (TextUtils.isEmpty(north)) {
                     Toast.makeText(this, "人都还没选呢，点个JJ", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 intent.putExtra("player", north);
-                intent.putExtra("player", north);
-                if(isStart) {
+                if (isStart) {
                     openPage(true, REQUEST_GET_SCORE, intent);
                 }
                 break;
             case R.id.btn:
-                if(TextUtils.isEmpty(east) || TextUtils.isEmpty(west) || TextUtils.isEmpty(south) || TextUtils.isEmpty(north)) {
+                if (TextUtils.isEmpty(east) || TextUtils.isEmpty(west) || TextUtils.isEmpty(south) || TextUtils
+                        .isEmpty(north)) {
                     Toast.makeText(this, "还没选人呢", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(!isStart) {
+                if (!isStart) {
                     mBtn.setText("对战中...");
                     isStart = true;
-
+                    //开局就将场次变成东一局
+                    SPUtils.putInt(Constant.CHANG,1);
+                    tvChang.setText(changMap.get(1));
                     //东家闪光，右边栏东一变色
                     mShimmer.start(mTvEast);
                     rightmenu_radiogroup.check(R.id.rb_east1);
@@ -295,16 +343,16 @@ public class MainActivity extends BaseActivity {
     public void showDialog(View view) {
         switch (view.getId()) {
             case R.id.tv_east:
-                String eastName = MyApplication.param.get("east");
+                String eastName = SPUtils.getString(Constant.EAST, "");
                 break;
             case R.id.tv_south:
-                String southName = MyApplication.param.get("south");
+                String southName = SPUtils.getString(Constant.SOUTH, "");
                 break;
             case R.id.tv_west:
-                String westName = MyApplication.param.get("west");
+                String westName = SPUtils.getString(Constant.WEST, "");
                 break;
             case R.id.tv_north:
-                String northName = MyApplication.param.get("north");
+                String northName = SPUtils.getString(Constant.NORTH, "");
                 break;
 
         }
@@ -312,7 +360,6 @@ public class MainActivity extends BaseActivity {
 
     public void closeDrawerLayout() {
         mDrawerLayout.closeDrawers();
-
 
 
     }

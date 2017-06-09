@@ -1,71 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activity.MainActivity"
-    tools:showIn="@layout/activity_main">
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:context=".activity.MainActivity"
+                tools:showIn="@layout/activity_main">
 
-    <include layout="@layout/layout_toolbar"
-        android:id="@+id/layout_toolbar"/>
+    <include
+        android:id="@+id/layout_toolbar"
+        layout="@layout/layout_toolbar"/>
 
     <RelativeLayout
-        android:layout_below="@id/layout_toolbar"
         android:id="@+id/rl_table"
-        android:layout_centerHorizontal="true"
         android:layout_width="300dp"
-        android:layout_height="300dp">
+        android:layout_height="300dp"
+        android:layout_below="@id/layout_toolbar"
+        android:layout_centerHorizontal="true">
 
-    <com.romainpiel.shimmer.ShimmerTextView
-        android:id="@+id/tv_east"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_centerVertical="true"
-        android:gravity="center"
-        android:text="东"
-        android:textSize="26sp"/>
-    <com.romainpiel.shimmer.ShimmerTextView
-        android:id="@+id/tv_south"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="南"
-        android:textSize="26sp"/>
-    <com.romainpiel.shimmer.ShimmerTextView
-        android:id="@+id/tv_west"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:gravity="center"
-        android:text="西"
-        android:textSize="26sp"/>
-    <com.romainpiel.shimmer.ShimmerTextView
-        android:id="@+id/tv_north"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_centerVertical="true"
-        android:gravity="center"
-        android:text="北"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textSize="26sp"/>
+        <com.romainpiel.shimmer.ShimmerTextView
+            android:id="@+id/tv_east"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="东"
+            android:textSize="26sp"/>
+
+        <TextView
+            android:id="@+id/tv_east_point"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_east"
+            android:layout_alignStart="@id/tv_east"
+            android:gravity="center"
+            android:text="@string/_25000"/>
+
+        <com.romainpiel.shimmer.ShimmerTextView
+            android:id="@+id/tv_south"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="南"
+            android:textSize="26sp"/>
+
+        <TextView
+            android:id="@+id/tv_south_point"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_south"
+            android:layout_alignStart="@id/tv_south"
+            android:gravity="center"
+            android:text="@string/_25000"/>
+
+        <com.romainpiel.shimmer.ShimmerTextView
+            android:id="@+id/tv_west"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="西"
+            android:textSize="26sp"/>
+
+        <TextView
+            android:id="@+id/tv_west_point"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_west"
+            android:layout_alignStart="@id/tv_west"
+            android:gravity="center"
+            android:text="@string/_25000"/>
+
+        <com.romainpiel.shimmer.ShimmerTextView
+            android:id="@+id/tv_north"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="北"
+            android:textSize="26sp"/>
+
+        <TextView
+            android:id="@+id/tv_north_point"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_north"
+            android:layout_alignStart="@id/tv_north"
+            android:gravity="center"
+            android:text="@string/_25000"/>
+
+        <LinearLayout
+            android:id="@+id/ll_chang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_chang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tv_gong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </RelativeLayout>
+
     <Button
-        android:background="@drawable/shape_round_corner_rec"
         android:id="@+id/btn"
-        android:layout_below="@id/rl_table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/rl_table"
+        android:background="@drawable/shape_round_corner_rec"
         android:text="开局"
-        android:textSize="26sp"
-        android:textColor="#fff"/>
-
+        android:textColor="#fff"
+        android:textSize="26sp"/>
 
 
 </RelativeLayout>

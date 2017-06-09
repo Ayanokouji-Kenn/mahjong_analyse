@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class DBDao {
     public static SQLiteDatabase getDataBase() {
-        MyOpenHelper myOpenHelper = new MyOpenHelper(MyApplication.instance);
+        MyOpenHelper myOpenHelper = new MyOpenHelper(MyApplication.getInstance());
         SQLiteDatabase db = myOpenHelper.getWritableDatabase();
         return db;
     }

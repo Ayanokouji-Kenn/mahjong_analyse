@@ -14,12 +14,14 @@ import android.widget.Toast;
 
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.CommonApi;
-import com.uu.mahjong_analyse.base.MyApplication;
+import com.uu.mahjong_analyse.Utils.Constant;
+import com.uu.mahjong_analyse.Utils.SPUtils;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.db.DBDao;
 import com.uu.mahjong_analyse.view.wheelview.widget.WheelViewDialog;
 
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,24 +85,24 @@ public class AddNewGameActivity extends BaseActivity {
                 String mSelectName = (String) s;
                 switch (view.getId()) {
                     case R.id.tv_east:
-                        mTvEast.setText("东家：" + mSelectName);
                         select[0] = mSelectName;
-                        MyApplication.param.put("east", mSelectName);
+                        mTvEast.setText(String.format(Locale.CHINA,"东家： %s",mSelectName));
+                        SPUtils.putString(Constant.EAST,mSelectName);
                         break;
                     case R.id.tv_west:
-                        mTvWest.setText("西家：" + mSelectName);
                         select[1] = mSelectName;
-                        MyApplication.param.put("west", mSelectName);
+                        mTvWest.setText(String.format(Locale.CHINA,"西家： %s",mSelectName));
+                        SPUtils.putString(Constant.WEST,mSelectName);
                         break;
                     case R.id.tv_south:
-                        mTvSouth.setText("南家：" + mSelectName);
                         select[2] = mSelectName;
-                        MyApplication.param.put("south", mSelectName);
+                        mTvSouth.setText(String.format(Locale.CHINA,"南家： %s",mSelectName));
+                        SPUtils.putString(Constant.SOUTH,mSelectName);
                         break;
                     case R.id.tv_north:
-                        mTvNorth.setText("北家：" + mSelectName);
                         select[3] = mSelectName;
-                        MyApplication.param.put("north", mSelectName);
+                        mTvNorth.setText(String.format(Locale.CHINA,"北家： %s",mSelectName));
+                        SPUtils.putString(Constant.NORTH,mSelectName);
                         break;
                 }
             }

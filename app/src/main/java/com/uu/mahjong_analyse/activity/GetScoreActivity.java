@@ -26,8 +26,8 @@ import com.iflytek.sunflower.FlowerCollector;
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.Constant;
 import com.uu.mahjong_analyse.Utils.JsonParser;
+import com.uu.mahjong_analyse.Utils.SPUtils;
 import com.uu.mahjong_analyse.base.BaseActivity;
-import com.uu.mahjong_analyse.base.MyApplication;
 import com.uu.mahjong_analyse.bean.PlayerRecord;
 import com.uu.mahjong_analyse.db.DBDao;
 import com.uu.mahjong_analyse.view.wheelview.widget.WheelViewDialog;
@@ -89,10 +89,10 @@ public class GetScoreActivity extends BaseActivity {
         Intent intent = getIntent();
         mPlayer = intent.getStringExtra("player");
         mPlayers = new ArrayList<>();
-        mPlayers.add(MyApplication.param.get("east"));
-        mPlayers.add(MyApplication.param.get("west"));
-        mPlayers.add(MyApplication.param.get("south"));
-        mPlayers.add(MyApplication.param.get("north"));
+        mPlayers.add(SPUtils.getString(Constant.EAST,""));
+        mPlayers.add(SPUtils.getString(Constant.WEST,""));
+        mPlayers.add(SPUtils.getString(Constant.NORTH,""));
+        mPlayers.add(SPUtils.getString(Constant.SOUTH,""));
     }
 
     @Override
