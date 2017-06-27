@@ -50,7 +50,7 @@ public class AddNewGameActivity extends BaseActivity {
     TextView mTvOk;
     private List<String> datas;
 //    String[] names = {"大⑨", "OOX", "司令", "SM", "怪蜀黍"};
-    String[] select = new String[4];
+    String[] select = new String[4];  //按照东南西北的顺序
 
 
     @Override
@@ -89,15 +89,15 @@ public class AddNewGameActivity extends BaseActivity {
                         mTvEast.setText(String.format(Locale.CHINA,"东家： %s",mSelectName));
                         SPUtils.putString(Constant.EAST,mSelectName);
                         break;
-                    case R.id.tv_west:
-                        select[1] = mSelectName;
-                        mTvWest.setText(String.format(Locale.CHINA,"西家： %s",mSelectName));
-                        SPUtils.putString(Constant.WEST,mSelectName);
-                        break;
                     case R.id.tv_south:
-                        select[2] = mSelectName;
+                        select[1] = mSelectName;
                         mTvSouth.setText(String.format(Locale.CHINA,"南家： %s",mSelectName));
                         SPUtils.putString(Constant.SOUTH,mSelectName);
+                        break;
+                    case R.id.tv_west:
+                        select[2] = mSelectName;
+                        mTvWest.setText(String.format(Locale.CHINA,"西家： %s",mSelectName));
+                        SPUtils.putString(Constant.WEST,mSelectName);
                         break;
                     case R.id.tv_north:
                         select[3] = mSelectName;

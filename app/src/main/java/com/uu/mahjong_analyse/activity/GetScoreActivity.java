@@ -83,16 +83,18 @@ public class GetScoreActivity extends BaseActivity {
     // 用HashMap存储听写结果
     private HashMap<String, String> mIatResults = new LinkedHashMap<>();
     private RecognizerDialog mDialog;
+    private String oyaName;
 
     @Override
     public void initData() {
         Intent intent = getIntent();
         mPlayer = intent.getStringExtra("player");
+        oyaName = intent.getStringExtra("oya");
         mPlayers = new ArrayList<>();
-        mPlayers.add(SPUtils.getString(Constant.EAST,""));
-        mPlayers.add(SPUtils.getString(Constant.WEST,""));
-        mPlayers.add(SPUtils.getString(Constant.NORTH,""));
-        mPlayers.add(SPUtils.getString(Constant.SOUTH,""));
+        mPlayers.add(SPUtils.getString(Constant.EAST, ""));
+        mPlayers.add(SPUtils.getString(Constant.WEST, ""));
+        mPlayers.add(SPUtils.getString(Constant.NORTH, ""));
+        mPlayers.add(SPUtils.getString(Constant.SOUTH, ""));
     }
 
     @Override
@@ -116,7 +118,7 @@ public class GetScoreActivity extends BaseActivity {
         mDialog = new RecognizerDialog(this, new InitListener() {
             @Override
             public void onInit(int i) {
-                if(i != ErrorCode.SUCCESS) {
+                if (i != ErrorCode.SUCCESS) {
                     Toast.makeText(mContext, "code=" + i, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -139,7 +141,7 @@ public class GetScoreActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_chong:
-                if(mRbRonn.isChecked()) {
+                if (mRbRonn.isChecked()) {
                     showChongPlayerDialog();
                 }
                 break;
@@ -158,7 +160,7 @@ public class GetScoreActivity extends BaseActivity {
     @OnLongClick(R.id.btn_confirm)
     public boolean speech(View view) {
         String[] permissions = {Manifest.permission.RECORD_AUDIO};
-        if(EasyPermissions.hasPermissions(this, Manifest.permission_group.MICROPHONE)) {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission_group.MICROPHONE)) {
             startSpeech();
         } else {
             EasyPermissions.requestPermissions(this, "麦克风权限", RC_RECORD_AUDIO, permissions);
@@ -191,7 +193,7 @@ public class GetScoreActivity extends BaseActivity {
     }
 
     private void setFan(String s) {
-        mFan =  s;
+        mFan = s;
         mTvFan.setText("番数：" + mFan);
     }
 
@@ -212,28 +214,28 @@ public class GetScoreActivity extends BaseActivity {
     private void saveData() {
         PlayerRecord playerRecord = DBDao.selectPlayer(mPlayer);
         ContentValues cv = new ContentValues();
-        if(mCbRichi.isChecked()) {  //立直
+        if (mCbRichi.isChecked()) {  //立直
             cv.put("richi_count", playerRecord.richi_count + 1);
         }
-        if(mRbTsumo.isChecked()) {  //自摸
+        if (mRbTsumo.isChecked()) {  //自摸
             cv.put("tsumo", playerRecord.tsumo + 1);
-            if(mCbRichi.isChecked()) {  //立直和了
+            if (mCbRichi.isChecked()) {  //立直和了
                 cv.put("richi_he", playerRecord.richi_he + 1);
             }
             cv.put("he_count", playerRecord.he_count + 1);
         }
-        if(mRbRonn.isChecked()) {   //荣和
+        if (mRbRonn.isChecked()) {   //荣和
             cv.put("ronn", playerRecord.ronn + 1);
-            if(mCbRichi.isChecked()) {  //立直和了
+            if (mCbRichi.isChecked()) {  //立直和了
                 cv.put("richi_he", playerRecord.richi_he + 1);
             }
             cv.put("he_count", playerRecord.he_count + 1);
         }
-        if(mCbIhhatsu.isChecked()) {    //一发
+        if (mCbIhhatsu.isChecked()) {    //一发
             cv.put("ihhatsu_count", playerRecord.ihhatsu_count + 1);
         }
 
-        if(mFan != null) {
+        if (mFan != null) {
 //            no_manguan integer" +          //满贯以下
 //            ",manguan integer" +             //满贯
 //                    ",tiaoman integer" +             //跳满
@@ -264,9 +266,9 @@ public class GetScoreActivity extends BaseActivity {
         }
 
         String point = mEtPoint.getText().toString().trim();
-        if(!TextUtils.isEmpty(point)) {
+        if (!TextUtils.isEmpty(point)) {
             mPoint_int = Integer.parseInt(point);
-            if(playerRecord.he_point_max < mPoint_int) {
+            if (playerRecord.he_point_max < mPoint_int) {
                 cv.put("he_point_max", mPoint_int);
             }
 
@@ -276,7 +278,7 @@ public class GetScoreActivity extends BaseActivity {
         DBDao.updatePlayerData(mPlayer, cv);
 
 
-        if(!TextUtils.isEmpty(mChongPlayer)) {
+        if (!TextUtils.isEmpty(mChongPlayer)) {
             //存储放铳人数据
             PlayerRecord chongPlayer = DBDao.selectPlayer(mChongPlayer);
             ContentValues cv_chong = new ContentValues();
@@ -287,15 +289,45 @@ public class GetScoreActivity extends BaseActivity {
 
         //当有人自摸或者荣和的话，所有人的发牌次数都要+1，否则只是存储richi之类的数据，不增长发牌数
 
-        if(mRbTsumo.isChecked() || mRbRonn.isChecked()) {
-            for(String player : mPlayers) {
+        if (mRbTsumo.isChecked() || mRbRonn.isChecked()) {
+            for (String player : mPlayers) {
                 PlayerRecord playerRecord1 = DBDao.selectPlayer(player);
                 ContentValues cv1 = new ContentValues();
                 cv1.put("total_deal", playerRecord1.total_deal + 1);
                 DBDao.updatePlayerData(player, cv1);
             }
         }
+
+        //改变点数
+        //和牌人点数
+        SPUtils.putInt(mPlayer, SPUtils.getInt(mPlayer, Integer.MIN_VALUE) + mPoint_int);
+        //如果放铳的话，放铳人点数变化
+        if (mRbRonn.isChecked() && !TextUtils.isEmpty(mChongPlayer)) {
+            SPUtils.putInt(mChongPlayer, SPUtils.getInt(mChongPlayer, Integer.MIN_VALUE) - mPoint_int);
+        }else {
+            //亲家自摸，那么其他三家平分点数
+            if (TextUtils.equals(oyaName,mPlayer)) {
+                for (String player : mPlayers) {
+                    if (!TextUtils.equals(player, mPlayer)) {
+                        SPUtils.putInt(player,SPUtils.getInt(player,Integer.MIN_VALUE) - (mPoint_int/3));
+                    }
+                }
+            }else {
+                //子家自摸，亲家付二分之一，另2家各付四分之一
+                for (String player : mPlayers) {
+                    if (!TextUtils.equals(player, mPlayer)) {
+                        if (TextUtils.equals(oyaName, player)) {
+                            SPUtils.putInt(player,SPUtils.getInt(player,Integer.MIN_VALUE) - (mPoint_int/2));
+                        }else {
+                            SPUtils.putInt(player,SPUtils.getInt(player,Integer.MIN_VALUE) - (mPoint_int/4));
+                        }
+
+                    }
+                }
+            }
+        }
         Toast.makeText(this, "该场数据保存成功", Toast.LENGTH_SHORT).show();
+        setResult(RESULT_OK);
         finish();
     }
 
@@ -336,65 +368,65 @@ public class GetScoreActivity extends BaseActivity {
         }
         mIatResults.put(sn, text);
         StringBuilder resultBuffer = new StringBuilder();
-        for(String key : mIatResults.keySet()) {
+        for (String key : mIatResults.keySet()) {
             resultBuffer.append(mIatResults.get(key));
         }
         String result = resultBuffer.toString();
         mTvVoice.setText(result);
-        if(result.contains(getString(R.string.richi))) {
+        if (result.contains(getString(R.string.richi))) {
             mCbRichi.setChecked(true);
-        }else {
+        } else {
             mCbRichi.setChecked(false);
         }
-        if(result.contains(getString(R.string.ihhatsu))) {
+        if (result.contains(getString(R.string.ihhatsu))) {
             mCbIhhatsu.setChecked(true);
-        }else {
+        } else {
             mCbIhhatsu.setChecked(false);
         }
-        if(result.contains(getString(R.string.tsumo))) {
+        if (result.contains(getString(R.string.tsumo))) {
             mRbTsumo.setChecked(true);
             mTvChong.setText("放铳人：");
-            setFanByVoice(result,false);
-        }else {
+            setFanByVoice(result, false);
+        } else {
             mRbRonn.setChecked(true);
-            setFanByVoice(result,true);
+            setFanByVoice(result, true);
         }
         Matcher matcher = Pattern.compile("(\\d)+").matcher(result);
-        if(matcher.find()) {
+        if (matcher.find()) {
             mEtPoint.setText(matcher.group());
         }
 
     }
 
-    private void setFanByVoice(String result,boolean isChong) {
+    private void setFanByVoice(String result, boolean isChong) {
 
-        if(result.contains(Constant.MANN_GANN)) {
-            handleFanByVoice(result,Constant.MANN_GANN, isChong);
-        } else if(result.contains(Constant.HANE_MANN)) {
-            handleFanByVoice(result,Constant.HANE_MANN,isChong);
-        } else if(result.contains(Constant.BAI_MANN)) {
-            handleFanByVoice(result,Constant.BAI_MANN,isChong);
-        }else if(result.contains(Constant.SANN_BAI_MANN)) {
-            handleFanByVoice(result,Constant.SANN_BAI_MANN,isChong);
-        }else if(result.contains(Constant.YAKUMAN)) {
-            handleFanByVoice(result,Constant.YAKUMAN,isChong);
+        if (result.contains(Constant.MANN_GANN)) {
+            handleFanByVoice(result, Constant.MANN_GANN, isChong);
+        } else if (result.contains(Constant.HANE_MANN)) {
+            handleFanByVoice(result, Constant.HANE_MANN, isChong);
+        } else if (result.contains(Constant.BAI_MANN)) {
+            handleFanByVoice(result, Constant.BAI_MANN, isChong);
+        } else if (result.contains(Constant.SANN_BAI_MANN)) {
+            handleFanByVoice(result, Constant.SANN_BAI_MANN, isChong);
+        } else if (result.contains(Constant.YAKUMAN)) {
+            handleFanByVoice(result, Constant.YAKUMAN, isChong);
         }
     }
 
-    private void handleFanByVoice(String result,String fan,boolean isChong) {
+    private void handleFanByVoice(String result, String fan, boolean isChong) {
         setFan(fan);
-        if(isChong) {
+        if (isChong) {
             int index = result.indexOf(fan);
-            String name = result.substring(0,index);
-            if(TextUtils.equals(name, "圈圈叉")) {
+            String name = result.substring(0, index);
+            if (TextUtils.equals(name, "圈圈叉")) {
                 name = "OOX";
-            } else if(TextUtils.equals(name, "大舅")) {
+            } else if (TextUtils.equals(name, "大舅")) {
                 name = "大⑨";
             }
-            if(mPlayers.contains(name)) {
+            if (mPlayers.contains(name)) {
                 mTvChong.setText(name);
-            }else {
-                Toast.makeText(this,"在座玩家未发现该名字", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "在座玩家未发现该名字", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.Constant;
 import com.uu.mahjong_analyse.Utils.rx.RxBus;
+import com.uu.mahjong_analyse.bean.LiujuResult;
 
 import java.util.ArrayList;
 
@@ -17,22 +18,22 @@ import java.util.ArrayList;
  */
 
 public class LiuJuDialog implements DialogInterface.OnClickListener, DialogInterface.OnMultiChoiceClickListener {
-    private String[] mChoices;
-    private boolean[] mChecks = new boolean[4];
+    private String[] mPlayers;                      //玩家名字
+    private boolean[] mTingPais = new boolean[4];  //记录流局听牌
+    private boolean[] mRichis = new boolean[4];     //记录立直
     private Context mContext;
     private AlertDialog mInstance;
 
     public LiuJuDialog(Context context, String[] choices) {
         mContext = context;
-        mChoices = choices;
+        mPlayers = choices;
 
     }
 
     public void show() {
         if (mInstance == null) {
-            mInstance = new AlertDialog.Builder(mContext).setTitle("流局")
-                    .setMessage("请选择流局玩家")
-                    .setMultiChoiceItems(mChoices, mChecks, this)
+            mInstance = new AlertDialog.Builder(mContext).setTitle("流局了，请选择听牌玩家，全听或全不听直接点确定")
+                    .setMultiChoiceItems(mPlayers, mTingPais, this)
                     .setPositiveButton(mContext.getString(R.string.confirm), this)
                     .setNegativeButton(mContext.getString(R.string.cancel), this).create();
         }
@@ -42,21 +43,49 @@ public class LiuJuDialog implements DialogInterface.OnClickListener, DialogInter
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            ArrayList<String> richiPlayers = new ArrayList<>();
-            for (int i = 0; i < mChecks.length; i++) {
-                if (mChecks[i]) {
-                    richiPlayers.add(mChoices[i]);
-                }
-            }
-            RxBus.getInstance().send(richiPlayers, Constant.RX_LIUJU_RESULT);
             dialog.dismiss();
+            new AlertDialog.Builder(mContext).setTitle("请选择立直的玩家")
+                    .setMultiChoiceItems(mPlayers,mRichis,new DialogInterface.OnMultiChoiceClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                            //选择立直玩家
+                            mRichis[which] = isChecked;
+                        }
+                    })
+                    .setPositiveButton(mContext.getString(R.string.confirm),new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            LiujuResult liujuResult = new LiujuResult();
+                            liujuResult.tingpaiPlayers = new ArrayList<String>();
+                            liujuResult.richiPlayers = new ArrayList<String>();
+                            for(int i = 0;i<mPlayers.length;i++) {
+                                if (mTingPais[i]) {
+                                    liujuResult.tingpaiPlayers.add(mPlayers[i]);
+                                }
+                                if (mRichis[i]) {
+                                    liujuResult.richiPlayers.add(mPlayers[i]);
+                                }
+                            }
+                            RxBus.getInstance().send(liujuResult, Constant.RX_LIUJU_RESULT);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
         } else if (which == DialogInterface.BUTTON_NEGATIVE) {
             dialog.dismiss();
         }
     }
 
+    /**
+     * 选择听牌玩家
+     * */
     @Override
     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-        mChecks[which] = isChecked;
+        mTingPais[which] = isChecked;
     }
 }

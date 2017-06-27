@@ -23,5 +23,5 @@
         android:id="@+id/toolbar_persional_record"
         android:orderInCategory="100"
         android:title="个人战绩"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 </menu>

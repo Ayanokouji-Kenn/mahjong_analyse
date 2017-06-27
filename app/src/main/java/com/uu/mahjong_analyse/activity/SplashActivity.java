@@ -52,17 +52,25 @@ public class SplashActivity extends BaseActivity implements DialogInterface.OnCl
                         ||ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)==  PackageManager.PERMISSION_DENIED)) {
 
             if (mDialog == null) {
-                new AlertDialog.Builder(mContext).setTitle("需要开启一些权限")
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(mContext,R.style.Theme_AppCompat_Light_Dialog_Alert);
+
+                }else {
+                    builder = new AlertDialog.Builder(mContext);
+                }
+                mDialog= builder.setTitle("需要开启一些权限")
                         .setMessage("因为加入了语音识别，所以需要获取一些手机状态、定位信息等权限，麻烦您通过一下")
                         .setPositiveButton(getString(R.string.confirm),this )
                         .setNegativeButton(getString(R.string.cancel),this)
                         .create();
+
             }
 
             mDialog.show();
 
         }else {
-            Observable.timer(2, TimeUnit.SECONDS)
+            Observable.timer(1, TimeUnit.SECONDS)
                     .subscribe(new Action1<Long>() {
                         @Override
                         public void call(Long aLong) {
