@@ -1,7 +1,5 @@
 package com.uu.mahjong_analyse.base;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -13,7 +11,6 @@ import android.view.WindowManager;
 
 import com.uu.mahjong_analyse.R;
 
-import butterknife.ButterKnife;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
@@ -27,6 +24,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static final String TAG = "uu";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //保持屏幕常亮
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {  //5.0以上直接用系统提供的方法
             Window window = getWindow();

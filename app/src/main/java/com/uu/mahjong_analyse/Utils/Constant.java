@@ -10,6 +10,8 @@ public class Constant {
         public  static final String TABLE_NAME = "tableName";
     }
 
+    public static final String RX_LIUJU_RESULT = "rx_liuju_result";
+
     public  static final String EAST = "east";
     public  static final String SOUTH = "south";
     public  static final String WEST = "west";

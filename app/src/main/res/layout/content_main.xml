@@ -21,12 +21,31 @@
         android:layout_centerHorizontal="true">
 
         <com.romainpiel.shimmer.ShimmerTextView
-            android:id="@+id/tv_east"
+            android:id="@+id/tv_north"
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:layout_centerVertical="true"
             android:gravity="center"
+            android:text="北"
+            android:textSize="26sp"/>
+
+        <TextView
+            android:id="@+id/tv_north_point"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_north"
+            android:layout_alignStart="@id/tv_north"
+            android:gravity="center"
+            android:text="@string/_25000"/>
+
+        <com.romainpiel.shimmer.ShimmerTextView
+            android:id="@+id/tv_east"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:gravity="center"
             android:text="东"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:textSize="26sp"/>
 
         <TextView
@@ -42,8 +61,8 @@
             android:id="@+id/tv_south"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:gravity="center"
             android:text="南"
             android:textSize="26sp"/>
@@ -61,7 +80,8 @@
             android:id="@+id/tv_west"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:gravity="center"
             android:text="西"
@@ -73,26 +93,6 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tv_west"
             android:layout_alignStart="@id/tv_west"
-            android:gravity="center"
-            android:text="@string/_25000"/>
-
-        <com.romainpiel.shimmer.ShimmerTextView
-            android:id="@+id/tv_north"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="北"
-            android:textSize="26sp"/>
-
-        <TextView
-            android:id="@+id/tv_north_point"
-            android:layout_width="96dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_north"
-            android:layout_alignStart="@id/tv_north"
             android:gravity="center"
             android:text="@string/_25000"/>
 
@@ -124,6 +124,4 @@
         android:text="开局"
         android:textColor="#fff"
         android:textSize="26sp"/>
-
-
 </RelativeLayout>

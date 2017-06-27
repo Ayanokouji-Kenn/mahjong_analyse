@@ -2,6 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activity.MainActivity">
+
+    <item
+        android:id="@+id/toolbar_liuju"
+        android:orderInCategory="100"
+        android:title="流局"
+        app:showAsAction="always" />
     <item
         android:id="@+id/toolbar_game_record"
         android:orderInCategory="100"

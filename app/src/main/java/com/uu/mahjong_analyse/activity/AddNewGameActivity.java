@@ -111,7 +111,6 @@ public class AddNewGameActivity extends BaseActivity {
 
     @OnClick({R.id.tv_east, R.id.tv_south, R.id.tv_west, R.id.tv_north})
     public void onClick(View view) {
-
         if(datas.size() != 0) {
             showDialog(view);
         }else {

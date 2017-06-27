@@ -8,7 +8,15 @@
     tools:context=".activity.MainActivity">
 
 
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/ic_media_play"
+        app:layout_anchor="@+id/drawerlayout"
+        app:layout_anchorGravity="bottom|right" />
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawerlayout"
@@ -22,30 +30,16 @@
         <include
             layout="@layout/content_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
 
         <FrameLayout
             android:id="@+id/fl_leftmenu"
-            android:background="@color/colorAccent"
-            android:layout_gravity="start"
             android:layout_width="270dp"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@color/colorAccent"/>
 
-        <include layout="@layout/fg_rightmenu" />
-
-
-
-
+        <include layout="@layout/fg_rightmenu"/>
     </android.support.v4.widget.DrawerLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|left"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_media_play"
-        app:layout_anchor="@+id/drawerlayout"
-        app:layout_anchorGravity="bottom|right" />
 </android.support.design.widget.CoordinatorLayout>

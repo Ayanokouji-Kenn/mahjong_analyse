@@ -1,12 +1,9 @@
 package com.uu.mahjong_analyse.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -27,6 +24,7 @@ import com.uu.mahjong_analyse.Utils.SPUtils;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.db.DBDao;
 import com.uu.mahjong_analyse.fragment.LeftMenuFragment;
+import com.uu.mahjong_analyse.view.LiuJuDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,9 +72,6 @@ public class MainActivity extends BaseActivity {
     private LeftMenuFragment mLeftMenuFragment;
     private Shimmer mShimmer;
 
-
-
-
     @Override
     public void initData() {
         mShimmer = new Shimmer();
@@ -120,54 +115,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        rightmenu_radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.rb_east1:
-                        chang = 1;
 
-                        break;
-                    case R.id.rb_east2:
-                        chang = 2;
-                        mShimmer.cancel();
-                        mShimmer.start(mTvSouth);
-                        break;
-                    case R.id.rb_east3:
-                        chang = 3;
-                        mShimmer.cancel();
-                        mShimmer.start(mTvWest);
-                        break;
-                    case R.id.rb_east4:
-                        chang = 4;
-                        mShimmer.cancel();
-                        mShimmer.start(mTvNorth);
-                        break;
-                    case R.id.rb_south1:
-                        chang = 5;
-                        mShimmer.cancel();
-                        mShimmer.start(mTvEast);
-                        break;
-                    case R.id.rb_south2:
-                        chang = 6;
-                        mShimmer.cancel();
-                        mShimmer.start(mTvSouth);
-                        break;
-                    case R.id.rb_south3:
-                        chang = 7;
-                        mShimmer.cancel();
-                        mShimmer.start(mTvWest);
-                        break;
-                    case R.id.rb_south4:
-                        chang = 8;
-                        mShimmer.cancel();
-                        mShimmer.start(mTvNorth);
-                        break;
-
-                }
-                mDrawerLayout.closeDrawer(GravityCompat.END);
-            }
-        });
     }
 
     @Override
@@ -221,6 +169,16 @@ public class MainActivity extends BaseActivity {
             case R.id.toolbar_modify_record:
                 openPage(true, -1, ModifyDbActivity.class);
                 break;
+            case R.id.toolbar_liuju:
+                //开始对局了才可以点击流局
+                if (isStart) {
+                    if (mLiujuDialog == null) {
+                        mLiujuDialog = new LiuJuDialog(mContext, mPlayers);
+                    }
+                    mLiujuDialog.show();
+                }
+
+                break;
 
         }
         return super.onOptionsItemSelected(item);
@@ -233,46 +191,16 @@ public class MainActivity extends BaseActivity {
 
 
     private boolean isStart = false;
-
-    @OnClick({R.id.tv_east, R.id.tv_south, R.id.tv_west, R.id.tv_north, R.id.btn,R.id.ll_chang})
+    private LiuJuDialog mLiujuDialog;
+    @OnClick({R.id.tv_east, R.id.tv_south, R.id.tv_west, R.id.tv_north, R.id.btn})
     public void onClick(View view) {
         Intent intent = new Intent(this, GetScoreActivity.class);
-        String east = SPUtils.getString(Constant.EAST, "");
-        String south = SPUtils.getString(Constant.SOUTH, "");
-        String north = SPUtils.getString(Constant.NORTH, "");
-        String west = SPUtils.getString(Constant.WEST, "");
+        final String east = SPUtils.getString(Constant.EAST, "");
+        final String south = SPUtils.getString(Constant.SOUTH, "");
+        final String north = SPUtils.getString(Constant.NORTH, "");
+        final String west = SPUtils.getString(Constant.WEST, "");
         switch (view.getId()) {
-            case R.id.ll_chang:
-                boolean[] checkArray = {false,false,false,false};
-                new AlertDialog.Builder(mContext).setMultiChoiceItems(mPlayers, checkArray
-                        , new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                switch (which) {
-                                    //东西南北
-                                    case 0:
-                                        if (isChecked) {
-                                            // TODO: 2017/6/9  
-                                        }
-                                        break;
-                                    case 1:
-                                        break;
-                                    case 2:
-                                        break;
-                                    case 3:
-                                        break;
 
-                                }
-                            }
-                        })
-                .setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-
-                break;
             case R.id.tv_east:
                 if (TextUtils.isEmpty(east)) {
                     Toast.makeText(this, "人都还没选呢，点个JJ", Toast.LENGTH_SHORT).show();

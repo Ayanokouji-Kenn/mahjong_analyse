@@ -42,6 +42,7 @@ public abstract class BaseDialog implements DialogInterface.OnClickListener {
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if(which == DialogInterface.BUTTON_POSITIVE) {
+            positiveClick();
             dialog.dismiss();
         } else if(which == DialogInterface.BUTTON_NEGATIVE) {
             dialog.dismiss();
