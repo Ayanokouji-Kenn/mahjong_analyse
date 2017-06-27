@@ -10,7 +10,10 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -72,6 +75,13 @@ public class MainActivity extends BaseActivity {
     TextView mTvWestPoint;
     @BindView(R.id.tv_north_point)
     TextView mTvNorthPoint;
+    @BindView(R.id.ll_south)
+    LinearLayout mLLSouth;
+    @BindView(R.id.ll_north)
+    LinearLayout mLLNorth;
+    @BindView(R.id.ll_west)
+    LinearLayout mLLWest;
+
     @BindView(R.id.tv_chang)
     TextView mTvChang;
     @BindView(R.id.tv_gong)
@@ -85,6 +95,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        rotatePlayerName();
         mShimmer = new Shimmer();
         changMap.append(0, "东一");
         changMap.append(1, "东二");
@@ -99,6 +110,28 @@ public class MainActivity extends BaseActivity {
         textViews.add(mTvSouth);
         textViews.add(mTvWest);
         textViews.add(mTvNorth);
+    }
+
+    private void rotatePlayerName() {
+        // TODO: 2017/6/27  玩家名称布局调整一下，名字和分数按照weight2:1来弄， ll固定96dp 
+        RotateAnimation northAnim = new RotateAnimation(0F,90F, Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        northAnim.setFillAfter(true);
+        northAnim.setDuration(2000L);
+        mLLNorth.setAnimation(northAnim);
+        northAnim.start();
+
+        RotateAnimation southAnim = new RotateAnimation(0F,-90F, Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        southAnim.setFillAfter(true);
+        southAnim.setDuration(2000L);
+        mLLSouth.setAnimation(southAnim);
+        southAnim.start();
+
+        RotateAnimation westAnim = new RotateAnimation(0F,180F, Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        westAnim.setFillAfter(true);
+        westAnim.setDuration(2000L);
+        mLLWest.setAnimation(westAnim);
+        westAnim.start();
+
     }
 
     @Override
@@ -306,7 +339,7 @@ public class MainActivity extends BaseActivity {
     private boolean isStart = false;
     private LiuJuDialog mLiujuDialog;
 
-    @OnClick({R.id.tv_east, R.id.tv_south, R.id.tv_west, R.id.tv_north, R.id.btn})
+    @OnClick({R.id.ll_east, R.id.ll_south, R.id.ll_west, R.id.ll_north, R.id.btn})
     public void onClick(View view) {
         Intent intent = new Intent(this, GetScoreActivity.class);
         final String east = SPUtils.getString(Constant.EAST, "");
@@ -314,16 +347,16 @@ public class MainActivity extends BaseActivity {
         final String north = SPUtils.getString(Constant.NORTH, "");
         final String west = SPUtils.getString(Constant.WEST, "");
         switch (view.getId()) {
-            case R.id.tv_east:
+            case R.id.ll_east:
                 openScorePage(intent, east);
                 break;
-            case R.id.tv_south:
+            case R.id.ll_south:
                 openScorePage(intent, south);
                 break;
-            case R.id.tv_west:
+            case R.id.ll_west:
                 openScorePage(intent, west);
                 break;
-            case R.id.tv_north:
+            case R.id.ll_north:
                 openScorePage(intent, north);
                 break;
             case R.id.btn:

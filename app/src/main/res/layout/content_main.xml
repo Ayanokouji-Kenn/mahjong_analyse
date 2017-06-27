@@ -20,69 +20,92 @@
         android:layout_below="@id/layout_toolbar"
         android:layout_centerHorizontal="true">
 
-        <com.romainpiel.shimmer.ShimmerTextView
-            android:id="@+id/tv_north"
+        <LinearLayout
+            android:id="@+id/ll_north"
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="北"
-            android:textSize="26sp"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_north_point"
-            android:layout_width="96dp"
+            <com.romainpiel.shimmer.ShimmerTextView
+                android:id="@+id/tv_north"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="北"
+                android:textSize="26sp"/>
+
+            <TextView
+                android:id="@+id/tv_north_point"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/_25000"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_east"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_north"
-            android:layout_alignStart="@id/tv_north"
-            android:gravity="center"
-            android:text="@string/_25000"/>
-
-        <com.romainpiel.shimmer.ShimmerTextView
-            android:id="@+id/tv_east"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:gravity="center"
-            android:text="东"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:textSize="26sp"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_east_point"
-            android:layout_width="96dp"
+            <com.romainpiel.shimmer.ShimmerTextView
+                android:id="@+id/tv_east"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+
+                android:gravity="center"
+                android:text="东"
+                android:textSize="26sp"/>
+
+            <TextView
+                android:id="@+id/tv_east_point"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/tv_east"
+                android:layout_alignStart="@id/tv_east"
+                android:gravity="center"
+                android:text="@string/_25000"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_south"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_east"
-            android:layout_alignStart="@id/tv_east"
-            android:gravity="center"
-            android:text="@string/_25000"/>
-
-        <com.romainpiel.shimmer.ShimmerTextView
-            android:id="@+id/tv_south"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="南"
-            android:textSize="26sp"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_south_point"
-            android:layout_width="96dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/tv_south"
-            android:layout_alignStart="@id/tv_south"
-            android:gravity="center"
-            android:text="@string/_25000"/>
+            <com.romainpiel.shimmer.ShimmerTextView
+                android:id="@+id/tv_south"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:gravity="center"
+                android:text="南"
+                android:textSize="26sp"/>
 
+            <TextView
+                android:id="@+id/tv_south_point"
+                android:layout_width="96dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/_25000"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_west"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
         <com.romainpiel.shimmer.ShimmerTextView
             android:id="@+id/tv_west"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:gravity="center"
             android:text="西"
             android:textSize="26sp"/>
@@ -95,7 +118,7 @@
             android:layout_alignStart="@id/tv_west"
             android:gravity="center"
             android:text="@string/_25000"/>
-
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/ll_chang"
             android:layout_width="wrap_content"
