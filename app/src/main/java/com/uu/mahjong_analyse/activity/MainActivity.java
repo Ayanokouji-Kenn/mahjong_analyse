@@ -1,7 +1,6 @@
 package com.uu.mahjong_analyse.activity;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -12,13 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 import com.uu.mahjong_analyse.R;
@@ -45,8 +44,8 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_PLAYERS = 1;
     private static final int REQUEST_GET_SCORE = 2;
 
-    @BindView(R.id.fab)
-    FloatingActionButton mFab;
+    @BindView(R.id.fab_menu)
+    FloatingActionsMenu mFabMenu;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.drawerlayout)
@@ -63,8 +62,6 @@ public class MainActivity extends BaseActivity {
     ShimmerTextView mTvNorth;
     @BindView(R.id.rl_table)
     RelativeLayout mRlTable;
-    @BindView(R.id.btn)
-    Button mBtn;
     @BindView(R.id.rightmenu_rg)
     RadioGroup rightmenu_radiogroup;
     @BindView(R.id.tv_east_point)
@@ -81,7 +78,10 @@ public class MainActivity extends BaseActivity {
     LinearLayout mLLNorth;
     @BindView(R.id.ll_west)
     LinearLayout mLLWest;
-
+    @BindView(R.id.fab_select_player)
+    com.getbase.floatingactionbutton.FloatingActionButton mFabSelectPlayer;
+    @BindView(R.id.fab_start)
+    com.getbase.floatingactionbutton.FloatingActionButton mFabStart;
     @BindView(R.id.tv_chang)
     TextView mTvChang;
     @BindView(R.id.tv_gong)
@@ -97,38 +97,38 @@ public class MainActivity extends BaseActivity {
     public void initData() {
         rotatePlayerName();
         mShimmer = new Shimmer();
-        changMap.append(0, "东一");
-        changMap.append(1, "东二");
-        changMap.append(2, "东三");
-        changMap.append(3, "东四");
-        changMap.append(4, "南一");
-        changMap.append(5, "南二");
-        changMap.append(6, "南三");
-        changMap.append(7, "南四");
+        changMap.append(0, getString(R.string.east1));
+        changMap.append(1, getString(R.string.east2));
+        changMap.append(2, getString(R.string.east3));
+        changMap.append(3, getString(R.string.east4));
+        changMap.append(4, getString(R.string.south1));
+        changMap.append(5, getString(R.string.south2));
+        changMap.append(6, getString(R.string.south3));
+        changMap.append(7, getString(R.string.south4));
         textViews = new ArrayList<>();
         textViews.add(mTvEast);
         textViews.add(mTvSouth);
         textViews.add(mTvWest);
         textViews.add(mTvNorth);
+
     }
 
     private void rotatePlayerName() {
-        // TODO: 2017/6/27  玩家名称布局调整一下，名字和分数按照weight2:1来弄， ll固定96dp 
-        RotateAnimation northAnim = new RotateAnimation(0F,90F, Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        RotateAnimation northAnim = new RotateAnimation(0F, 90F, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         northAnim.setFillAfter(true);
-        northAnim.setDuration(2000L);
+        northAnim.setDuration(500L);
         mLLNorth.setAnimation(northAnim);
         northAnim.start();
 
-        RotateAnimation southAnim = new RotateAnimation(0F,-90F, Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        RotateAnimation southAnim = new RotateAnimation(0F, -90F, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         southAnim.setFillAfter(true);
-        southAnim.setDuration(2000L);
+        southAnim.setDuration(500L);
         mLLSouth.setAnimation(southAnim);
         southAnim.start();
 
-        RotateAnimation westAnim = new RotateAnimation(0F,180F, Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        RotateAnimation westAnim = new RotateAnimation(0F, 180F, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         westAnim.setFillAfter(true);
-        westAnim.setDuration(2000L);
+        westAnim.setDuration(500L);
         mLLWest.setAnimation(westAnim);
         westAnim.start();
 
@@ -159,12 +159,7 @@ public class MainActivity extends BaseActivity {
     private HashMap<String, TextView> playerTvMap = new HashMap<>();
 
     public void initEvent() {
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openPage(true, REQUEST_PLAYERS, AddNewGameActivity.class);
-            }
-        });
+//
         //流局逻辑全在这里
         RxBus.getInstance().toObservable(LiujuResult.class, Constant.RX_LIUJU_RESULT)
                 .subscribe(new Action1<LiujuResult>() {
@@ -173,9 +168,9 @@ public class MainActivity extends BaseActivity {
                         //处理流局立直的数据
                         for (String richiPlayer : liujuResult.richiPlayers) {
                             TextView tv = playerTvMap.get(richiPlayer);
-                            int score = SPUtils.getInt(richiPlayer,Integer.MIN_VALUE);
+                            int score = SPUtils.getInt(richiPlayer, Integer.MIN_VALUE);
                             tv.setText(String.valueOf(score - 1000));
-                            SPUtils.putInt(richiPlayer,score-1000);
+                            SPUtils.putInt(richiPlayer, score - 1000);
                             gong += 1000;
                         }
                         mTvGong.setText(String.valueOf(gong));
@@ -190,13 +185,13 @@ public class MainActivity extends BaseActivity {
                                 for (String player : players) {
                                     TextView tv = playerTvMap.get(player);
                                     if (TextUtils.equals(player, liujuResult.tingpaiPlayers.get(0))) {
-                                        int score = SPUtils.getInt(player,Integer.MIN_VALUE);
+                                        int score = SPUtils.getInt(player, Integer.MIN_VALUE);
                                         tv.setText(String.valueOf(score + 3000));
-                                        SPUtils.putInt(player,score + 3000);
+                                        SPUtils.putInt(player, score + 3000);
                                     } else {
-                                        int score = SPUtils.getInt(player,Integer.MIN_VALUE);
+                                        int score = SPUtils.getInt(player, Integer.MIN_VALUE);
                                         tv.setText(String.valueOf(score - 1000));
-                                        SPUtils.putInt(player,score-1000);
+                                        SPUtils.putInt(player, score - 1000);
                                     }
                                 }
 
@@ -205,13 +200,13 @@ public class MainActivity extends BaseActivity {
                                 for (String player : players) {
                                     TextView tv = playerTvMap.get(player);
                                     if (liujuResult.tingpaiPlayers.contains(player)) {
-                                        int score = SPUtils.getInt(player,Integer.MIN_VALUE);
+                                        int score = SPUtils.getInt(player, Integer.MIN_VALUE);
                                         tv.setText(String.valueOf(score + 1500));
-                                        SPUtils.putInt(player,score + 1500);
+                                        SPUtils.putInt(player, score + 1500);
                                     } else {
-                                        int score = SPUtils.getInt(player,Integer.MIN_VALUE);
-                                        tv.setText(String.valueOf(score -1500));
-                                        SPUtils.putInt(player,score -1500);
+                                        int score = SPUtils.getInt(player, Integer.MIN_VALUE);
+                                        tv.setText(String.valueOf(score - 1500));
+                                        SPUtils.putInt(player, score - 1500);
                                     }
                                 }
                                 break;
@@ -219,13 +214,13 @@ public class MainActivity extends BaseActivity {
                                 for (String player : players) {
                                     TextView tv = playerTvMap.get(player);
                                     if (!liujuResult.tingpaiPlayers.contains(player)) {
-                                        int score = SPUtils.getInt(player,Integer.MIN_VALUE);
+                                        int score = SPUtils.getInt(player, Integer.MIN_VALUE);
                                         tv.setText(String.valueOf(score - 3000));
-                                        SPUtils.putInt(player,score - 3000);
+                                        SPUtils.putInt(player, score - 3000);
                                     } else {
-                                        int score = SPUtils.getInt(player,Integer.MIN_VALUE);
+                                        int score = SPUtils.getInt(player, Integer.MIN_VALUE);
                                         tv.setText(String.valueOf(score + 1000));
-                                        SPUtils.putInt(player,score + 1000);
+                                        SPUtils.putInt(player, score + 1000);
                                     }
                                 }
                                 break;
@@ -274,14 +269,14 @@ public class MainActivity extends BaseActivity {
             mTvGong.setText(null);
             //改变四家分数
             for (String player : mPlayers) {
-                playerTvMap.get(player).setText(String.valueOf(SPUtils.getInt(player,Integer.MIN_VALUE)));
+                playerTvMap.get(player).setText(String.valueOf(SPUtils.getInt(player, Integer.MIN_VALUE)));
             }
         }
     }
 
     /**
      * 庄家下庄，进行下一场了
-     * */
+     */
     private void nextChang() {
         mTvChang.setText(changMap.get(++chang));
         mShimmer.cancel();
@@ -339,34 +334,40 @@ public class MainActivity extends BaseActivity {
     private boolean isStart = false;
     private LiuJuDialog mLiujuDialog;
 
-    @OnClick({R.id.ll_east, R.id.ll_south, R.id.ll_west, R.id.ll_north, R.id.btn})
+    @OnClick({R.id.ll_east, R.id.ll_south, R.id.ll_west, R.id.ll_north, R.id.fab_select_player, R.id.fab_start})
     public void onClick(View view) {
         Intent intent = new Intent(this, GetScoreActivity.class);
-        final String east = SPUtils.getString(Constant.EAST, "");
-        final String south = SPUtils.getString(Constant.SOUTH, "");
-        final String north = SPUtils.getString(Constant.NORTH, "");
-        final String west = SPUtils.getString(Constant.WEST, "");
+//        final String east = SPUtils.getString(Constant.EAST, "");
+//        final String south = SPUtils.getString(Constant.SOUTH, "");
+//        final String north = SPUtils.getString(Constant.NORTH, "");
+//        final String west = SPUtils.getString(Constant.WEST, "");
         switch (view.getId()) {
             case R.id.ll_east:
-                openScorePage(intent, east);
+                openScorePage(intent, mPlayers == null ? null : mPlayers[0]);
                 break;
             case R.id.ll_south:
-                openScorePage(intent, south);
+                openScorePage(intent, mPlayers == null ? null : mPlayers[1]);
                 break;
             case R.id.ll_west:
-                openScorePage(intent, west);
+                openScorePage(intent, mPlayers == null ? null : mPlayers[2]);
                 break;
             case R.id.ll_north:
-                openScorePage(intent, north);
+                openScorePage(intent, mPlayers == null ? null : mPlayers[3]);
                 break;
-            case R.id.btn:
-                if (TextUtils.isEmpty(east) || TextUtils.isEmpty(west) || TextUtils.isEmpty(south) || TextUtils
-                        .isEmpty(north)) {
+
+            case R.id.fab_select_player:
+                openPage(true, REQUEST_PLAYERS, AddNewGameActivity.class);
+                mFabMenu.collapse();
+                break;
+            case R.id.fab_start:
+                mFabMenu.collapse();
+                if (mPlayers == null) {
                     Toast.makeText(this, "还没选人呢", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (!isStart) {
-                    mBtn.setText("对战中...");
+                    mFabStart.setTitle("对战中...");
+                    mFabStart.setIcon(R.drawable.stop);
                     isStart = true;
                     //开局就将场次变成东一局
                     SPUtils.putInt(Constant.CHANG, 1);
@@ -379,10 +380,12 @@ public class MainActivity extends BaseActivity {
                     initScore();
                 } else {
                     openPage(true, -1, SetGameScoreActiivty.class);
-                    mBtn.setText("开局");
+                    mFabStart.setTitle("开局");
+                    mFabStart.setIcon(R.mipmap.start_game);
                     isStart = false;
                 }
                 break;
+
         }
     }
 
@@ -391,18 +394,18 @@ public class MainActivity extends BaseActivity {
         mTvSouthPoint.setText(getString(R.string._25000));
         mTvWestPoint.setText(getString(R.string._25000));
         mTvNorthPoint.setText(getString(R.string._25000));
-        SPUtils.putInt(mPlayers[0],25000);
-        SPUtils.putInt(mPlayers[1],25000);
-        SPUtils.putInt(mPlayers[2],25000);
-        SPUtils.putInt(mPlayers[3],25000);
+        SPUtils.putInt(mPlayers[0], 25000);
+        SPUtils.putInt(mPlayers[1], 25000);
+        SPUtils.putInt(mPlayers[2], 25000);
+        SPUtils.putInt(mPlayers[3], 25000);
     }
 
     private void openScorePage(Intent intent, String player) {
-        hePlayer = player;
         if (TextUtils.isEmpty(player)) {
             Toast.makeText(this, "人都还没选呢，点个JJ", Toast.LENGTH_SHORT).show();
             return;
         }
+        hePlayer = player;
         intent.putExtra("player", player);
         intent.putExtra("oya", getOyaName());
         if (isStart) {

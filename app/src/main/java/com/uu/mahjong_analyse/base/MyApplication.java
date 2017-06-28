@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.facebook.stetho.Stetho;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 
@@ -21,6 +22,9 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = getApplicationContext();
+        //chrome debug bridge
+        Stetho.initializeWithDefaults(this);
+        //科大讯飞初始化
         SpeechUtility.createUtility(this, SpeechConstant.APPID +"=59279059");
     }
 
