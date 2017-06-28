@@ -13,15 +13,17 @@
         android:orderInCategory="100"
         android:title="对局记录"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/toolbar_modify_record"
-        android:orderInCategory="100"
-        android:title="修改记录"
-        app:showAsAction="never" />
+
 
     <item
         android:id="@+id/toolbar_persional_record"
         android:orderInCategory="100"
         android:title="个人战绩"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/toolbar_change_desk"
+        android:orderInCategory="100"
+        android:title="更改桌面"
         app:showAsAction="never" />
 </menu>

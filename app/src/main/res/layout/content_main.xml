@@ -24,8 +24,8 @@
             android:id="@+id/ll_north"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:gravity="center"
             android:layout_centerVertical="true"
+            android:gravity="center"
             android:orientation="vertical">
 
             <com.romainpiel.shimmer.ShimmerTextView
@@ -48,9 +48,9 @@
             android:id="@+id/ll_east"
             android:layout_width="@dimen/dp96"
             android:layout_height="@dimen/dp96"
-            android:gravity="center"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:orientation="vertical">
 
             <com.romainpiel.shimmer.ShimmerTextView
@@ -73,9 +73,9 @@
             android:id="@+id/ll_south"
             android:layout_width="@dimen/dp96"
             android:layout_height="@dimen/dp96"
-            android:gravity="center"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:gravity="center"
             android:orientation="vertical">
 
             <com.romainpiel.shimmer.ShimmerTextView
@@ -96,28 +96,30 @@
 
         <LinearLayout
             android:id="@+id/ll_west"
+            android:layout_width="@dimen/dp96"
+            android:layout_height="@dimen/dp96"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:orientation="vertical"
             android:gravity="center"
-            android:layout_width="@dimen/dp96"
-            android:layout_height="@dimen/dp96">
-        <com.romainpiel.shimmer.ShimmerTextView
-            android:id="@+id/tv_west"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="西"
-            android:textSize="26sp"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_west_point"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/_25000"/>
+            <com.romainpiel.shimmer.ShimmerTextView
+                android:id="@+id/tv_west"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="西"
+                android:textSize="26sp"/>
+
+            <TextView
+                android:id="@+id/tv_west_point"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/_25000"/>
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/ll_chang"
             android:layout_width="wrap_content"
@@ -127,6 +129,7 @@
 
             <TextView
                 android:id="@+id/tv_chang"
+                android:textSize="@dimen/sp30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

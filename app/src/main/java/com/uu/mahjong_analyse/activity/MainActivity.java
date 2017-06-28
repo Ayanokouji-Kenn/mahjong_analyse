@@ -1,6 +1,12 @@
 package com.uu.mahjong_analyse.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -41,8 +47,9 @@ import butterknife.OnClick;
 import rx.functions.Action1;
 
 public class MainActivity extends BaseActivity {
-    private static final int REQUEST_PLAYERS = 1;
-    private static final int REQUEST_GET_SCORE = 2;
+    private static final int RC_PLAYERS = 1;
+    private static final int RC_GET_SCORE = 2;
+    private static final int RC_ALBUM = 3;
 
     @BindView(R.id.fab_menu)
     FloatingActionsMenu mFabMenu;
@@ -235,7 +242,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_PLAYERS && resultCode == RESULT_OK) {
+        if (requestCode == RC_PLAYERS && resultCode == RESULT_OK && data != null) {
             mPlayers = (String[]) data.getCharSequenceArrayExtra("players");
             //把对局的四个人名字传过来，如果数据库中没有，就为他们建表,并将所有值变成0；
             for (int i = 0; i < mPlayers.length; i++) {
@@ -260,7 +267,7 @@ public class MainActivity extends BaseActivity {
             mLeftMenuFragment.mLeftMenuAdapter.notifyDataSetChanged();
 
             startGame();
-        } else if (requestCode == REQUEST_GET_SCORE && resultCode == RESULT_OK) {
+        } else if (requestCode == RC_GET_SCORE && resultCode == RESULT_OK) {
             //设置完分数，不是庄家则chang+1
             if (!TextUtils.equals(hePlayer, getOyaName())) {
                 //改变场风和庄家闪光效果
@@ -272,6 +279,21 @@ public class MainActivity extends BaseActivity {
             //改变四家分数
             for (String player : mPlayers) {
                 playerTvMap.get(player).setText(String.valueOf(SPUtils.getInt(player, Integer.MIN_VALUE)));
+            }
+        } else if (requestCode == RC_ALBUM && resultCode == RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            if (selectedImage != null) {
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                // 获取选择照片的数据视图
+                Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+                cursor.moveToFirst();
+                // 从数据视图中获取已选择图片的路径
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String picturePath = cursor.getString(columnIndex);
+                cursor.close();
+                // 将图片显示到界面上
+                Bitmap bm = BitmapFactory.decodeFile(picturePath);
+                findViewById(R.id.rl_table).setBackground(new BitmapDrawable(bm));
             }
         }
     }
@@ -297,7 +319,6 @@ public class MainActivity extends BaseActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
@@ -307,8 +328,15 @@ public class MainActivity extends BaseActivity {
             case R.id.toolbar_persional_record:
                 openPage(true, -1, PlayerInfoActivity.class);
                 break;
-            case R.id.toolbar_modify_record:
-                openPage(true, -1, ModifyDbActivity.class);
+            //直接修改数据库，暂不提供该功能
+//            case R.id.toolbar_modify_record:
+//                openPage(true, -1, ModifyDbActivity.class);
+//                break;
+            case R.id.toolbar_change_desk:
+                //调用相册
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, RC_ALBUM);
                 break;
             case R.id.toolbar_liuju:
                 //开始对局了才可以点击流局
@@ -358,7 +386,7 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.fab_select_player:
-                openPage(true, REQUEST_PLAYERS, AddNewGameActivity.class);
+                openPage(true, RC_PLAYERS, AddNewGameActivity.class);
                 mFabMenu.collapse();
                 break;
             case R.id.fab_start:
@@ -415,7 +443,7 @@ public class MainActivity extends BaseActivity {
         intent.putExtra("player", player);
         intent.putExtra("oya", getOyaName());
         if (isStart) {
-            openPage(true, REQUEST_GET_SCORE, intent);
+            openPage(true, RC_GET_SCORE, intent);
         }
     }
 
