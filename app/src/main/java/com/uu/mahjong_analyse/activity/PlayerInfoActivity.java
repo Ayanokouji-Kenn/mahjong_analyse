@@ -1,8 +1,6 @@
 package com.uu.mahjong_analyse.activity;
 
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.method.CharacterPickerDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -13,7 +11,6 @@ import com.uu.mahjong_analyse.Utils.CommonApi;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.bean.PlayerRecord;
 import com.uu.mahjong_analyse.db.DBDao;
-import com.uu.mahjong_analyse.view.wheelview.widget.WheelView;
 import com.uu.mahjong_analyse.view.wheelview.widget.WheelViewDialog;
 
 import java.util.List;
@@ -75,21 +72,24 @@ public class PlayerInfoActivity extends BaseActivity {
     @BindView(R.id.tv_select)
     TextView mTvSelect;
     private WheelViewDialog<String> mSelectPlayerDialog;
-
+    private String mPlayer;
 
     @Override
     public void initView() {
         setContentView(R.layout.activity_playerinfo);
         ButterKnife.bind(this);
-//        mPlayer = getIntent().getStringExtra("player");
-//        mPlayer = mPlayer.substring(3);
+        mPlayer = getIntent().getStringExtra("player");
+        mPlayer = mPlayer.substring(3);
         CommonApi.setToolbar(this,mToolbar,"战绩");
 
     }
 
     @Override
     public void initData() {
-
+        if (mPlayer != null) {
+            mTvSelect.setText(mPlayer);
+            showData(mPlayer);
+        }
     }
 
     @Override

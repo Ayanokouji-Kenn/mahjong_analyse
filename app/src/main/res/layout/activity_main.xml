@@ -27,10 +27,10 @@
 
         <FrameLayout
             android:id="@+id/fl_leftmenu"
+            android:background="@color/translate20"
             android:layout_width="270dp"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="@color/colorAccent"/>
+            android:layout_gravity="start"/>
 
         <include layout="@layout/fg_rightmenu"/>
     </android.support.v4.widget.DrawerLayout>

@@ -75,7 +75,7 @@ public class AddNewGameActivity extends BaseActivity {
         final WheelViewDialog dialog = new WheelViewDialog(this);
         dialog.setTitle(getString(R.string.choose_player))
                 .setItems(datas)
-                .setButtonText("确定")
+                .setButtonText(getString(R.string.confirm))
                 .setDialogStyle(getResources().getColor(R.color.colorPrimary))
                 .setCount(5)
                 .show();

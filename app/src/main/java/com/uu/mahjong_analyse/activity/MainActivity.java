@@ -258,6 +258,8 @@ public class MainActivity extends BaseActivity {
             mLeftMenuFragment.mLeftmenuDatas.add("南家：" + SPUtils.getString(Constant.SOUTH, ""));
             mLeftMenuFragment.mLeftmenuDatas.add("北家：" + SPUtils.getString(Constant.NORTH, ""));
             mLeftMenuFragment.mLeftMenuAdapter.notifyDataSetChanged();
+
+            startGame();
         } else if (requestCode == REQUEST_GET_SCORE && resultCode == RESULT_OK) {
             //设置完分数，不是庄家则chang+1
             if (!TextUtils.equals(hePlayer, getOyaName())) {
@@ -365,27 +367,31 @@ public class MainActivity extends BaseActivity {
                     Toast.makeText(this, "还没选人呢", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (!isStart) {
-                    mFabStart.setTitle("对战中...");
-                    mFabStart.setIcon(R.drawable.stop);
-                    isStart = true;
-                    //开局就将场次变成东一局
-                    SPUtils.putInt(Constant.CHANG, 1);
-                    mTvChang.setText(changMap.get(0));
-                    //东家闪光，右边栏东一变色
-                    mShimmer.start(mTvEast);
-                    rightmenu_radiogroup.check(R.id.rb_east1);
-
-                    //将所有人分数初始化为25000
-                    initScore();
-                } else {
-                    openPage(true, -1, SetGameScoreActiivty.class);
-                    mFabStart.setTitle("开局");
-                    mFabStart.setIcon(R.mipmap.start_game);
-                    isStart = false;
-                }
+                startGame();
                 break;
 
+        }
+    }
+
+    public void startGame() {
+        if (!isStart) {
+            mFabStart.setTitle("对战中...");
+            mFabStart.setIcon(R.drawable.stop);
+            isStart = true;
+            //开局就将场次变成东一局
+            SPUtils.putInt(Constant.CHANG, 1);
+            mTvChang.setText(changMap.get(0));
+            //东家闪光，右边栏东一变色
+            mShimmer.start(mTvEast);
+            rightmenu_radiogroup.check(R.id.rb_east1);
+
+            //将所有人分数初始化为25000
+            initScore();
+        } else {
+            openPage(true, -1, SetGameScoreActiivty.class);
+            mFabStart.setTitle("开局");
+            mFabStart.setIcon(R.mipmap.start_game);
+            isStart = false;
         }
     }
 
