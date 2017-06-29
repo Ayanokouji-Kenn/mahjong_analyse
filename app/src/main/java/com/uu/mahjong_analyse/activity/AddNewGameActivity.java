@@ -1,13 +1,14 @@
 package com.uu.mahjong_analyse.activity;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +31,7 @@ import butterknife.OnClick;
 /**
  * Created by Nagisa on 2016/6/24.
  */
-public class AddNewGameActivity extends BaseActivity {
+public class AddNewGameActivity extends BaseActivity implements TextView.OnEditorActionListener {
 
     @BindView(R.id.tv_east)
     TextView mTvEast;
@@ -42,14 +43,12 @@ public class AddNewGameActivity extends BaseActivity {
     TextView mTvNorth;
     @BindView(R.id.text_input_layout)
     TextInputLayout mTextInputLayout;
-    @BindView(R.id.fab)
-    FloatingActionButton mFab;
+
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.tv_ok)
     TextView mTvOk;
     private List<String> datas;
-//    String[] names = {"大⑨", "OOX", "司令", "SM", "怪蜀黍"};
     String[] select = new String[4];  //按照东南西北的顺序
 
 
@@ -68,7 +67,7 @@ public class AddNewGameActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
-
+        mTextInputLayout.getEditText().setOnEditorActionListener(this);
     }
 
     public void showDialog(final View view) {
@@ -118,20 +117,6 @@ public class AddNewGameActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.fab)
-    public void onClick() {
-        EditText et = mTextInputLayout.getEditText();
-        Editable text = et.getText();
-        String trim = text.toString().trim();
-
-        if(!TextUtils.isEmpty(trim)) {
-            datas.add(trim);
-            Toast.makeText(this, "小伙伴加入了", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(this, "小伙伴是空名？", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @OnClick(R.id.tv_ok)
     public void ok(View view) {
         Log.d(getClass().getSimpleName(), "ok: ============点击事件");
@@ -148,5 +133,22 @@ public class AddNewGameActivity extends BaseActivity {
     }
 
 
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            EditText et = mTextInputLayout.getEditText();
+            Editable text = et.getText();
+            String trim = text.toString().trim();
 
+            if(!TextUtils.isEmpty(trim)) {
+                datas.add(trim);
+                Toast.makeText(this, "小伙伴加入了,可以直接点击东家来进行设置", Toast.LENGTH_SHORT).show();
+                et.setText("");
+            }else {
+                mTextInputLayout.setError("小伙伴没名字？");
+            }
+            return true;
+        }
+        return false;
+    }
 }

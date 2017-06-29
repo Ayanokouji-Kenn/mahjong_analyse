@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -252,6 +253,14 @@ public class MainActivity extends BaseActivity {
             mLeftMenuFragment.mLeftMenuAdapter.notifyDataSetChanged();
 
             startGame();
+
+            Snackbar.make(mToolbar, "谁和牌就点击谁的名字设置点数即可", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("知道了", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    }).show();
         } else if (requestCode == RC_GET_SCORE && resultCode == RESULT_OK) {
             //设置完分数，不是庄家则chang+1
             if (!TextUtils.equals(hePlayer, getOyaName())) {
@@ -421,7 +430,7 @@ public class MainActivity extends BaseActivity {
     private void openScorePage(String player) {
         Log.d("ZFDT", "openScorePage: ");
         if (TextUtils.isEmpty(player)) {
-            Toast.makeText(this, "人都还没选呢，点个JJ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "人都还没选呢", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent intent = new Intent(mContext, GetScoreActivity.class);

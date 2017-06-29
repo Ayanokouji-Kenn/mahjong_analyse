@@ -70,7 +70,7 @@ public class SplashActivity extends BaseActivity implements DialogInterface.OnCl
             mDialog.show();
 
         }else {
-            Observable.timer(1, TimeUnit.SECONDS)
+            Observable.timer(100, TimeUnit.MILLISECONDS)
                     .subscribe(new Action1<Long>() {
                         @Override
                         public void call(Long aLong) {
