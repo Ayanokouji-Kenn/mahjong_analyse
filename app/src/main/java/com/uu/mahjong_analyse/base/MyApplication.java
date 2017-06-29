@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.facebook.stetho.Stetho;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,9 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = getApplicationContext();
+
+        //初始化bugly
+        CrashReport.initCrashReport(getApplicationContext(), "2a6c84812d", true);
         //chrome debug bridge
         Stetho.initializeWithDefaults(this);
         //科大讯飞初始化
@@ -109,5 +113,7 @@ public class MyApplication extends Application {
         SQLiteDatabase result = SQLiteDatabase.openOrCreateDatabase(getDatabasePath(name), null);
         return result;
     }
+
+
 }
 
