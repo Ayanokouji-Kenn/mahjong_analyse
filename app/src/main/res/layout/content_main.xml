@@ -34,12 +34,14 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="北"
+                android:clickable="false"
                 android:textSize="26sp"/>
 
             <TextView
                 android:id="@+id/tv_north_point"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="false"
                 android:gravity="center"
                 android:text="@string/_25000"/>
         </LinearLayout>
@@ -59,6 +61,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="东"
+                android:clickable="false"
                 android:textSize="26sp"/>
 
             <TextView
@@ -66,6 +69,7 @@
                 android:layout_width="96dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:clickable="false"
                 android:text="@string/_25000"/>
         </LinearLayout>
 
@@ -83,6 +87,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:clickable="false"
                 android:text="南"
                 android:textSize="26sp"/>
 
@@ -90,6 +95,7 @@
                 android:id="@+id/tv_south_point"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="false"
                 android:gravity="center"
                 android:text="@string/_25000"/>
         </LinearLayout>
@@ -108,6 +114,7 @@
                 android:id="@+id/tv_west"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="false"
                 android:gravity="center"
                 android:text="西"
                 android:textSize="26sp"/>
@@ -116,6 +123,7 @@
                 android:id="@+id/tv_west_point"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="false"
                 android:gravity="center"
                 android:text="@string/_25000"/>
         </LinearLayout>

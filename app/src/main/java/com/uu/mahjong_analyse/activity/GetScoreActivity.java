@@ -27,6 +27,7 @@ import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.Constant;
 import com.uu.mahjong_analyse.Utils.JsonParser;
 import com.uu.mahjong_analyse.Utils.SPUtils;
+import com.uu.mahjong_analyse.Utils.ToastUtils;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.bean.PlayerRecord;
 import com.uu.mahjong_analyse.db.DBDao;
@@ -150,9 +151,25 @@ public class GetScoreActivity extends BaseActivity {
 
                 break;
             case R.id.btn_confirm:
-                saveData();
+                if (checkData()) {
+                    saveData();
+                }
                 break;
         }
+    }
+
+    private boolean checkData() {
+        if (mRbRonn.isChecked() && TextUtils.isEmpty(mChongPlayer)) {
+            ToastUtils.show(mContext, "没有选择放铳人");
+            return false;
+        } else if (TextUtils.isEmpty(mFan)) {
+            ToastUtils.show(mContext, "没有选择番种");
+            return false;
+        } else if (mEtPoint.getText().length() == 0) {
+            ToastUtils.show(mContext, "没有输入点数");
+            return false;
+        }
+        return true;
     }
 
     public static final int RC_RECORD_AUDIO = 1;
@@ -304,22 +321,22 @@ public class GetScoreActivity extends BaseActivity {
         //如果放铳的话，放铳人点数变化
         if (mRbRonn.isChecked() && !TextUtils.isEmpty(mChongPlayer)) {
             SPUtils.putInt(mChongPlayer, SPUtils.getInt(mChongPlayer, Integer.MIN_VALUE) - mPoint_int);
-        }else {
+        } else {
             //亲家自摸，那么其他三家平分点数
-            if (TextUtils.equals(oyaName,mPlayer)) {
+            if (TextUtils.equals(oyaName, mPlayer)) {
                 for (String player : mPlayers) {
                     if (!TextUtils.equals(player, mPlayer)) {
-                        SPUtils.putInt(player,SPUtils.getInt(player,Integer.MIN_VALUE) - (mPoint_int/3));
+                        SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - (mPoint_int / 3));
                     }
                 }
-            }else {
+            } else {
                 //子家自摸，亲家付二分之一，另2家各付四分之一
                 for (String player : mPlayers) {
                     if (!TextUtils.equals(player, mPlayer)) {
                         if (TextUtils.equals(oyaName, player)) {
-                            SPUtils.putInt(player,SPUtils.getInt(player,Integer.MIN_VALUE) - (mPoint_int/2));
-                        }else {
-                            SPUtils.putInt(player,SPUtils.getInt(player,Integer.MIN_VALUE) - (mPoint_int/4));
+                            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - (mPoint_int / 2));
+                        } else {
+                            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - (mPoint_int / 4));
                         }
 
                     }

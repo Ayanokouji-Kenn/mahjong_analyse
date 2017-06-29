@@ -79,14 +79,14 @@ public class PlayerInfoActivity extends BaseActivity {
         setContentView(R.layout.activity_playerinfo);
         ButterKnife.bind(this);
         mPlayer = getIntent().getStringExtra("player");
-        mPlayer = mPlayer.substring(3);
-        CommonApi.setToolbar(this,mToolbar,"战绩");
+        CommonApi.setToolbar(this, mToolbar, "战绩");
 
     }
 
     @Override
     public void initData() {
         if (mPlayer != null) {
+            mPlayer = mPlayer.substring(3);
             mTvSelect.setText(mPlayer);
             showData(mPlayer);
         }
@@ -100,9 +100,9 @@ public class PlayerInfoActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_select:
-                if( mSelectPlayerDialog==null) {
+                if (mSelectPlayerDialog == null) {
                     List<String> players = DBDao.getPlayers();
-                    if(players.size() == 0) {
+                    if (players.size() == 0) {
                         Toast.makeText(this, "暂未存储过对局", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -119,7 +119,7 @@ public class PlayerInfoActivity extends BaseActivity {
                                 }
                             });
                 }
-                if(mSelectPlayerDialog.isShowing()) {
+                if (mSelectPlayerDialog.isShowing()) {
                     return;
                 }
                 mSelectPlayerDialog.show();
@@ -133,29 +133,30 @@ public class PlayerInfoActivity extends BaseActivity {
         PlayerRecord record = DBDao.selectPlayer(playerName);
         float vii = record.richi_count * 1f / record.total_deal;
         Log.d(getClass().getSimpleName(), "initData: " + vii);
-        mTvRichi.setText(String.format(Locale.CHINESE,"立直率：%.2f", vii));
-        mTvIhhatsu.setText(String.format(Locale.CHINESE,"一发率：%.2f", record.ihhatsu_count*1f/record.richi_count));
-        mTvHelv.setText(String.format(Locale.CHINESE,"和了率：%.2f", record.he_count*1f/record.total_deal));
-        mTvChonglv.setText(String.format(Locale.CHINESE,"放铳率：%.2f", record.chong_count*1f/record.total_deal));
-        mTvRichiHeLv.setText(String.format(Locale.CHINESE,"立直和了率：%.2f",record.richi_he*1f/record.total_deal));
-        mTvHeAvg.setText(String.format(Locale.CHINESE,"平均和了点：%.2f", record.he_point_sum*1f/record.he_count));
-        mTvChongAvg.setText(String.format(Locale.CHINESE,"平均放铳点：%.2f", record.chong_point_sum*1f/record.chong_count));
-        mTvTop.setText(String.format(Locale.CHINESE,"一位率：%.2f", record.top*1f/record.total_games));
-        mTvSecond.setText(String.format(Locale.CHINESE,"二位率：%.2f", record.second*1f/record.total_games));
-        mTvThird.setText(String.format(Locale.CHINESE,"三位率：%.2f", record.third*1f/record.total_games));
-        mTvLast.setText(String.format(Locale.CHINESE,"四位率：%.2f", record.last*1f/record.total_games));
-        mTvShunwei.setText(String.format(Locale.CHINESE,"平均顺位：%.2f", (record.top+record.second*2+record.third*3+record.last*4)*1f/record.total_games));
-        mTvScoreAvg.setText(String.format(Locale.CHINESE,"场均得点：%.2f",record.score_sum*1f/record.total_games));
-        mTvNomanguan.setText(String.format(Locale.CHINESE,"满贯未满：%.2f",record.no_manguan*1f/record.he_count));
-        mTvManguan.setText(String.format(Locale.CHINESE,"满贯：%.2f",record.manguan*1f/record.he_count));
-        mTvTiaoman.setText(String.format(Locale.CHINESE,"跳满：%.2f",record.tiaoman*1f/record.he_count));
-        mTvBeiman.setText(String.format(Locale.CHINESE,"倍满：%.2f",record.beiman*1f/record.he_count));
-        mTvSanbeiman.setText(String.format(Locale.CHINESE,"三倍满：%.2f",record.sanbeiman*1f/record.he_count));
-        mTvYikuman.setText(String.format(Locale.CHINESE,"役满：%.2f",record.yakuman*1f/record.he_count));
-        mTvDeal.setText(String.format(Locale.CHINESE,"对战局数：%d",record.total_deal));
-        mTvGames.setText(String.format(Locale.CHINESE,"对战场次：%d",record.total_games));
-        Log.d(getClass().getSimpleName(), "initData: =====" + record.top+":"+record.second+":"+record.third+":"+record.last);
-        Log.d(getClass().getSimpleName(), "initData: =====" +record.score_sum );
+        mTvRichi.setText(String.format(Locale.CHINESE, "立直率：%.2f", vii));
+        mTvIhhatsu.setText(String.format(Locale.CHINESE, "一发率：%.2f", record.ihhatsu_count * 1f / record.richi_count));
+        mTvHelv.setText(String.format(Locale.CHINESE, "和了率：%.2f", record.he_count * 1f / record.total_deal));
+        mTvChonglv.setText(String.format(Locale.CHINESE, "放铳率：%.2f", record.chong_count * 1f / record.total_deal));
+        mTvRichiHeLv.setText(String.format(Locale.CHINESE, "立直和了率：%.2f", record.richi_he * 1f / record.total_deal));
+        mTvHeAvg.setText(String.format(Locale.CHINESE, "平均和了点：%.2f", record.he_point_sum * 1f / record.he_count));
+        mTvChongAvg.setText(String.format(Locale.CHINESE, "平均放铳点：%.2f", record.chong_point_sum * 1f / record.chong_count));
+        mTvTop.setText(String.format(Locale.CHINESE, "一位率：%.2f", record.top * 1f / record.total_games));
+        mTvSecond.setText(String.format(Locale.CHINESE, "二位率：%.2f", record.second * 1f / record.total_games));
+        mTvThird.setText(String.format(Locale.CHINESE, "三位率：%.2f", record.third * 1f / record.total_games));
+        mTvLast.setText(String.format(Locale.CHINESE, "四位率：%.2f", record.last * 1f / record.total_games));
+        mTvShunwei.setText(String.format(Locale.CHINESE, "平均顺位：%.2f", (record.top + record.second * 2 + record.third * 3 + record.last * 4) * 1f / record
+                .total_games));
+        mTvScoreAvg.setText(String.format(Locale.CHINESE, "场均得点：%.2f", record.score_sum * 1f / record.total_games));
+        mTvNomanguan.setText(String.format(Locale.CHINESE, "满贯未满：%.2f", record.no_manguan * 1f / record.he_count));
+        mTvManguan.setText(String.format(Locale.CHINESE, "满贯：%.2f", record.manguan * 1f / record.he_count));
+        mTvTiaoman.setText(String.format(Locale.CHINESE, "跳满：%.2f", record.tiaoman * 1f / record.he_count));
+        mTvBeiman.setText(String.format(Locale.CHINESE, "倍满：%.2f", record.beiman * 1f / record.he_count));
+        mTvSanbeiman.setText(String.format(Locale.CHINESE, "三倍满：%.2f", record.sanbeiman * 1f / record.he_count));
+        mTvYikuman.setText(String.format(Locale.CHINESE, "役满：%.2f", record.yakuman * 1f / record.he_count));
+        mTvDeal.setText(String.format(Locale.CHINESE, "对战局数：%d", record.total_deal));
+        mTvGames.setText(String.format(Locale.CHINESE, "对战场次：%d", record.total_games));
+        Log.d(getClass().getSimpleName(), "initData: =====" + record.top + ":" + record.second + ":" + record.third + ":" + record.last);
+        Log.d(getClass().getSimpleName(), "initData: =====" + record.score_sum);
     }
 
 }

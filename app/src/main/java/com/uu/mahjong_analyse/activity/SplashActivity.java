@@ -75,6 +75,7 @@ public class SplashActivity extends BaseActivity implements DialogInterface.OnCl
                         @Override
                         public void call(Long aLong) {
                             startActivity(new Intent(mContext, MainActivity.class));
+                            finish();
                         }
                     });
         }

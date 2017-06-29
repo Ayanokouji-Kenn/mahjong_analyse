@@ -1,5 +1,6 @@
 package com.uu.mahjong_analyse.activity;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -11,12 +12,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -121,24 +121,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void rotatePlayerName() {
-        RotateAnimation northAnim = new RotateAnimation(0F, 90F, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        northAnim.setFillAfter(true);
-        northAnim.setDuration(500L);
-        mLLNorth.setAnimation(northAnim);
-        northAnim.start();
-
-        RotateAnimation southAnim = new RotateAnimation(0F, -90F, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        southAnim.setFillAfter(true);
-        southAnim.setDuration(500L);
-        mLLSouth.setAnimation(southAnim);
-        southAnim.start();
-
-        RotateAnimation westAnim = new RotateAnimation(0F, 180F, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        westAnim.setFillAfter(true);
-        westAnim.setDuration(500L);
-        mLLWest.setAnimation(westAnim);
-        westAnim.start();
-
+        ObjectAnimator.ofFloat(mLLSouth, "rotation", 0F, -90F).start();
+        ObjectAnimator.ofFloat(mLLWest, "rotation", 0F, 180F).start();
+        ObjectAnimator.ofFloat(mLLNorth, "rotation", 0F, 90F).start();
     }
 
     @Override
@@ -366,23 +351,22 @@ public class MainActivity extends BaseActivity {
 
     @OnClick({R.id.ll_east, R.id.ll_south, R.id.ll_west, R.id.ll_north, R.id.fab_select_player, R.id.fab_start})
     public void onClick(View view) {
-        Intent intent = new Intent(this, GetScoreActivity.class);
 //        final String east = SPUtils.getString(Constant.EAST, "");
 //        final String south = SPUtils.getString(Constant.SOUTH, "");
 //        final String north = SPUtils.getString(Constant.NORTH, "");
 //        final String west = SPUtils.getString(Constant.WEST, "");
         switch (view.getId()) {
             case R.id.ll_east:
-                openScorePage(intent, mPlayers == null ? null : mPlayers[0]);
+                openScorePage(mPlayers == null ? null : mPlayers[0]);
                 break;
             case R.id.ll_south:
-                openScorePage(intent, mPlayers == null ? null : mPlayers[1]);
+                openScorePage(mPlayers == null ? null : mPlayers[1]);
                 break;
             case R.id.ll_west:
-                openScorePage(intent, mPlayers == null ? null : mPlayers[2]);
+                openScorePage(mPlayers == null ? null : mPlayers[2]);
                 break;
             case R.id.ll_north:
-                openScorePage(intent, mPlayers == null ? null : mPlayers[3]);
+                openScorePage(mPlayers == null ? null : mPlayers[3]);
                 break;
 
             case R.id.fab_select_player:
@@ -434,11 +418,13 @@ public class MainActivity extends BaseActivity {
         SPUtils.putInt(mPlayers[3], 25000);
     }
 
-    private void openScorePage(Intent intent, String player) {
+    private void openScorePage(String player) {
+        Log.d("ZFDT", "openScorePage: ");
         if (TextUtils.isEmpty(player)) {
             Toast.makeText(this, "人都还没选呢，点个JJ", Toast.LENGTH_SHORT).show();
             return;
         }
+        Intent intent = new Intent(mContext, GetScoreActivity.class);
         hePlayer = player;
         intent.putExtra("player", player);
         intent.putExtra("oya", getOyaName());
@@ -462,6 +448,17 @@ public class MainActivity extends BaseActivity {
                 String northName = SPUtils.getString(Constant.NORTH, "");
                 break;
 
+        }
+    }
+
+    private long backPressedTime;
+    @Override
+    public void onBackPressed() {
+        if ((System.currentTimeMillis() - backPressedTime) < 3000L) {
+            super.onBackPressed();
+        }else {
+            backPressedTime = System.currentTimeMillis();
+            ToastUtils.show(mContext, "你可能手滑了，再次点击退出应用");
         }
     }
 
