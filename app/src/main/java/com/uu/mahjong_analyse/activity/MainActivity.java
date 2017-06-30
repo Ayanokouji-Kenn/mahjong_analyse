@@ -45,6 +45,7 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import rx.functions.Action1;
 
 public class MainActivity extends BaseActivity {
@@ -100,6 +101,7 @@ public class MainActivity extends BaseActivity {
     private Shimmer mShimmer;
     private String hePlayer;
     private ArrayList<ShimmerTextView> textViews;
+    private Unbinder unbinder;
 
     @Override
     public void initData() {
@@ -130,9 +132,9 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initView() {
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
-        setTitle("麻将统计分析工具");
+        setTitle("日麻分析");
         mToolbar.setPopupTheme(R.style.PopupMenu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open,
@@ -342,9 +344,10 @@ public class MainActivity extends BaseActivity {
                 } else {
                     ToastUtils.show(mContext, "对局未开始");
                 }
-
                 break;
-
+            case R.id.toolbar_point:
+                startActivity(new Intent(mContext,PhotoViewActivity.class));
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

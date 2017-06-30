@@ -9,6 +9,12 @@
         android:title="流局"
         app:showAsAction="always" />
     <item
+        android:id="@+id/toolbar_point"
+        android:orderInCategory="100"
+        android:title="点数速查"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/toolbar_game_record"
         android:orderInCategory="100"
         android:title="对局记录"

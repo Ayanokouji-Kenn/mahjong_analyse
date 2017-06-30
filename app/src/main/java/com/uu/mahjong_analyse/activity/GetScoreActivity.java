@@ -330,7 +330,8 @@ public class GetScoreActivity extends BaseActivity {
                     }
                 }
             } else {
-                //子家自摸，亲家付二分之一，另2家各付四分之一
+                //子家自摸，亲家付二分之一，另2家各付四分之一。
+                // 这里有点小问题，比如30符1番，荣和是1300，自摸1500是700/400，并不是按照上面的公式750/350
                 for (String player : mPlayers) {
                     if (!TextUtils.equals(player, mPlayer)) {
                         if (TextUtils.equals(oyaName, player)) {

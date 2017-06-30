@@ -19,3 +19,4 @@
 -keepattributes Signature
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
+-dontwarn rx.internal.util.unsafe.*
