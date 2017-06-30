@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".activity.MainActivity">
-
-
-
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawerlayout"
@@ -27,39 +26,42 @@
 
         <FrameLayout
             android:id="@+id/fl_leftmenu"
-            android:background="@color/translate20"
-            android:layout_width="270dp"
+            android:layout_width="@dimen/dp200"
             android:layout_height="match_parent"
-            android:layout_gravity="start"/>
+            android:layout_gravity="start"
+            android:background="@color/translate20"/>
 
         <include layout="@layout/fg_rightmenu"/>
     </android.support.v4.widget.DrawerLayout>
+
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/fab_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp16"
+        android:clickable="false"
         fab:fab_addButtonColorNormal="@color/colorAccent"
         fab:fab_addButtonColorPressed="@color/white"
         fab:fab_addButtonPlusIconColor="@color/white"
         fab:fab_labelStyle="@style/menu_labels_style"
         fab:layout_anchor="@id/drawerlayout"
-        fab:layout_anchorGravity="bottom|end"
-        android:clickable="true"
-        android:layout_margin="@dimen/dp16">
+        fab:layout_anchorGravity="bottom|end">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_start"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_title="@string/start_game"
-            fab:fab_icon="@mipmap/start_game"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_icon="@mipmap/start_game"
+            fab:fab_title="@string/start_game"/>
+
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_select_player"
             android:layout_width="wrap_content"
-            fab:fab_title="@string/select_player"
-            fab:fab_icon="@mipmap/add_player"
+            android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/colorAccent"
-            android:layout_height="wrap_content"/>
+            fab:fab_icon="@mipmap/add_player"
+            fab:fab_title="@string/select_player"/>
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
 </android.support.design.widget.CoordinatorLayout>

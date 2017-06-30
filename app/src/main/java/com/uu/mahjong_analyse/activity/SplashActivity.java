@@ -60,7 +60,7 @@ public class SplashActivity extends BaseActivity implements DialogInterface.OnCl
                     builder = new AlertDialog.Builder(mContext);
                 }
                 mDialog= builder.setTitle("需要开启一些权限")
-                        .setMessage("因为加入了语音识别，所以需要获取一些手机状态、定位信息等权限，麻烦您通过一下")
+                        .setMessage("因为加入了语音识别，所以需要获取一些手机状态、定位信息等权限，请通过一下")
                         .setPositiveButton(getString(R.string.confirm),this )
                         .setNegativeButton(getString(R.string.cancel),this)
                         .create();

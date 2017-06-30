@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                tools:context=".activity.MainActivity"
-                tools:showIn="@layout/activity_main">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.MainActivity"
+    tools:showIn="@layout/activity_main">
 
     <include
         android:id="@+id/layout_toolbar"
@@ -32,9 +32,9 @@
                 android:id="@+id/tv_north"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="false"
                 android:gravity="center"
                 android:text="北"
-                android:clickable="false"
                 android:textSize="26sp"/>
 
             <TextView
@@ -56,20 +56,21 @@
             android:orientation="vertical">
 
             <com.romainpiel.shimmer.ShimmerTextView
+
                 android:id="@+id/tv_east"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="false"
                 android:gravity="center"
                 android:text="东"
-                android:clickable="false"
                 android:textSize="26sp"/>
 
             <TextView
                 android:id="@+id/tv_east_point"
                 android:layout_width="96dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:clickable="false"
+                android:gravity="center"
                 android:text="@string/_25000"/>
         </LinearLayout>
 
@@ -86,8 +87,8 @@
                 android:id="@+id/tv_south"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:clickable="false"
+                android:gravity="center"
                 android:text="南"
                 android:textSize="26sp"/>
 
@@ -137,9 +138,9 @@
 
             <TextView
                 android:id="@+id/tv_chang"
-                android:textSize="@dimen/sp30"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp30"/>
 
             <TextView
                 android:id="@+id/tv_gong"
