@@ -83,7 +83,7 @@
         android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="确定/长按语音"
+        android:text="确定"
         android:background="@drawable/shape_round_corner_rec"
         android:textSize="24sp"/>
 </LinearLayout>

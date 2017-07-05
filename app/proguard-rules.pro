@@ -15,8 +15,19 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keep class com.iflytek.**{*;}
--keepattributes Signature
--dontwarn com.tencent.bugly.**
--keep public class com.tencent.bugly.**{*;}
+
+#-keep class com.iflytek.**{*;}
+#-keepattributes Signature
+#-dontwarn com.tencent.bugly.**
+#-keep public class com.tencent.bugly.**{*;}
 -dontwarn rx.internal.util.unsafe.*
+#Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+    **[] $VALUES;
+    public *;
+}
+#Utils
+-keep class com.blankj.utilcode.** { *; }
+-keepclassmembers class com.blankj.utilcode.** { *; }
+-dontwarn com.blankj.utilcode.**

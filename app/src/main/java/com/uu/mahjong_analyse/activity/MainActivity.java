@@ -2,12 +2,8 @@ package com.uu.mahjong_analyse.activity;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,11 +20,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.ScreenUtils;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 import com.uu.mahjong_analyse.R;
+import com.uu.mahjong_analyse.Utils.BitmapUtils;
 import com.uu.mahjong_analyse.Utils.Constant;
+import com.uu.mahjong_analyse.Utils.MagicFileChooser;
 import com.uu.mahjong_analyse.Utils.SPUtils;
 import com.uu.mahjong_analyse.Utils.ToastUtils;
 import com.uu.mahjong_analyse.Utils.rx.RxBus;
@@ -38,6 +37,7 @@ import com.uu.mahjong_analyse.db.DBDao;
 import com.uu.mahjong_analyse.fragment.LeftMenuFragment;
 import com.uu.mahjong_analyse.view.LiuJuDialog;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -102,6 +102,7 @@ public class MainActivity extends BaseActivity {
     private String hePlayer;
     private ArrayList<ShimmerTextView> textViews;
     private Unbinder unbinder;
+    private MagicFileChooser magicFileChooser;
 
     @Override
     public void initData() {
@@ -276,21 +277,35 @@ public class MainActivity extends BaseActivity {
             for (String player : mPlayers) {
                 playerTvMap.get(player).setText(String.valueOf(SPUtils.getInt(player, Integer.MIN_VALUE)));
             }
-        } else if (requestCode == RC_ALBUM && resultCode == RESULT_OK && data != null) {
-            Uri selectedImage = data.getData();
-            if (selectedImage != null) {
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                // 获取选择照片的数据视图
-                Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-                cursor.moveToFirst();
-                // 从数据视图中获取已选择图片的路径
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String picturePath = cursor.getString(columnIndex);
-                cursor.close();
-                // 将图片显示到界面上
-                Bitmap bm = BitmapFactory.decodeFile(picturePath);
-                findViewById(R.id.rl_table).setBackground(new BitmapDrawable(bm));
+        } else if (requestCode == MagicFileChooser.ACTIVITY_FILE_CHOOSER) {
+            if (resultCode == RESULT_OK) {
+                if (magicFileChooser.onActivityResult(requestCode, resultCode, data)) {
+                    File[] files = magicFileChooser.getChosenFiles();
+                    if (files.length != 0) {
+                        Bitmap bitmap = BitmapUtils.compressBitmap(mContext, files[0].getAbsolutePath(), ScreenUtils.getScreenWidth(), ScreenUtils
+                                .getScreenHeight());
+                        findViewById(R.id.rl_table).setBackground(new BitmapDrawable(getResources(),bitmap));
+                    }
+                }
+            }else {
+                findViewById(R.id.rl_table).setBackground(null);
             }
+
+//            Uri selectedImage = data.getData();
+//            if (selectedImage != null) {
+//                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+//                // 获取选择照片的数据视图
+//                Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+//                cursor.moveToFirst();
+//                // 从数据视图中获取已选择图片的路径
+//                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//                String picturePath = cursor.getString(columnIndex);
+//                cursor.close();
+//                // 将图片显示到界面上
+//                Bitmap bm = BitmapFactory.decodeFile(picturePath);
+//
+//                findViewById(R.id.rl_table).setBackground(new BitmapDrawable(bm));
+//            }
         }
     }
 
@@ -318,9 +333,11 @@ public class MainActivity extends BaseActivity {
 
         //noinspection SimplifiableIfStatement
         switch (item.getItemId()) {
+//            设置对局数据
             case R.id.toolbar_game_record:
                 openPage(true, -1, GameRecordActivity.class);
                 return true;
+//            查看个人数据
             case R.id.toolbar_persional_record:
                 openPage(true, -1, PlayerInfoActivity.class);
                 break;
@@ -328,12 +345,12 @@ public class MainActivity extends BaseActivity {
 //            case R.id.toolbar_modify_record:
 //                openPage(true, -1, ModifyDbActivity.class);
 //                break;
+            //变更背景
             case R.id.toolbar_change_desk:
-                //调用相册
-                Intent intent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, RC_ALBUM);
+                magicFileChooser = new MagicFileChooser(this);
+                magicFileChooser.showFileChooser("image/*");
                 break;
+//            流局
             case R.id.toolbar_liuju:
                 //开始对局了才可以点击流局
                 if (isStart) {
@@ -345,8 +362,9 @@ public class MainActivity extends BaseActivity {
                     ToastUtils.show(mContext, "对局未开始");
                 }
                 break;
+//            点数早见表
             case R.id.toolbar_point:
-                startActivity(new Intent(mContext,PhotoViewActivity.class));
+                startActivity(new Intent(mContext, PhotoViewActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -464,11 +482,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private long backPressedTime;
+
     @Override
     public void onBackPressed() {
         if ((System.currentTimeMillis() - backPressedTime) < 3000L) {
             super.onBackPressed();
-        }else {
+        } else {
             backPressedTime = System.currentTimeMillis();
             ToastUtils.show(mContext, "你可能手滑了，再次点击退出应用");
         }

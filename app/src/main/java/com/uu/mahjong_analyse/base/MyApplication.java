@@ -5,10 +5,8 @@ import android.content.Context;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.blankj.utilcode.util.Utils;
 import com.facebook.stetho.Stetho;
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechUtility;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,13 +21,14 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = getApplicationContext();
-
-        //初始化bugly
-        CrashReport.initCrashReport(getApplicationContext(), "2a6c84812d", true);
+        Utils.init(this);
         //chrome debug bridge
         Stetho.initializeWithDefaults(this);
+
+        //初始化bugly
+//        CrashReport.initCrashReport(getApplicationContext(), "2a6c84812d", true);
         //科大讯飞初始化
-        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=59279059");
+//        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=59279059");
     }
 
     public static Context getInstance() {
