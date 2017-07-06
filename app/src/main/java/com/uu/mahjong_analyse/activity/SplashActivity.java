@@ -46,10 +46,11 @@ public class SplashActivity extends BaseActivity implements DialogInterface.OnCl
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE)  ==PackageManager.PERMISSION_DENIED
-                        || ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED
-                        ||ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA)==  PackageManager.PERMISSION_DENIED
-                        ||ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE)==  PackageManager.PERMISSION_DENIED
-                        ||ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)==  PackageManager.PERMISSION_DENIED)) {
+//                        || ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED
+//                        ||ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA)==  PackageManager.PERMISSION_DENIED
+//                        ||ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE)==  PackageManager.PERMISSION_DENIED
+//                        ||ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)==  PackageManager.PERMISSION_DENIED)
+                )) {
 
             if (mDialog == null) {
                 AlertDialog.Builder builder;
@@ -59,8 +60,8 @@ public class SplashActivity extends BaseActivity implements DialogInterface.OnCl
                 }else {
                     builder = new AlertDialog.Builder(mContext);
                 }
-                mDialog= builder.setTitle("需要开启一些权限")
-                        .setMessage("因为加入了语音识别，所以需要获取一些手机状态、定位信息等权限，请通过一下")
+                mDialog= builder.setTitle("需要开启权限")
+                        .setMessage("为方便取数据，数据保存在SD卡的mahjong文件夹下，故需要读写权限，请通过一下")
                         .setPositiveButton(getString(R.string.confirm),this )
                         .setNegativeButton(getString(R.string.cancel),this)
                         .create();

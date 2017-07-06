@@ -28,6 +28,7 @@ public class RichiDialog implements DialogInterface.OnClickListener, DialogInter
     public void show() {
         if (mInstance == null) {
             mInstance = new AlertDialog.Builder(mContext)
+                    .setTitle("请选择已经立直的玩家")
                     .setMultiChoiceItems(mPlayers,mRichis,this)
                     .setPositiveButton(mContext.getString(R.string.confirm), this)
                     .setNegativeButton(mContext.getString(R.string.cancel), this).create();

@@ -68,6 +68,7 @@ public class GetScoreActivity extends BaseActivity {
     private RecognizerDialog mDialog;
     private String oyaName;
     private int gong;
+    private int benchang;
 
     @Override
     public void initData() {
@@ -75,6 +76,7 @@ public class GetScoreActivity extends BaseActivity {
         mPlayer = intent.getStringExtra("player");
         oyaName = intent.getStringExtra("oya");
         gong = intent.getIntExtra("gong", 0);
+        benchang = intent.getIntExtra("benchang", 0);
         mPlayers = new ArrayList<>();
         mPlayers.add(SPUtils.getString(Constant.EAST, ""));
         mPlayers.add(SPUtils.getString(Constant.WEST, ""));
@@ -270,11 +272,11 @@ public class GetScoreActivity extends BaseActivity {
         if (!TextUtils.isEmpty(point)) {
             mPoint_int = Integer.parseInt(point);
 //            和牌最大值要加上供托的
-            if (playerRecord.he_point_max < mPoint_int+gong) {
-                cv.put("he_point_max", mPoint_int+gong);
+            if (playerRecord.he_point_max < mPoint_int+gong+benchang*300) {
+                cv.put("he_point_max", mPoint_int+gong+benchang*300);
             }
 
-            cv.put("he_point_sum", playerRecord.he_point_sum + mPoint_int+gong);
+            cv.put("he_point_sum", playerRecord.he_point_sum + mPoint_int+gong+benchang*300);
         }
 
         DBDao.updatePlayerData(mPlayer, cv);
@@ -289,7 +291,7 @@ public class GetScoreActivity extends BaseActivity {
             DBDao.updatePlayerData(mChongPlayer, cv_chong);
         }
 
-        //当有人自摸或者荣和的话，所有人的发牌次数都要+1，否则只是存储richi之类的数据，不增长发牌数
+        //当有人自摸或者荣和的话，所有人的发牌次数都要+1
 
         if (mRbTsumo.isChecked() || mRbRonn.isChecked()) {
             for (String player : mPlayers) {
@@ -302,21 +304,21 @@ public class GetScoreActivity extends BaseActivity {
 
         //改变点数
         //和牌人点数
-        SPUtils.putInt(mPlayer, SPUtils.getInt(mPlayer, Integer.MIN_VALUE) + mPoint_int+gong);
+        SPUtils.putInt(mPlayer, SPUtils.getInt(mPlayer, Integer.MIN_VALUE) + mPoint_int+gong+benchang*300);
         //如果放铳的话，放铳人点数变化
         if (mRbRonn.isChecked() && !TextUtils.isEmpty(mChongPlayer)) {
-            SPUtils.putInt(mChongPlayer, SPUtils.getInt(mChongPlayer, Integer.MIN_VALUE) - mPoint_int);
+            SPUtils.putInt(mChongPlayer, SPUtils.getInt(mChongPlayer, Integer.MIN_VALUE) - mPoint_int-benchang*300);
         } else {
             //亲家自摸，那么其他三家平分点数
             if (TextUtils.equals(oyaName, mPlayer)) {
                 for (String player : mPlayers) {
                     if (!TextUtils.equals(player, mPlayer)) {
-                        SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - (mPoint_int / 3));
+                        SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - (mPoint_int / 3)-benchang*100);
                     }
                 }
             } else {
                 //子家自摸，亲家付二分之一，另2家各付四分之一。
-                // 这里有点小问题，比如30符1番，荣和是1300，自摸1500是700/400，并不是按照公式的750/350---已解决
+                // 这里有点小问题，比如40符1番，荣和是1300，自摸1500是700/400，并不是按照公式的750/350---已解决
                 for (String player : mPlayers) {
                     if (!TextUtils.equals(player, mPlayer)) {
                         switch (mPoint_int) {
@@ -353,9 +355,9 @@ public class GetScoreActivity extends BaseActivity {
 
     private void setZiJiaTsumo(String player,int oyaPoint,int ziPoint) {
         if (TextUtils.equals(oyaName, player)) {
-            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - oyaPoint);
+            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - oyaPoint-benchang*100);
         } else {
-            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - ziPoint);
+            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - ziPoint-benchang*100);
         }
     }
 

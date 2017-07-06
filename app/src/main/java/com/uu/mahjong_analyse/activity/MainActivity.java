@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.SpanUtils;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
@@ -105,8 +106,10 @@ public class MainActivity extends BaseActivity {
     private MagicFileChooser magicFileChooser;
     private int chang = 0;  //0-7 代表东1到南4；
     private int gong = 0;  //流局产生的供托,有人和牌则清零
+    private int benchang = 0;
     private SparseArray<String> changMap = new SparseArray<>();
     private HashMap<String, TextView> playerTvMap = new HashMap<>();
+
     @Override
     public void initData() {
         rotatePlayerName();
@@ -152,11 +155,9 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
-
     public void initEvent() {
         //和牌后先谈选择立直的框，回调在这里
-        RxBus.getInstance().toObservable(ArrayList.class,Constant.RX_RICHI_RESULT)
+        RxBus.getInstance().toObservable(ArrayList.class, Constant.RX_RICHI_RESULT)
                 .compose(this.<ArrayList>bindToLifecycle())
                 .subscribe(new Action1<ArrayList>() {
                     @Override
@@ -166,6 +167,7 @@ public class MainActivity extends BaseActivity {
                         intent.putExtra("player", hePlayer);
                         intent.putExtra("oya", getOyaName());
                         intent.putExtra("gong", gong);
+                        intent.putExtra("benchang", benchang);
                         if (isStart) {
                             openPage(true, RC_GET_SCORE, intent);
                         }
@@ -180,9 +182,11 @@ public class MainActivity extends BaseActivity {
                         //处理流局立直的数据
                         handleRichi(liujuResult.richiPlayers);
                         //处理流局听牌的数据
-                        //如果庄家没听牌，那么进行下一场
+                        //如果庄家没听牌，那么进行下一场,否则本场+1
                         if (!liujuResult.tingpaiPlayers.contains(getOyaName())) {
                             nextChang();
+                        } else {
+                            mTvChang.setText(new SpanUtils().append(changMap.get(chang)).append(++benchang + "本场").setFontSize(14, true).create());
                         }
                         Set<String> players = playerTvMap.keySet();
                         switch (liujuResult.tingpaiPlayers.size()) {
@@ -239,7 +243,7 @@ public class MainActivity extends BaseActivity {
 
     /**
      * 遍历立直玩家集合，取出当前分数，扣掉1000，存回sp，供托+1000
-     * */
+     */
     private void handleRichi(ArrayList<String> richiPlayers) {
         for (String richiPlayer : richiPlayers) {
             TextView tv = playerTvMap.get(richiPlayer);
@@ -248,7 +252,7 @@ public class MainActivity extends BaseActivity {
             SPUtils.putInt(richiPlayer, score - 1000);
             gong += 1000;
         }
-        mTvGong.setText(String.valueOf(gong));
+        mTvGong.setText(gong == 0 ? "" : String.valueOf(gong));
     }
 
     @Override
@@ -292,6 +296,8 @@ public class MainActivity extends BaseActivity {
             if (!TextUtils.equals(hePlayer, getOyaName())) {
                 //改变场风和庄家闪光效果
                 nextChang();
+            } else {
+                mTvChang.setText(new SpanUtils().append(changMap.get(chang)).append(++benchang + "本场").setFontSize(14, true).create());
             }
             //供托要清零
             gong = 0;
@@ -307,10 +313,10 @@ public class MainActivity extends BaseActivity {
                     if (files.length != 0) {
                         Bitmap bitmap = BitmapUtils.compressBitmap(mContext, files[0].getAbsolutePath(), ScreenUtils.getScreenWidth(), ScreenUtils
                                 .getScreenHeight());
-                        findViewById(R.id.rl_table).setBackground(new BitmapDrawable(getResources(),bitmap));
+                        findViewById(R.id.rl_table).setBackground(new BitmapDrawable(getResources(), bitmap));
                     }
                 }
-            }else {
+            } else {
                 findViewById(R.id.rl_table).setBackground(null);
             }
 
@@ -336,6 +342,7 @@ public class MainActivity extends BaseActivity {
      * 庄家下庄，进行下一场了
      */
     private void nextChang() {
+        benchang = 0;
         mTvChang.setText(changMap.get(++chang));
         mShimmer.cancel();
         mShimmer.start(getOyaTextView());
@@ -477,7 +484,7 @@ public class MainActivity extends BaseActivity {
             return;
         }
         hePlayer = player;
-        new RichiDialog(mContext,mPlayers).show();
+        new RichiDialog(mContext, mPlayers).show();
 //        点击对话框的确定和取消后跳转到GetScoreActivity，逻辑在initEvent（）里
     }
 
