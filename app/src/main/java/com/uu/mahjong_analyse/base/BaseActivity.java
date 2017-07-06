@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.uu.mahjong_analyse.R;
 
 import pub.devrel.easypermissions.EasyPermissions;
@@ -16,7 +16,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 /**
  * Created by Nagisa on 2016/6/24.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends RxAppCompatActivity {
     public Context mContext;
     public BaseActivity() {
         mContext = this;

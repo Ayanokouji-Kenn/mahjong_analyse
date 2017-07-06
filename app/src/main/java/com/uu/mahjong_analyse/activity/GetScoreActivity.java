@@ -67,12 +67,14 @@ public class GetScoreActivity extends BaseActivity {
     private HashMap<String, String> mIatResults = new LinkedHashMap<>();
     private RecognizerDialog mDialog;
     private String oyaName;
+    private int gong;
 
     @Override
     public void initData() {
         Intent intent = getIntent();
         mPlayer = intent.getStringExtra("player");
         oyaName = intent.getStringExtra("oya");
+        gong = intent.getIntExtra("gong", 0);
         mPlayers = new ArrayList<>();
         mPlayers.add(SPUtils.getString(Constant.EAST, ""));
         mPlayers.add(SPUtils.getString(Constant.WEST, ""));
@@ -267,11 +269,12 @@ public class GetScoreActivity extends BaseActivity {
         String point = mEtPoint.getText().toString().trim();
         if (!TextUtils.isEmpty(point)) {
             mPoint_int = Integer.parseInt(point);
-            if (playerRecord.he_point_max < mPoint_int) {
-                cv.put("he_point_max", mPoint_int);
+//            和牌最大值要加上供托的
+            if (playerRecord.he_point_max < mPoint_int+gong) {
+                cv.put("he_point_max", mPoint_int+gong);
             }
 
-            cv.put("he_point_sum", playerRecord.he_point_sum + mPoint_int);
+            cv.put("he_point_sum", playerRecord.he_point_sum + mPoint_int+gong);
         }
 
         DBDao.updatePlayerData(mPlayer, cv);
@@ -299,7 +302,7 @@ public class GetScoreActivity extends BaseActivity {
 
         //改变点数
         //和牌人点数
-        SPUtils.putInt(mPlayer, SPUtils.getInt(mPlayer, Integer.MIN_VALUE) + mPoint_int);
+        SPUtils.putInt(mPlayer, SPUtils.getInt(mPlayer, Integer.MIN_VALUE) + mPoint_int+gong);
         //如果放铳的话，放铳人点数变化
         if (mRbRonn.isChecked() && !TextUtils.isEmpty(mChongPlayer)) {
             SPUtils.putInt(mChongPlayer, SPUtils.getInt(mChongPlayer, Integer.MIN_VALUE) - mPoint_int);
@@ -313,15 +316,32 @@ public class GetScoreActivity extends BaseActivity {
                 }
             } else {
                 //子家自摸，亲家付二分之一，另2家各付四分之一。
-                // 这里有点小问题，比如30符1番，荣和是1300，自摸1500是700/400，并不是按照上面的公式750/350
+                // 这里有点小问题，比如30符1番，荣和是1300，自摸1500是700/400，并不是按照公式的750/350---已解决
                 for (String player : mPlayers) {
                     if (!TextUtils.equals(player, mPlayer)) {
-                        if (TextUtils.equals(oyaName, player)) {
-                            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - (mPoint_int / 2));
-                        } else {
-                            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - (mPoint_int / 4));
+                        switch (mPoint_int) {
+                            case 1100:  //30符1翻
+                                setZiJiaTsumo(player,500,300);
+                                break;
+                            case 1500:  //40符1翻  20符2翻
+                                setZiJiaTsumo(player,700,400);
+                                break;
+                            case 2700:  //80符1翻  40符2翻  20符3翻
+                                setZiJiaTsumo(player,1300,700);
+                                break;
+                            case 3100:  //90符1翻
+                                setZiJiaTsumo(player,1500,800);
+                                break;
+                            case 4700:  //70符2翻
+                                setZiJiaTsumo(player,2300,1200);
+                                break;
+                            case 5900:  //90符2翻
+                                setZiJiaTsumo(player,2900,1500);
+                                break;
+                            default:
+                                setZiJiaTsumo(player,mPoint_int / 2,mPoint_int / 4);
+                                break;
                         }
-
                     }
                 }
             }
@@ -329,6 +349,14 @@ public class GetScoreActivity extends BaseActivity {
         Toast.makeText(this, "该场数据保存成功", Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK);
         finish();
+    }
+
+    private void setZiJiaTsumo(String player,int oyaPoint,int ziPoint) {
+        if (TextUtils.equals(oyaName, player)) {
+            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - oyaPoint);
+        } else {
+            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - ziPoint);
+        }
     }
 
     @Override

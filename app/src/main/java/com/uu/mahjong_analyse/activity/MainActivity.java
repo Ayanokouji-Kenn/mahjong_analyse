@@ -9,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +35,7 @@ import com.uu.mahjong_analyse.bean.LiujuResult;
 import com.uu.mahjong_analyse.db.DBDao;
 import com.uu.mahjong_analyse.fragment.LeftMenuFragment;
 import com.uu.mahjong_analyse.view.LiuJuDialog;
+import com.uu.mahjong_analyse.view.RichiDialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -103,7 +103,10 @@ public class MainActivity extends BaseActivity {
     private ArrayList<ShimmerTextView> textViews;
     private Unbinder unbinder;
     private MagicFileChooser magicFileChooser;
-
+    private int chang = 0;  //0-7 代表东1到南4；
+    private int gong = 0;  //流局产生的供托,有人和牌则清零
+    private SparseArray<String> changMap = new SparseArray<>();
+    private HashMap<String, TextView> playerTvMap = new HashMap<>();
     @Override
     public void initData() {
         rotatePlayerName();
@@ -149,27 +152,33 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    private int chang = 0;  //0-7 代表东1到南4；
-    private int gong = 0;  //流局产生的供托,有人和牌则清零
-    private SparseArray<String> changMap = new SparseArray<>();
-    private HashMap<String, TextView> playerTvMap = new HashMap<>();
+
 
     public void initEvent() {
-//
+        //和牌后先谈选择立直的框，回调在这里
+        RxBus.getInstance().toObservable(ArrayList.class,Constant.RX_RICHI_RESULT)
+                .compose(this.<ArrayList>bindToLifecycle())
+                .subscribe(new Action1<ArrayList>() {
+                    @Override
+                    public void call(ArrayList arrayList) {
+                        handleRichi(arrayList);
+                        Intent intent = new Intent(mContext, GetScoreActivity.class);
+                        intent.putExtra("player", hePlayer);
+                        intent.putExtra("oya", getOyaName());
+                        intent.putExtra("gong", gong);
+                        if (isStart) {
+                            openPage(true, RC_GET_SCORE, intent);
+                        }
+                    }
+                });
         //流局逻辑全在这里
         RxBus.getInstance().toObservable(LiujuResult.class, Constant.RX_LIUJU_RESULT)
+                .compose(this.<LiujuResult>bindToLifecycle())
                 .subscribe(new Action1<LiujuResult>() {
                     @Override
                     public void call(LiujuResult liujuResult) {
                         //处理流局立直的数据
-                        for (String richiPlayer : liujuResult.richiPlayers) {
-                            TextView tv = playerTvMap.get(richiPlayer);
-                            int score = SPUtils.getInt(richiPlayer, Integer.MIN_VALUE);
-                            tv.setText(String.valueOf(score - 1000));
-                            SPUtils.putInt(richiPlayer, score - 1000);
-                            gong += 1000;
-                        }
-                        mTvGong.setText(String.valueOf(gong));
+                        handleRichi(liujuResult.richiPlayers);
                         //处理流局听牌的数据
                         //如果庄家没听牌，那么进行下一场
                         if (!liujuResult.tingpaiPlayers.contains(getOyaName())) {
@@ -226,6 +235,20 @@ public class MainActivity extends BaseActivity {
                     }
                 });
 
+    }
+
+    /**
+     * 遍历立直玩家集合，取出当前分数，扣掉1000，存回sp，供托+1000
+     * */
+    private void handleRichi(ArrayList<String> richiPlayers) {
+        for (String richiPlayer : richiPlayers) {
+            TextView tv = playerTvMap.get(richiPlayer);
+            int score = SPUtils.getInt(richiPlayer, Integer.MIN_VALUE);
+            tv.setText(String.valueOf(score - 1000));
+            SPUtils.putInt(richiPlayer, score - 1000);
+            gong += 1000;
+        }
+        mTvGong.setText(String.valueOf(gong));
     }
 
     @Override
@@ -449,18 +472,13 @@ public class MainActivity extends BaseActivity {
     }
 
     private void openScorePage(String player) {
-        Log.d("ZFDT", "openScorePage: ");
         if (TextUtils.isEmpty(player)) {
             Toast.makeText(this, "人都还没选呢", Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent intent = new Intent(mContext, GetScoreActivity.class);
         hePlayer = player;
-        intent.putExtra("player", player);
-        intent.putExtra("oya", getOyaName());
-        if (isStart) {
-            openPage(true, RC_GET_SCORE, intent);
-        }
+        new RichiDialog(mContext,mPlayers).show();
+//        点击对话框的确定和取消后跳转到GetScoreActivity，逻辑在initEvent（）里
     }
 
     public void showDialog(View view) {

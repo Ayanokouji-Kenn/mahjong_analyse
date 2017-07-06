@@ -11,6 +11,7 @@ public class Constant {
     }
 
     public static final String RX_LIUJU_RESULT = "rx_liuju_result";
+    public static final String RX_RICHI_RESULT = "rx_richi_result";
 
     public  static final String EAST = "east";
     public  static final String SOUTH = "south";
