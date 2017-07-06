@@ -1,10 +1,7 @@
 package com.uu.mahjong_analyse.base;
 
 import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -27,7 +24,7 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return mDatas.get(position);
     }
 
     @Override

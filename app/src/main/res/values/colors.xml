@@ -7,4 +7,6 @@
     <color name="black">#000000</color>
     <color name="translate">#00000000</color>
     <color name="translate20">#20000000</color>
+    <color name="pink_blue">#c9fffc</color>
+    <color name="pink">#ffebef</color>
 </resources>

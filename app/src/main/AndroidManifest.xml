@@ -65,7 +65,7 @@
         <activity android:name=".activity.PlayerInfoActivity"/>
         <activity android:name=".activity.GameRecordActivity" />
         <activity android:name=".activity.ModifyDbActivity"/>
-        <activity android:name=".activity.PhotoViewActivity"/>
+        <activity android:name=".activity.ScanPointActivity"/>
 
 
 

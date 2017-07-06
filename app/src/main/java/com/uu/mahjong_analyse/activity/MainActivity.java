@@ -364,7 +364,7 @@ public class MainActivity extends BaseActivity {
                 break;
 //            点数早见表
             case R.id.toolbar_point:
-                startActivity(new Intent(mContext, PhotoViewActivity.class));
+                startActivity(new Intent(mContext, ScanPointActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);

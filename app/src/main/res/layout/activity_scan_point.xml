@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/layout_toolbar"/>
+    <!--<com.github.chrisbanes.photoview.PhotoView-->
+        <!--android:id="@+id/photo_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"/>-->
+    <LinearLayout
+        android:background="@color/pink_blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="@string/oya"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:text="@string/zi"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="@dimen/dp0"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+   <!--<android.support.v7.widget.RecyclerView-->
+       <!--android:id="@+id/rv_point"-->
+       <!--android:layout_width="match_parent"-->
+       <!--android:layout_height="wrap_content"/>-->
+    <GridView
+        android:id="@+id/gridview"
+        android:numColumns="9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:text="表中空白处以及5翻均为满贯。\n亲家12000(4000)子家8000(4000/2000)"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

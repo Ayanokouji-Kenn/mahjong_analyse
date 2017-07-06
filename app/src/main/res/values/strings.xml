@@ -21,4 +21,23 @@
     <string name="south2">南二</string>
     <string name="south3">南三</string>
     <string name="south4">南四</string>
+
+    <string name="fan4">四翻</string>
+    <string name="fan3">三翻</string>
+    <string name="fan2">二翻</string>
+    <string name="fan1">一翻</string>
+    <string name="oya">亲</string>
+    <string name="zi">子</string>
+    <string name="fu">符</string>
+    <string name="fu20">20符</string>
+    <string name="fu25">25符</string>
+    <string name="fu30">30符</string>
+    <string name="fu40">40符</string>
+    <string name="fu50">50符</string>
+    <string name="fu60">60符</string>
+    <string name="fu70">70符</string>
+    <string name="fu80">80符</string>
+    <string name="fu90">90符</string>
+    <string name="fu100">100符</string>
+    <string name="fu110">110符</string>
 </resources>
