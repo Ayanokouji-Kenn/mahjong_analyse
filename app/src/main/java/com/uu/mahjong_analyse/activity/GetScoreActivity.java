@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.ArrayMap;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.OptionsPickerView;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.Constant;
@@ -69,9 +72,159 @@ public class GetScoreActivity extends BaseActivity {
     private String oyaName;
     private int gong;
     private int benchang;
+    private static ArrayMap<String, Integer> qinRonnMap = new ArrayMap<>();
+    private static ArrayMap<String, Integer> qinTsumoMap = new ArrayMap<>();
+    private static ArrayMap<String, Integer> ziRonnMap = new ArrayMap<>();
+    private static ArrayMap<String, Integer> ziTsumoMap = new ArrayMap<>();
+    private static List<String> mFanList = new ArrayList<>();
+    private static List<List<String>> mFuList = new ArrayList<>();
+    private static List<List<List<String>>> mFanlist2 = new ArrayList<>();  //第三列数据，用来显示满贯以下具体多少翻的
+    static {
+        initFanData();
+        initQinRonnMap();
+        qinTsumoMap.put("30符1翻", 1500);
+        qinTsumoMap.put("40符1翻", 2000);
+        qinTsumoMap.put("50符1翻", 2400);
+        qinTsumoMap.put("60符1翻", 2900);
+        qinTsumoMap.put("70符1翻", 3400);
+        qinTsumoMap.put("80符1翻", 3900);
+        qinTsumoMap.put("90符1翻", 4400);
+        qinTsumoMap.put("100符1翻", 4800);
+        qinTsumoMap.put("110符1翻", 5300);
+
+        qinTsumoMap.put("20符2翻", 2000);
+        qinTsumoMap.put("25符2翻", 2400);
+        qinTsumoMap.put("30符2翻", 2900);
+        qinTsumoMap.put("40符2翻", 3900);
+        qinTsumoMap.put("50符2翻", 4800);
+        qinTsumoMap.put("60符2翻", 5800);
+        qinTsumoMap.put("70符2翻", 6800);
+        qinTsumoMap.put("80符2翻", 7700);
+        qinTsumoMap.put("90符2翻", 8700);
+        qinTsumoMap.put("100符2翻", 9600);
+        qinTsumoMap.put("110符2翻", 10600);
+
+        qinTsumoMap.put("20符3翻", 3900);
+        qinTsumoMap.put("25符3翻", 4800);
+        qinTsumoMap.put("30符3翻", 5800);
+        qinTsumoMap.put("40符3翻", 7700);
+        qinTsumoMap.put("50符3翻", 9600);
+
+        qinTsumoMap.put("20符4翻", 7700);
+        qinTsumoMap.put("25符4翻", 9600);
+
+        qinTsumoMap.put("满贯", 12000);
+        qinTsumoMap.put("跳满", 18000);
+        qinTsumoMap.put("倍满", 24000);
+        qinTsumoMap.put("三倍满", 36000);
+        qinTsumoMap.put("役满", 48000);
+
+    }
+
+    private static void initQinRonnMap() {
+        qinRonnMap.put("30符1翻", 1500);
+        qinRonnMap.put("40符1翻", 2000);
+        qinRonnMap.put("50符1翻", 2400);
+        qinRonnMap.put("60符1翻", 2900);
+        qinRonnMap.put("70符1翻", 3400);
+        qinRonnMap.put("80符1翻", 3900);
+        qinRonnMap.put("90符1翻", 4400);
+        qinRonnMap.put("100符1翻", 4800);
+        qinRonnMap.put("110符1翻", 5300);
+
+        qinRonnMap.put("20符2翻", 2000);
+        qinRonnMap.put("25符2翻", 2400);
+        qinRonnMap.put("30符2翻", 2900);
+        qinRonnMap.put("40符2翻", 3900);
+        qinRonnMap.put("50符2翻", 4800);
+        qinRonnMap.put("60符2翻", 5800);
+        qinRonnMap.put("70符2翻", 6800);
+        qinRonnMap.put("80符2翻", 7700);
+        qinRonnMap.put("90符2翻", 8700);
+        qinRonnMap.put("100符2翻", 9600);
+        qinRonnMap.put("110符2翻", 10600);
+
+        qinRonnMap.put("20符3翻", 3900);
+        qinRonnMap.put("25符3翻", 4800);
+        qinRonnMap.put("30符3翻", 5800);
+        qinRonnMap.put("40符3翻", 7700);
+        qinRonnMap.put("50符3翻", 9600);
+
+        qinRonnMap.put("20符4翻", 7700);
+        qinRonnMap.put("25符4翻", 9600);
+
+        qinRonnMap.put("满贯", 12000);
+        qinRonnMap.put("跳满", 18000);
+        qinRonnMap.put("倍满", 24000);
+        qinRonnMap.put("三倍满", 36000);
+        qinRonnMap.put("役满", 48000);
+    }
+
+    private static void initFanData() {
+        //第一列显示番数
+        mFanList.add("满贯以下");
+        mFanList.add("满贯");
+        mFanList.add("跳满");
+        mFanList.add("倍满");
+        mFanList.add("三倍满");
+        mFanList.add("役满");
+        //第二列显示符，只有满贯以下才需要符，所以添加5个空集合
+        List<String> fuList = new ArrayList<>();
+        fuList.add("20符");
+        fuList.add("25符");
+        fuList.add("30符");
+        fuList.add("40符");
+        fuList.add("50符");
+        fuList.add("60符");
+        fuList.add("70符");
+        fuList.add("80符");
+        fuList.add("90符");
+        fuList.add("100符");
+        fuList.add("110符");
+        ArrayList<String> emptyList = new ArrayList<>();
+        emptyList.add("");
+        mFuList.add(fuList);
+        mFuList.add(emptyList);
+        mFuList.add(emptyList);
+        mFuList.add(emptyList);
+        mFuList.add(emptyList);
+        mFuList.add(emptyList);
+        //第三列显示满贯以下的哪一种
+        ArrayList<String> fan = new ArrayList<>();
+        ArrayList<String> fu25fan = new ArrayList<>();
+        List<List<String>> fan2 = new ArrayList<>();
+        List<List<String>> fan2Empty = new ArrayList<>();
+        fan2Empty.add(emptyList);
+        fan.add("1翻");
+        fan.add("2翻");
+        fan.add("3翻");
+        fan.add("4翻");
+        fu25fan.add("2翻");
+        fu25fan.add("3翻");
+        fu25fan.add("4翻");
+        fan2.add(fan);
+        fan2.add(fu25fan);
+        fan2.add(fan);
+        fan2.add(fan);
+        fan2.add(fan);
+        fan2.add(fan);
+        fan2.add(fan);
+        fan2.add(fan);
+        fan2.add(fan);
+        fan2.add(fan);
+        fan2.add(fan);
+        mFanlist2.add(fan2);
+        mFanlist2.add(fan2Empty);
+        mFanlist2.add(fan2Empty);
+        mFanlist2.add(fan2Empty);
+        mFanlist2.add(fan2Empty);
+        mFanlist2.add(fan2Empty);
+    }
+
 
     @Override
     public void initData() {
+
         Intent intent = getIntent();
         mPlayer = intent.getStringExtra("player");
         oyaName = intent.getStringExtra("oya");
@@ -181,18 +334,36 @@ public class GetScoreActivity extends BaseActivity {
 //    }
 
 
-    String[] fan = {"满贯以下", "满贯", "跳满", "倍满", "三倍满", "役满"};
+
 
     private void showFanDialog() {
-        final WheelViewDialog<String> dialog = new WheelViewDialog<>(this);
-        dialog.setTitle("选择番数").setItems(fan).setButtonText("确定").setDialogStyle(Color
-                .parseColor("#fc97a9")).setCount(5).show();
-        dialog.setOnDialogItemClickListener(new WheelViewDialog.OnDialogItemClickListener<String>() {
+        OptionsPickerView optionsPickerView = new OptionsPickerView.Builder(mContext, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
-            public void onItemClick(int position, String s) {
-                setFan(s);
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                if (options1 == 0) {
+                    Log.d("ZFDT", mFanList.get(options1) + mFuList.get(options1).get(options2)+mFanlist2.get(options1).get(options2).get(options3));
+                }else {
+                    Log.d("ZFDT", mFanList.get(options1)+"");
+                }
             }
-        });
+        })
+                .setSubmitColor(getResources().getColor(R.color.colorAccent))
+                .setCancelColor(getResources().getColor(R.color.colorAccent))
+                .build();
+
+        optionsPickerView.setPicker(mFanList,mFuList,mFanlist2);
+        optionsPickerView.show();
+
+//
+//        final WheelViewDialog<String> dialog = new WheelViewDialog<>(this);
+//        dialog.setTitle("选择番数").setItems(fan).setButtonText("确定").setDialogStyle(Color
+//                .parseColor("#fc97a9")).setCount(5).show();
+//        dialog.setOnDialogItemClickListener(new WheelViewDialog.OnDialogItemClickListener<String>() {
+//            @Override
+//            public void onItemClick(int position, String s) {
+//                setFan(s);
+//            }
+//        });
     }
 
     private void setFan(String s) {
