@@ -32,10 +32,11 @@
                 android:id="@+id/tv_north"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:lines="1"
                 android:clickable="false"
                 android:gravity="center"
                 android:text="北"
-                android:textSize="26sp"/>
+                android:textSize="24sp"/>
 
             <TextView
                 android:id="@+id/tv_north_point"
@@ -61,9 +62,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="false"
+                android:lines="1"
                 android:gravity="center"
                 android:text="东"
-                android:textSize="26sp"/>
+                android:textSize="24sp"/>
 
             <TextView
                 android:id="@+id/tv_east_point"
@@ -88,9 +90,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="false"
+                android:lines="1"
                 android:gravity="center"
                 android:text="南"
-                android:textSize="26sp"/>
+                android:textSize="24sp"/>
 
             <TextView
                 android:id="@+id/tv_south_point"
@@ -116,9 +119,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="false"
+                android:lines="1"
                 android:gravity="center"
                 android:text="西"
-                android:textSize="26sp"/>
+                android:textSize="24sp"/>
 
             <TextView
                 android:id="@+id/tv_west_point"

@@ -430,8 +430,12 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.fab_select_player:
-                openPage(true, RC_PLAYERS, AddNewGameActivity.class);
-                mFabMenu.collapse();
+                if (isStart) {
+                    ToastUtils.show(mContext,"不支持中途换人，请先结束当前对局");
+                }else {
+                    openPage(true, RC_PLAYERS, AddNewGameActivity.class);
+                    mFabMenu.collapse();
+                }
                 break;
             case R.id.fab_start:
                 mFabMenu.collapse();
