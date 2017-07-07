@@ -2,6 +2,7 @@ package com.uu.mahjong_analyse.base;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,6 +37,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             window.setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
         }
         init();
+        getWindow().getDecorView().setBackgroundColor(Color.WHITE);
     }
 
     public  void init() {

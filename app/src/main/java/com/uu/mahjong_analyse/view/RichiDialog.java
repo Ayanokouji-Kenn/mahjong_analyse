@@ -1,8 +1,8 @@
 package com.uu.mahjong_analyse.view;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.Constant;
@@ -27,11 +27,11 @@ public class RichiDialog implements DialogInterface.OnClickListener, DialogInter
 
     public void show() {
         if (mInstance == null) {
-            mInstance = new AlertDialog.Builder(mContext)
+            mInstance = new AlertDialog.Builder(mContext,R.style.Theme_AppCompat_Light_Dialog_Alert_Self)
                     .setTitle("请选择已经立直的玩家")
                     .setMultiChoiceItems(mPlayers,mRichis,this)
-                    .setPositiveButton(mContext.getString(R.string.confirm), this)
-                    .setNegativeButton(mContext.getString(R.string.cancel), this).create();
+                    .setNegativeButton(mContext.getResources().getString(R.string.cancel),this)
+                    .setPositiveButton(mContext.getString(R.string.confirm), this).create();
         }
         if (!mInstance.isShowing()) {
             mInstance.show();

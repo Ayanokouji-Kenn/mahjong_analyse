@@ -13,13 +13,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.OptionsPickerView;
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.CommonApi;
 import com.uu.mahjong_analyse.Utils.Constant;
 import com.uu.mahjong_analyse.Utils.SPUtils;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.db.DBDao;
-import com.uu.mahjong_analyse.view.wheelview.widget.WheelViewDialog;
 
 import java.util.List;
 import java.util.Locale;
@@ -71,41 +71,56 @@ public class AddNewGameActivity extends BaseActivity implements TextView.OnEdito
     }
 
     public void showDialog(final View view) {
-        final WheelViewDialog dialog = new WheelViewDialog(this);
-        dialog.setTitle(getString(R.string.choose_player))
-                .setItems(datas)
-                .setButtonText(getString(R.string.confirm))
-                .setDialogStyle(getResources().getColor(R.color.colorPrimary))
-                .setCount(5)
-                .show();
-        dialog.setOnDialogItemClickListener(new WheelViewDialog.OnDialogItemClickListener() {
+        OptionsPickerView selectPlayerDialog = new OptionsPickerView.Builder(mContext, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
-            public void onItemClick(int position, Object s) {
-                String mSelectName = (String) s;
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                String mSelectName = datas.get(options1);
                 switch (view.getId()) {
                     case R.id.tv_east:
                         select[0] = mSelectName;
-                        mTvEast.setText(String.format(Locale.CHINA,"东家： %s",mSelectName));
-                        SPUtils.putString(Constant.EAST,mSelectName);
+                        mTvEast.setText(String.format(Locale.CHINA, "东家： %s", mSelectName));
+                        SPUtils.putString(Constant.EAST, mSelectName);
                         break;
                     case R.id.tv_south:
                         select[1] = mSelectName;
-                        mTvSouth.setText(String.format(Locale.CHINA,"南家： %s",mSelectName));
-                        SPUtils.putString(Constant.SOUTH,mSelectName);
+                        mTvSouth.setText(String.format(Locale.CHINA, "南家： %s", mSelectName));
+                        SPUtils.putString(Constant.SOUTH, mSelectName);
                         break;
                     case R.id.tv_west:
                         select[2] = mSelectName;
-                        mTvWest.setText(String.format(Locale.CHINA,"西家： %s",mSelectName));
-                        SPUtils.putString(Constant.WEST,mSelectName);
+                        mTvWest.setText(String.format(Locale.CHINA, "西家： %s", mSelectName));
+                        SPUtils.putString(Constant.WEST, mSelectName);
                         break;
                     case R.id.tv_north:
                         select[3] = mSelectName;
-                        mTvNorth.setText(String.format(Locale.CHINA,"北家： %s",mSelectName));
-                        SPUtils.putString(Constant.NORTH,mSelectName);
+                        mTvNorth.setText(String.format(Locale.CHINA, "北家： %s", mSelectName));
+                        SPUtils.putString(Constant.NORTH, mSelectName);
                         break;
                 }
             }
-        });
+        })
+
+                .setCancelColor(getResources().getColor(R.color.colorAccent))
+                .setSubmitColor(getResources().getColor(R.color.colorAccent))
+                .build();
+        selectPlayerDialog.setPicker(datas);
+        selectPlayerDialog.show();
+
+
+//        final WheelViewDialog dialog = new WheelViewDialog(this);
+//        dialog.setTitle(getString(R.string.choose_player))
+//                .setItems(datas)
+//                .setButtonText(getString(R.string.confirm))
+//                .setDialogStyle(getResources().getColor(R.color.colorPrimary))
+//                .setCount(5)
+//                .show();
+//        dialog.setOnDialogItemClickListener(new WheelViewDialog.OnDialogItemClickListener() {
+//            @Override
+//            public void onItemClick(int position, Object s) {
+//
+//                }
+//            }
+//        });
     }
 
     @OnClick({R.id.tv_east, R.id.tv_south, R.id.tv_west, R.id.tv_north})

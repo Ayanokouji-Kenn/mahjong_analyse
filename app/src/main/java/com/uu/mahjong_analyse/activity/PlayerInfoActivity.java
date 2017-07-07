@@ -6,12 +6,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.OptionsPickerView;
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.CommonApi;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.bean.PlayerRecord;
 import com.uu.mahjong_analyse.db.DBDao;
-import com.uu.mahjong_analyse.view.wheelview.widget.WheelViewDialog;
 
 import java.util.List;
 import java.util.Locale;
@@ -71,7 +71,7 @@ public class PlayerInfoActivity extends BaseActivity {
     TextView mTvRichiHeLv;
     @BindView(R.id.tv_select)
     TextView mTvSelect;
-    private WheelViewDialog<String> mSelectPlayerDialog;
+    private OptionsPickerView mSelectPlayerDialog;
     private String mPlayer;
 
     @Override
@@ -101,30 +101,41 @@ public class PlayerInfoActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_select:
                 if (mSelectPlayerDialog == null) {
-                    List<String> players = DBDao.getPlayers();
+                    final List<String> players = DBDao.getPlayers();
                     if (players.size() == 0) {
                         Toast.makeText(this, "暂未存储过对局", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    mSelectPlayerDialog = new WheelViewDialog<>(this);
-                    mSelectPlayerDialog.setItems(players)
-                            .setCount(5)
-                            .setDialogStyle(getResources().getColor(R.color.colorPrimary))
-                            .setOnDialogItemClickListener(new WheelViewDialog.OnDialogItemClickListener<String>() {
-                                @Override
-                                public void onItemClick(int position, String s) {
-                                    Log.d(getClass().getSimpleName(), "onItemClick: " + s);
-                                    mTvSelect.setText(s);
-                                    showData(s);
-                                }
-                            });
+                    mSelectPlayerDialog = new OptionsPickerView.Builder(mContext, new OptionsPickerView.OnOptionsSelectListener() {
+                        @Override
+                        public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                            mTvSelect.setText(players.get(options1));
+                            showData(players.get(options1));
+                        }
+                    })
+                            .setSubmitColor(getResources().getColor(R.color.colorAccent))
+                            .setCancelColor(getResources().getColor(R.color.colorAccent))
+                            .build();
+                    mSelectPlayerDialog.setPicker(players);
+
+
+//                    mSelectPlayerDialog = new WheelViewDialog<>(this);
+//                    mSelectPlayerDialog.setItems(players)
+//                            .setCount(5)
+//                            .setDialogStyle(getResources().getColor(R.color.colorPrimary))
+//                            .setOnDialogItemClickListener(new WheelViewDialog.OnDialogItemClickListener<String>() {
+//                                @Override
+//                                public void onItemClick(int position, String s) {
+//                                    Log.d(getClass().getSimpleName(), "onItemClick: " + s);
+//                                    mTvSelect.setText(s);
+//                                    showData(s);
+//                                }
+//                            });
                 }
                 if (mSelectPlayerDialog.isShowing()) {
                     return;
                 }
                 mSelectPlayerDialog.show();
-                Log.d(getClass().getSimpleName(), "onClick: " + mSelectPlayerDialog.getStyle().textSize);
-
                 break;
         }
     }

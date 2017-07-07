@@ -6,10 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColorPrimary">@color/white</item>
         <item name="android:actionMenuTextColor">@color/white</item>
         <!--将popupmenu样式设置进主题里,但还是要代码中引入setPopupTheme-->
         <item name="actionOverflowMenuStyle">@style/PopupMenu</item>
+        <item name="android:alertDialogTheme">@style/Theme.AppCompat.Light.Dialog.Alert.Self</item>
     </style>
 
     <!-- Base application theme. -->
@@ -20,10 +20,14 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.AppCompat.Light.Dialog.Alert.Self"  parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+    <!--修改AlertDialog按钮的颜色-->
+    <item name="colorAccent">@color/colorAccent</item>
+    </style>
 
     <!--设置popupwindow样式-->
     <style name="PopupMenu" parent="@style/Widget.AppCompat.Light.PopupMenu.Overflow" >

@@ -2,7 +2,6 @@ package com.uu.mahjong_analyse.activity;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -25,7 +24,6 @@ import com.uu.mahjong_analyse.Utils.ToastUtils;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.bean.PlayerRecord;
 import com.uu.mahjong_analyse.db.DBDao;
-import com.uu.mahjong_analyse.view.wheelview.widget.WheelViewDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,7 +127,7 @@ public class GetScoreActivity extends BaseActivity {
                 if (checkedId == R.id.rb_tsumo) {
                     mTvChong.setVisibility(View.GONE);
                     mChongPlayer = "";
-                }else {
+                } else {
                     mTvChong.setVisibility(View.VISIBLE);
                 }
             }
@@ -165,15 +163,16 @@ public class GetScoreActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_chong:
-                if (mRbRonn.isChecked()) {
-                    showChongPlayerDialog();
+                if (!mRbRonn.isChecked()) {
+                    mRbRonn.setChecked(true);
                 }
+                showChongPlayerDialog();
                 break;
             case R.id.tv_fan:
                 if (mRbRonn.isChecked() || mRbTsumo.isChecked()) {
                     showFanDialog();
-                }else {
-                    ToastUtils.show(mContext,"请选点击自摸或荣和");
+                } else {
+                    ToastUtils.show(mContext, "请选点击自摸或荣和");
                 }
                 break;
             case R.id.btn_confirm:
@@ -234,21 +233,21 @@ public class GetScoreActivity extends BaseActivity {
                     key = mFanList.get(options1);
                 }
                 if (TextUtils.equals("25符2翻", key) && mRbTsumo.isChecked()) {
-                    ToastUtils.show(mContext,"2翻的七对子不可能自摸哦~");
+                    ToastUtils.show(mContext, "2翻的七对子不可能自摸哦~");
                     return;
                 }
                 if (isOya) {
                     if (mRbTsumo.isChecked()) {
                         mPoint_int = qinTsumoMap.get(key);
                     } else if (mRbRonn.isChecked()) {
-                        mPoint_int =qinRonnMap.get(key);
+                        mPoint_int = qinRonnMap.get(key);
                     }
                 } else {
                     if (mRbTsumo.isChecked()) {
 
-                        mPoint_int =ziTsumoMap.get(key);
+                        mPoint_int = ziTsumoMap.get(key);
                     } else if (mRbRonn.isChecked()) {
-                        mPoint_int =ziRonnMap.get(key);
+                        mPoint_int = ziRonnMap.get(key);
                     }
                 }
 
@@ -282,17 +281,30 @@ public class GetScoreActivity extends BaseActivity {
     }
 
     private void showChongPlayerDialog() {
-
-        final WheelViewDialog dialog = new WheelViewDialog(this);
-        dialog.setTitle("选择放铳人").setItems(mPlayers).setButtonText("确定").setDialogStyle(Color
-                .parseColor("#fc97a9")).setCount(5).show();
-        dialog.setOnDialogItemClickListener(new WheelViewDialog.OnDialogItemClickListener() {
+        OptionsPickerView dialog = new OptionsPickerView.Builder(mContext, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
-            public void onItemClick(int position, Object s) {
-                mChongPlayer = (String) s;
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                mChongPlayer = mPlayers.get(options1);
                 mTvChong.setText("放铳人：" + mChongPlayer);
             }
-        });
+        })
+                .setTitleText("选择放铳人")
+                .setSubmitColor(getResources().getColor(R.color.colorAccent))
+                .setCancelColor(getResources().getColor(R.color.colorAccent))
+                .build();
+        dialog.setPicker(mPlayers);
+        dialog.show();
+//
+//        final WheelViewDialog dialog = new WheelViewDialog(this);
+//        dialog.setTitle("选择放铳人").setItems(mPlayers).setButtonText("确定").setDialogStyle(Color
+//                .parseColor("#fc97a9")).setCount(5).show();
+//        dialog.setOnDialogItemClickListener(new WheelViewDialog.OnDialogItemClickListener() {
+//            @Override
+//            public void onItemClick(int position, Object s) {
+//                mChongPlayer = (String) s;
+//                mTvChong.setText("放铳人：" + mChongPlayer);
+//            }
+//        });
     }
 
     private void saveData() {

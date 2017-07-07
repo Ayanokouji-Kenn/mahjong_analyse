@@ -447,7 +447,7 @@ public class MainActivity extends BaseActivity {
 
     public void startGame() {
         if (!isStart) {
-            mFabStart.setTitle("对战中...");
+            mFabStart.setTitle("结束对局");
             mFabStart.setIcon(R.drawable.stop);
             isStart = true;
             //开局就将场次变成东一局

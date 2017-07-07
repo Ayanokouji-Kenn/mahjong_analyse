@@ -2,8 +2,7 @@ package com.example;
 
 public class MyClass {
     public static void main(String[] args) {
-        System.out.println(compressBitmap());
-        System.exit(0);
+       float f = 0.0075F;
     }
 
     public static int compressBitmap() {

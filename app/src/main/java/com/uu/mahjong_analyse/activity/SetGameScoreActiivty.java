@@ -71,6 +71,10 @@ public class SetGameScoreActiivty extends BaseActivity{
         names[2] = SPUtils.getString(Constant.SOUTH,"");
         names[3] = SPUtils.getString(Constant.NORTH,"");
 
+        mEtEast.setText(String.valueOf(SPUtils.getInt(names[0],25000)));
+        mEtWest.setText(String.valueOf(SPUtils.getInt(names[1],25000)));
+        mEtSouth.setText(String.valueOf(SPUtils.getInt(names[2],25000)));
+        mEtNorth.setText(String.valueOf(SPUtils.getInt(names[3],25000)));
     }
 
     @Override
@@ -89,6 +93,8 @@ public class SetGameScoreActiivty extends BaseActivity{
 
     @OnClick(R.id.btn_save)
     public void onClick() {
+
+
         String east = mEtEast.getText().toString().trim();
         String west = mEtWest.getText().toString().trim();
         String north = mEtNorth.getText().toString().trim();

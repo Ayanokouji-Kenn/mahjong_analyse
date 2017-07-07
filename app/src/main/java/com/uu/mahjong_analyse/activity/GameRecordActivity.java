@@ -1,6 +1,5 @@
 package com.uu.mahjong_analyse.activity;
 
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 
@@ -42,6 +41,7 @@ public class GameRecordActivity extends BaseActivity {
         mGameRecord = DBDao.getGameRecord();
         mGameRecordAdapter = new GameRecordAdapter(this, mGameRecord);
         mListview.setAdapter(mGameRecordAdapter);
+        mListview.setDivider(null);
     }
 
     @Override

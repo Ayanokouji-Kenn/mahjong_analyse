@@ -152,7 +152,7 @@ public class DBDao {
     public static List<GameRecord> getGameRecord() {
         List<GameRecord> list = new ArrayList<>();
         SQLiteDatabase db = getDataBase();
-        Cursor cursor = db.query(Constant.Table.TABLE_GAME_RECORD, null, null, null, null, null, null);
+        Cursor cursor = db.query(Constant.Table.TABLE_GAME_RECORD, null, null, null, null, null, "date desc");
         while (cursor.moveToNext()) {
             GameRecord gr = new GameRecord();
             gr.date = cursor.getString(cursor.getColumnIndex("date"));

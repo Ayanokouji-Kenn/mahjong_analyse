@@ -1,8 +1,8 @@
 package com.uu.mahjong_analyse.view;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 
 import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.Utils.Constant;
@@ -32,7 +32,7 @@ public class LiuJuDialog implements DialogInterface.OnClickListener, DialogInter
 
     public void show() {
         if (mInstance == null) {
-            mInstance = new AlertDialog.Builder(mContext).setTitle("流局了，请选择听牌玩家，全听或全不听直接点确定")
+            mInstance = new AlertDialog.Builder(mContext,R.style.Theme_AppCompat_Light_Dialog_Alert_Self).setTitle("流局了，请选择听牌玩家")
                     .setMultiChoiceItems(mPlayers, mTingPais, this)
                     .setPositiveButton(mContext.getString(R.string.confirm), this)
                     .setNegativeButton(mContext.getString(R.string.cancel), this).create();
@@ -44,21 +44,21 @@ public class LiuJuDialog implements DialogInterface.OnClickListener, DialogInter
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
             dialog.dismiss();
-            new AlertDialog.Builder(mContext).setTitle("请选择立直的玩家")
-                    .setMultiChoiceItems(mPlayers,mRichis,new DialogInterface.OnMultiChoiceClickListener(){
+            AlertDialog richiDialog = new AlertDialog.Builder(mContext,R.style.Theme_AppCompat_Light_Dialog_Alert_Self).setTitle("请选择立直的玩家")
+                    .setMultiChoiceItems(mPlayers, mRichis, new DialogInterface.OnMultiChoiceClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                             //选择立直玩家
                             mRichis[which] = isChecked;
                         }
                     })
-                    .setPositiveButton(mContext.getString(R.string.confirm),new DialogInterface.OnClickListener() {
+                    .setPositiveButton(mContext.getString(R.string.confirm), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             LiujuResult liujuResult = new LiujuResult();
                             liujuResult.tingpaiPlayers = new ArrayList<String>();
                             liujuResult.richiPlayers = new ArrayList<String>();
-                            for(int i = 0;i<mPlayers.length;i++) {
+                            for (int i = 0; i < mPlayers.length; i++) {
                                 if (mTingPais[i]) {
                                     liujuResult.tingpaiPlayers.add(mPlayers[i]);
                                 }
@@ -75,7 +75,8 @@ public class LiuJuDialog implements DialogInterface.OnClickListener, DialogInter
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                         }
-                    }).show();
+                    }).create();
+            richiDialog.show();
         } else if (which == DialogInterface.BUTTON_NEGATIVE) {
             dialog.dismiss();
         }
