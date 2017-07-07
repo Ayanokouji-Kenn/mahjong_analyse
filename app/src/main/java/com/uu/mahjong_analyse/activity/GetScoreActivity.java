@@ -3,15 +3,16 @@ package com.uu.mahjong_analyse.activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.IdRes;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.ArrayMap;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ public class GetScoreActivity extends BaseActivity {
     CheckBox mCbRichi;
     @BindView(R.id.cb_ihhatsu)
     CheckBox mCbIhhatsu;
+    @BindView(R.id.rg_hepai)
+    RadioGroup mRg;
     @BindView(R.id.rb_tsumo)
     RadioButton mRbTsumo;
     @BindView(R.id.rb_ronn)
@@ -77,149 +80,18 @@ public class GetScoreActivity extends BaseActivity {
     private static ArrayMap<String, Integer> ziRonnMap = new ArrayMap<>();
     private static ArrayMap<String, Integer> ziTsumoMap = new ArrayMap<>();
     private static List<String> mFanList = new ArrayList<>();
-    private static List<List<String>> mFuList = new ArrayList<>();
-    private static List<List<List<String>>> mFanlist2 = new ArrayList<>();  //第三列数据，用来显示满贯以下具体多少翻的
+    private static List<List<String>> mFuList = new ArrayList<>();  //满贯以下 满贯  跳满..
+    private static List<List<List<String>>> mFanlist2 = new ArrayList<>();  //第三列数据，1翻 2翻 3翻 4翻
+
     static {
         initFanData();
         initQinRonnMap();
-        qinTsumoMap.put("30符1翻", 1500);
-        qinTsumoMap.put("40符1翻", 2000);
-        qinTsumoMap.put("50符1翻", 2400);
-        qinTsumoMap.put("60符1翻", 2900);
-        qinTsumoMap.put("70符1翻", 3400);
-        qinTsumoMap.put("80符1翻", 3900);
-        qinTsumoMap.put("90符1翻", 4400);
-        qinTsumoMap.put("100符1翻", 4800);
-        qinTsumoMap.put("110符1翻", 5300);
-
-        qinTsumoMap.put("20符2翻", 2000);
-        qinTsumoMap.put("25符2翻", 2400);
-        qinTsumoMap.put("30符2翻", 2900);
-        qinTsumoMap.put("40符2翻", 3900);
-        qinTsumoMap.put("50符2翻", 4800);
-        qinTsumoMap.put("60符2翻", 5800);
-        qinTsumoMap.put("70符2翻", 6800);
-        qinTsumoMap.put("80符2翻", 7700);
-        qinTsumoMap.put("90符2翻", 8700);
-        qinTsumoMap.put("100符2翻", 9600);
-        qinTsumoMap.put("110符2翻", 10600);
-
-        qinTsumoMap.put("20符3翻", 3900);
-        qinTsumoMap.put("25符3翻", 4800);
-        qinTsumoMap.put("30符3翻", 5800);
-        qinTsumoMap.put("40符3翻", 7700);
-        qinTsumoMap.put("50符3翻", 9600);
-
-        qinTsumoMap.put("20符4翻", 7700);
-        qinTsumoMap.put("25符4翻", 9600);
-
-        qinTsumoMap.put("满贯", 12000);
-        qinTsumoMap.put("跳满", 18000);
-        qinTsumoMap.put("倍满", 24000);
-        qinTsumoMap.put("三倍满", 36000);
-        qinTsumoMap.put("役满", 48000);
-
+        initQinTsumoMap();
+        initZiTsumoMap();
+        initZiRonnMap();
     }
 
-    private static void initQinRonnMap() {
-        qinRonnMap.put("30符1翻", 1500);
-        qinRonnMap.put("40符1翻", 2000);
-        qinRonnMap.put("50符1翻", 2400);
-        qinRonnMap.put("60符1翻", 2900);
-        qinRonnMap.put("70符1翻", 3400);
-        qinRonnMap.put("80符1翻", 3900);
-        qinRonnMap.put("90符1翻", 4400);
-        qinRonnMap.put("100符1翻", 4800);
-        qinRonnMap.put("110符1翻", 5300);
-
-        qinRonnMap.put("20符2翻", 2000);
-        qinRonnMap.put("25符2翻", 2400);
-        qinRonnMap.put("30符2翻", 2900);
-        qinRonnMap.put("40符2翻", 3900);
-        qinRonnMap.put("50符2翻", 4800);
-        qinRonnMap.put("60符2翻", 5800);
-        qinRonnMap.put("70符2翻", 6800);
-        qinRonnMap.put("80符2翻", 7700);
-        qinRonnMap.put("90符2翻", 8700);
-        qinRonnMap.put("100符2翻", 9600);
-        qinRonnMap.put("110符2翻", 10600);
-
-        qinRonnMap.put("20符3翻", 3900);
-        qinRonnMap.put("25符3翻", 4800);
-        qinRonnMap.put("30符3翻", 5800);
-        qinRonnMap.put("40符3翻", 7700);
-        qinRonnMap.put("50符3翻", 9600);
-
-        qinRonnMap.put("20符4翻", 7700);
-        qinRonnMap.put("25符4翻", 9600);
-
-        qinRonnMap.put("满贯", 12000);
-        qinRonnMap.put("跳满", 18000);
-        qinRonnMap.put("倍满", 24000);
-        qinRonnMap.put("三倍满", 36000);
-        qinRonnMap.put("役满", 48000);
-    }
-
-    private static void initFanData() {
-        //第一列显示番数
-        mFanList.add("满贯以下");
-        mFanList.add("满贯");
-        mFanList.add("跳满");
-        mFanList.add("倍满");
-        mFanList.add("三倍满");
-        mFanList.add("役满");
-        //第二列显示符，只有满贯以下才需要符，所以添加5个空集合
-        List<String> fuList = new ArrayList<>();
-        fuList.add("20符");
-        fuList.add("25符");
-        fuList.add("30符");
-        fuList.add("40符");
-        fuList.add("50符");
-        fuList.add("60符");
-        fuList.add("70符");
-        fuList.add("80符");
-        fuList.add("90符");
-        fuList.add("100符");
-        fuList.add("110符");
-        ArrayList<String> emptyList = new ArrayList<>();
-        emptyList.add("");
-        mFuList.add(fuList);
-        mFuList.add(emptyList);
-        mFuList.add(emptyList);
-        mFuList.add(emptyList);
-        mFuList.add(emptyList);
-        mFuList.add(emptyList);
-        //第三列显示满贯以下的哪一种
-        ArrayList<String> fan = new ArrayList<>();
-        ArrayList<String> fu25fan = new ArrayList<>();
-        List<List<String>> fan2 = new ArrayList<>();
-        List<List<String>> fan2Empty = new ArrayList<>();
-        fan2Empty.add(emptyList);
-        fan.add("1翻");
-        fan.add("2翻");
-        fan.add("3翻");
-        fan.add("4翻");
-        fu25fan.add("2翻");
-        fu25fan.add("3翻");
-        fu25fan.add("4翻");
-        fan2.add(fan);
-        fan2.add(fu25fan);
-        fan2.add(fan);
-        fan2.add(fan);
-        fan2.add(fan);
-        fan2.add(fan);
-        fan2.add(fan);
-        fan2.add(fan);
-        fan2.add(fan);
-        fan2.add(fan);
-        fan2.add(fan);
-        mFanlist2.add(fan2);
-        mFanlist2.add(fan2Empty);
-        mFanlist2.add(fan2Empty);
-        mFanlist2.add(fan2Empty);
-        mFanlist2.add(fan2Empty);
-        mFanlist2.add(fan2Empty);
-    }
+    private boolean isOya;
 
 
     @Override
@@ -230,6 +102,7 @@ public class GetScoreActivity extends BaseActivity {
         oyaName = intent.getStringExtra("oya");
         gong = intent.getIntExtra("gong", 0);
         benchang = intent.getIntExtra("benchang", 0);
+        isOya = TextUtils.equals(mPlayer, oyaName);
         mPlayers = new ArrayList<>();
         mPlayers.add(SPUtils.getString(Constant.EAST, ""));
         mPlayers.add(SPUtils.getString(Constant.WEST, ""));
@@ -250,6 +123,17 @@ public class GetScoreActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
+        mRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                if (checkedId == R.id.rb_tsumo) {
+                    mTvChong.setVisibility(View.GONE);
+                    mChongPlayer = "";
+                }else {
+                    mTvChong.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 //        initVoiceDialog();
     }
 //
@@ -286,8 +170,11 @@ public class GetScoreActivity extends BaseActivity {
                 }
                 break;
             case R.id.tv_fan:
-                showFanDialog();
-
+                if (mRbRonn.isChecked() || mRbTsumo.isChecked()) {
+                    showFanDialog();
+                }else {
+                    ToastUtils.show(mContext,"请选点击自摸或荣和");
+                }
                 break;
             case R.id.btn_confirm:
                 if (checkData()) {
@@ -334,24 +221,45 @@ public class GetScoreActivity extends BaseActivity {
 //    }
 
 
-
-
     private void showFanDialog() {
+
         OptionsPickerView optionsPickerView = new OptionsPickerView.Builder(mContext, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                String key;
+                //满贯以下
                 if (options1 == 0) {
-                    Log.d("ZFDT", mFanList.get(options1) + mFuList.get(options1).get(options2)+mFanlist2.get(options1).get(options2).get(options3));
-                }else {
-                    Log.d("ZFDT", mFanList.get(options1)+"");
+                    key = mFuList.get(options1).get(options2) + mFanlist2.get(options1).get(options2).get(options3); //这里取出来的应该是  110符1翻 这种字符串
+                } else {
+                    key = mFanList.get(options1);
                 }
+                if (TextUtils.equals("25符2翻", key) && mRbTsumo.isChecked()) {
+                    ToastUtils.show(mContext,"2翻的七对子不可能自摸哦~");
+                    return;
+                }
+                if (isOya) {
+                    if (mRbTsumo.isChecked()) {
+                        mPoint_int = qinTsumoMap.get(key);
+                    } else if (mRbRonn.isChecked()) {
+                        mPoint_int =qinRonnMap.get(key);
+                    }
+                } else {
+                    if (mRbTsumo.isChecked()) {
+
+                        mPoint_int =ziTsumoMap.get(key);
+                    } else if (mRbRonn.isChecked()) {
+                        mPoint_int =ziRonnMap.get(key);
+                    }
+                }
+
+                setFan(key);
+                mEtPoint.setText(String.valueOf(mPoint_int));
             }
         })
                 .setSubmitColor(getResources().getColor(R.color.colorAccent))
                 .setCancelColor(getResources().getColor(R.color.colorAccent))
                 .build();
-
-        optionsPickerView.setPicker(mFanList,mFuList,mFanlist2);
+        optionsPickerView.setPicker(mFanList, mFuList, mFanlist2);
         optionsPickerView.show();
 
 //
@@ -364,7 +272,9 @@ public class GetScoreActivity extends BaseActivity {
 //                setFan(s);
 //            }
 //        });
+
     }
+
 
     private void setFan(String s) {
         mFan = s;
@@ -443,11 +353,11 @@ public class GetScoreActivity extends BaseActivity {
         if (!TextUtils.isEmpty(point)) {
             mPoint_int = Integer.parseInt(point);
 //            和牌最大值要加上供托的
-            if (playerRecord.he_point_max < mPoint_int+gong+benchang*300) {
-                cv.put("he_point_max", mPoint_int+gong+benchang*300);
+            if (playerRecord.he_point_max < mPoint_int + gong + benchang * 300) {
+                cv.put("he_point_max", mPoint_int + gong + benchang * 300);
             }
 
-            cv.put("he_point_sum", playerRecord.he_point_sum + mPoint_int+gong+benchang*300);
+            cv.put("he_point_sum", playerRecord.he_point_sum + mPoint_int + gong + benchang * 300);
         }
 
         DBDao.updatePlayerData(mPlayer, cv);
@@ -475,16 +385,16 @@ public class GetScoreActivity extends BaseActivity {
 
         //改变点数
         //和牌人点数
-        SPUtils.putInt(mPlayer, SPUtils.getInt(mPlayer, Integer.MIN_VALUE) + mPoint_int+gong+benchang*300);
+        SPUtils.putInt(mPlayer, SPUtils.getInt(mPlayer, Integer.MIN_VALUE) + mPoint_int + gong + benchang * 300);
         //如果放铳的话，放铳人点数变化
         if (mRbRonn.isChecked() && !TextUtils.isEmpty(mChongPlayer)) {
-            SPUtils.putInt(mChongPlayer, SPUtils.getInt(mChongPlayer, Integer.MIN_VALUE) - mPoint_int-benchang*300);
+            SPUtils.putInt(mChongPlayer, SPUtils.getInt(mChongPlayer, Integer.MIN_VALUE) - mPoint_int - benchang * 300);
         } else {
             //亲家自摸，那么其他三家平分点数
             if (TextUtils.equals(oyaName, mPlayer)) {
                 for (String player : mPlayers) {
                     if (!TextUtils.equals(player, mPlayer)) {
-                        SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - (mPoint_int / 3)-benchang*100);
+                        SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - (mPoint_int / 3) - benchang * 100);
                     }
                 }
             } else {
@@ -494,25 +404,25 @@ public class GetScoreActivity extends BaseActivity {
                     if (!TextUtils.equals(player, mPlayer)) {
                         switch (mPoint_int) {
                             case 1100:  //30符1翻
-                                setZiJiaTsumo(player,500,300);
+                                setZiJiaTsumo(player, 500, 300);
                                 break;
                             case 1500:  //40符1翻  20符2翻
-                                setZiJiaTsumo(player,700,400);
+                                setZiJiaTsumo(player, 700, 400);
                                 break;
                             case 2700:  //80符1翻  40符2翻  20符3翻
-                                setZiJiaTsumo(player,1300,700);
+                                setZiJiaTsumo(player, 1300, 700);
                                 break;
                             case 3100:  //90符1翻
-                                setZiJiaTsumo(player,1500,800);
+                                setZiJiaTsumo(player, 1500, 800);
                                 break;
                             case 4700:  //70符2翻
-                                setZiJiaTsumo(player,2300,1200);
+                                setZiJiaTsumo(player, 2300, 1200);
                                 break;
                             case 5900:  //90符2翻
-                                setZiJiaTsumo(player,2900,1500);
+                                setZiJiaTsumo(player, 2900, 1500);
                                 break;
                             default:
-                                setZiJiaTsumo(player,mPoint_int / 2,mPoint_int / 4);
+                                setZiJiaTsumo(player, mPoint_int / 2, mPoint_int / 4);
                                 break;
                         }
                     }
@@ -524,11 +434,11 @@ public class GetScoreActivity extends BaseActivity {
         finish();
     }
 
-    private void setZiJiaTsumo(String player,int oyaPoint,int ziPoint) {
+    private void setZiJiaTsumo(String player, int oyaPoint, int ziPoint) {
         if (TextUtils.equals(oyaName, player)) {
-            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - oyaPoint-benchang*100);
+            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - oyaPoint - benchang * 100);
         } else {
-            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - ziPoint-benchang*100);
+            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - ziPoint - benchang * 100);
         }
     }
 
@@ -647,4 +557,225 @@ public class GetScoreActivity extends BaseActivity {
 //        FlowerCollector.onPause(this);
 //        super.onPause();
 //    }
+
+    private static void initZiRonnMap() {
+        ziRonnMap.put("30符1翻", 1000);
+        ziRonnMap.put("40符1翻", 1300);
+        ziRonnMap.put("50符1翻", 1600);
+        ziRonnMap.put("60符1翻", 2000);
+        ziRonnMap.put("70符1翻", 2300);
+        ziRonnMap.put("80符1翻", 2600);
+        ziRonnMap.put("90符1翻", 2900);
+        ziRonnMap.put("100符1翻", 3200);
+        ziRonnMap.put("110符1翻", 3600);
+
+        ziRonnMap.put("20符2翻", 1300);
+        ziRonnMap.put("25符2翻", 1600);
+        ziRonnMap.put("30符2翻", 2000);
+        ziRonnMap.put("40符2翻", 2600);
+        ziRonnMap.put("50符2翻", 3200);
+        ziRonnMap.put("60符2翻", 3900);
+        ziRonnMap.put("70符2翻", 4500);
+        ziRonnMap.put("80符2翻", 5200);
+        ziRonnMap.put("90符2翻", 5800);
+        ziRonnMap.put("100符2翻", 6400);
+        ziRonnMap.put("110符2翻", 7100);
+
+        ziRonnMap.put("20符3翻", 2600);
+        ziRonnMap.put("25符3翻", 3200);
+        ziRonnMap.put("30符3翻", 3900);
+        ziRonnMap.put("40符3翻", 5200);
+        ziRonnMap.put("50符3翻", 6400);
+
+        ziRonnMap.put("20符4翻", 5200);
+        ziRonnMap.put("25符4翻", 6400);
+
+        ziRonnMap.put("满贯", 8000);
+        ziRonnMap.put("跳满", 12000);
+        ziRonnMap.put("倍满", 16000);
+        ziRonnMap.put("三倍满", 24000);
+        ziRonnMap.put("役满", 32000);
+    }
+
+    private static void initZiTsumoMap() {
+        ziTsumoMap.put("30符1翻", 1100);
+        ziTsumoMap.put("40符1翻", 1500);
+        ziTsumoMap.put("50符1翻", 1600);
+        ziTsumoMap.put("60符1翻", 2000);
+        ziTsumoMap.put("70符1翻", 2400);
+        ziTsumoMap.put("80符1翻", 2700);
+        ziTsumoMap.put("90符1翻", 3100);
+        ziTsumoMap.put("100符1翻", 3200);
+        ziTsumoMap.put("110符1翻", 3600);
+
+        ziTsumoMap.put("20符2翻", 1500);
+        ziTsumoMap.put("30符2翻", 2000);
+        ziTsumoMap.put("40符2翻", 2700);
+        ziTsumoMap.put("50符2翻", 3200);
+        ziTsumoMap.put("60符2翻", 4000);
+        ziTsumoMap.put("70符2翻", 4700);
+        ziTsumoMap.put("80符2翻", 5200);
+        ziTsumoMap.put("90符2翻", 5900);
+        ziTsumoMap.put("100符2翻", 6400);
+        ziTsumoMap.put("110符2翻", 7200);
+
+        ziTsumoMap.put("20符3翻", 2700);
+        ziTsumoMap.put("25符3翻", 3200);
+        ziTsumoMap.put("30符3翻", 4000);
+        ziTsumoMap.put("40符3翻", 5200);
+        ziTsumoMap.put("50符3翻", 6400);
+
+        ziTsumoMap.put("20符4翻", 5200);
+        ziTsumoMap.put("25符4翻", 6400);
+
+        ziTsumoMap.put("满贯", 8000);
+        ziTsumoMap.put("跳满", 12000);
+        ziTsumoMap.put("倍满", 160);
+        ziTsumoMap.put("三倍满", 24000);
+        ziTsumoMap.put("役满", 32000);
+    }
+
+    private static void initQinTsumoMap() {
+        qinTsumoMap.put("30符1翻", 1500);
+        qinTsumoMap.put("40符1翻", 2100);
+        qinTsumoMap.put("50符1翻", 2400);
+        qinTsumoMap.put("60符1翻", 3000);
+        qinTsumoMap.put("70符1翻", 3600);
+        qinTsumoMap.put("80符1翻", 3900);
+        qinTsumoMap.put("90符1翻", 4500);
+        qinTsumoMap.put("100符1翻", 4800);
+        qinTsumoMap.put("110符1翻", 5400);
+
+        qinTsumoMap.put("20符2翻", 2100);
+        qinTsumoMap.put("30符2翻", 3000);
+        qinTsumoMap.put("40符2翻", 3900);
+        qinTsumoMap.put("50符2翻", 4800);
+        qinTsumoMap.put("60符2翻", 6000);
+        qinTsumoMap.put("70符2翻", 6900);
+        qinTsumoMap.put("80符2翻", 7800);
+        qinTsumoMap.put("90符2翻", 8700);
+        qinTsumoMap.put("100符2翻", 9600);
+        qinTsumoMap.put("110符2翻", 10800);
+
+        qinTsumoMap.put("20符3翻", 3900);
+        qinTsumoMap.put("25符3翻", 6000);
+        qinTsumoMap.put("30符3翻", 5800);
+        qinTsumoMap.put("40符3翻", 7800);
+        qinTsumoMap.put("50符3翻", 9600);
+
+        qinTsumoMap.put("20符4翻", 7800);
+        qinTsumoMap.put("25符4翻", 9600);
+
+        qinTsumoMap.put("满贯", 12000);
+        qinTsumoMap.put("跳满", 18000);
+        qinTsumoMap.put("倍满", 24000);
+        qinTsumoMap.put("三倍满", 36000);
+        qinTsumoMap.put("役满", 48000);
+    }
+
+    private static void initQinRonnMap() {
+        qinRonnMap.put("30符1翻", 1500);
+        qinRonnMap.put("40符1翻", 2000);
+        qinRonnMap.put("50符1翻", 2400);
+        qinRonnMap.put("60符1翻", 2900);
+        qinRonnMap.put("70符1翻", 3400);
+        qinRonnMap.put("80符1翻", 3900);
+        qinRonnMap.put("90符1翻", 4400);
+        qinRonnMap.put("100符1翻", 4800);
+        qinRonnMap.put("110符1翻", 5300);
+
+        qinRonnMap.put("20符2翻", 2000);
+        qinRonnMap.put("25符2翻", 2400);
+        qinRonnMap.put("30符2翻", 2900);
+        qinRonnMap.put("40符2翻", 3900);
+        qinRonnMap.put("50符2翻", 4800);
+        qinRonnMap.put("60符2翻", 5800);
+        qinRonnMap.put("70符2翻", 6800);
+        qinRonnMap.put("80符2翻", 7700);
+        qinRonnMap.put("90符2翻", 8700);
+        qinRonnMap.put("100符2翻", 9600);
+        qinRonnMap.put("110符2翻", 10600);
+
+        qinRonnMap.put("20符3翻", 3900);
+        qinRonnMap.put("25符3翻", 4800);
+        qinRonnMap.put("30符3翻", 5800);
+        qinRonnMap.put("40符3翻", 7700);
+        qinRonnMap.put("50符3翻", 9600);
+
+        qinRonnMap.put("20符4翻", 7700);
+        qinRonnMap.put("25符4翻", 9600);
+
+        qinRonnMap.put("满贯", 12000);
+        qinRonnMap.put("跳满", 18000);
+        qinRonnMap.put("倍满", 24000);
+        qinRonnMap.put("三倍满", 36000);
+        qinRonnMap.put("役满", 48000);
+    }
+
+    private static void initFanData() {
+        //第一列显示番数
+        mFanList.add("满贯以下");
+        mFanList.add("满贯");
+        mFanList.add("跳满");
+        mFanList.add("倍满");
+        mFanList.add("三倍满");
+        mFanList.add("役满");
+        //第二列显示符，只有满贯以下才需要符，所以添加5个空集合
+        List<String> fuList = new ArrayList<>();
+        fuList.add("20符");
+        fuList.add("25符");
+        fuList.add("30符");
+        fuList.add("40符");
+        fuList.add("50符");
+        fuList.add("60符");
+        fuList.add("70符");
+        fuList.add("80符");
+        fuList.add("90符");
+        fuList.add("100符");
+        fuList.add("110符");
+        ArrayList<String> emptyList = new ArrayList<>();
+        emptyList.add("");
+        mFuList.add(fuList);
+        mFuList.add(emptyList);
+        mFuList.add(emptyList);
+        mFuList.add(emptyList);
+        mFuList.add(emptyList);
+        mFuList.add(emptyList);
+        //第三列显示满贯以下的哪一种
+        ArrayList<String> fu20_25fan = new ArrayList<>();
+        ArrayList<String> fu30_40_50fan = new ArrayList<>();
+        ArrayList<String> fu60_110fan = new ArrayList<>();
+        List<List<String>> fan2 = new ArrayList<>();
+        List<List<String>> fan2Empty = new ArrayList<>();
+        fan2Empty.add(emptyList);
+
+        fu20_25fan.add("2翻");
+        fu20_25fan.add("3翻");
+        fu20_25fan.add("4翻");
+
+        fu30_40_50fan.add("1翻");
+        fu30_40_50fan.add("2翻");
+        fu30_40_50fan.add("3翻");
+
+        fu60_110fan.add("1翻");
+        fu60_110fan.add("2翻");
+
+        fan2.add(fu20_25fan);   //20符和25符只有2 3 4翻
+        fan2.add(fu20_25fan);
+        fan2.add(fu30_40_50fan); //30 40 50符只有1 2 3翻
+        fan2.add(fu30_40_50fan);
+        fan2.add(fu30_40_50fan);
+        fan2.add(fu60_110fan);   //60~110符 只有1 2翻
+        fan2.add(fu60_110fan);
+        fan2.add(fu60_110fan);
+        fan2.add(fu60_110fan);
+        fan2.add(fu60_110fan);
+        fan2.add(fu60_110fan);
+        mFanlist2.add(fan2);
+        mFanlist2.add(fan2Empty);
+        mFanlist2.add(fan2Empty);
+        mFanlist2.add(fan2Empty);
+        mFanlist2.add(fan2Empty);
+        mFanlist2.add(fan2Empty);
+    }
 }

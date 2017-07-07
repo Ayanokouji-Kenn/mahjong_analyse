@@ -158,7 +158,7 @@ public class ScanPointActivity extends BaseActivity {
         mDatas.add(new SpanUtils().appendLine("4800").appendLine("1600").setFontSize(8,true).create());
         mDatas.add(getString(R.string.fu100));
         mDatas.add(new SpanUtils().appendLine("3200").appendLine("1600/800").setFontSize(8,true).create());
-        mDatas.add(new SpanUtils().appendLine("56400").appendLine("3200/1600").setFontSize(8,true).create());
+        mDatas.add(new SpanUtils().appendLine("6400").appendLine("3200/1600").setFontSize(8,true).create());
         mDatas.add("");
         mDatas.add("");
         //110符
