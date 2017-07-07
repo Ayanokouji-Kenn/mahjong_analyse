@@ -61,7 +61,7 @@ public class SplashActivity extends BaseActivity implements DialogInterface.OnCl
                     builder = new AlertDialog.Builder(mContext);
                 }
                 mDialog= builder.setTitle("需要开启权限")
-                        .setMessage("为方便取数据，数据保存在SD卡的mahjong文件夹下，故需要读写权限，请通过一下")
+                        .setMessage("为方便取数据，保存在SD卡的mahjong文件夹下，故需要读写权限，请通过一下")
                         .setPositiveButton(getString(R.string.confirm),this )
                         .setNegativeButton(getString(R.string.cancel),this)
                         .create();
