@@ -396,6 +396,9 @@ public class MainActivity extends BaseActivity {
             case R.id.toolbar_point:
                 startActivity(new Intent(mContext, ScanPointActivity.class));
                 break;
+            case R.id.toolbar_practice:
+                startActivity(new Intent(mContext,PracticeActivity.class));
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

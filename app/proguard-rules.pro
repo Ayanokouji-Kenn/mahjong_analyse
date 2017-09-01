@@ -16,10 +16,10 @@
 #   public *;
 #}
 
-#-keep class com.iflytek.**{*;}
-#-keepattributes Signature
-#-dontwarn com.tencent.bugly.**
-#-keep public class com.tencent.bugly.**{*;}
+-keep class com.iflytek.**{*;}
+-keepattributes Signature
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
 -dontwarn rx.internal.util.unsafe.*
 #Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
