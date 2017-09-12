@@ -2,33 +2,28 @@ package com.uu.mahjong_analyse.activity;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.support.design.widget.TextInputEditText;
+import android.databinding.DataBindingUtil;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uu.mahjong_analyse.R;
-import com.uu.mahjong_analyse.Utils.CommonApi;
-import com.uu.mahjong_analyse.Utils.Constant;
-import com.uu.mahjong_analyse.Utils.SPUtils;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.bean.PlayerRecord;
+import com.uu.mahjong_analyse.databinding.ActivitySetGameScoreBinding;
 import com.uu.mahjong_analyse.db.DBDao;
+import com.uu.mahjong_analyse.utils.CommonApi;
+import com.uu.mahjong_analyse.utils.Constant;
+import com.uu.mahjong_analyse.utils.SPUtils;
 
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.TreeSet;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 
 /**
  * @auther Nagisa.
@@ -37,18 +32,7 @@ import butterknife.OnClick;
  */
 public class SetGameScoreActiivty extends BaseActivity{
 
-    @BindView(R.id.et_east)
-    TextInputEditText mEtEast;
-    @BindView(R.id.et_south)
-    TextInputEditText mEtSouth;
-    @BindView(R.id.et_west)
-    TextInputEditText mEtWest;
-    @BindView(R.id.et_north)
-    TextInputEditText mEtNorth;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-    @BindView(R.id.btn_save)
-    Button mBtnSave;
+
 
     private int topBonus = 20;
     private PlayerRecord mNorthPlayer;
@@ -57,6 +41,7 @@ public class SetGameScoreActiivty extends BaseActivity{
     private PlayerRecord mEastPlayer;
     private String[] names = new String[4];
     private int mSum;
+    private ActivitySetGameScoreBinding mBinding;
 
     @Override
     public void initData() {
@@ -71,18 +56,17 @@ public class SetGameScoreActiivty extends BaseActivity{
         names[2] = SPUtils.getString(Constant.SOUTH,"");
         names[3] = SPUtils.getString(Constant.NORTH,"");
 
-        mEtEast.setText(String.valueOf(SPUtils.getInt(names[0],25000)));
-        mEtWest.setText(String.valueOf(SPUtils.getInt(names[1],25000)));
-        mEtSouth.setText(String.valueOf(SPUtils.getInt(names[2],25000)));
-        mEtNorth.setText(String.valueOf(SPUtils.getInt(names[3],25000)));
+        mBinding.etEast.setText(String.valueOf(SPUtils.getInt(names[0],25000)));
+        mBinding.etWest.setText(String.valueOf(SPUtils.getInt(names[1],25000)));
+        mBinding.etSouth.setText(String.valueOf(SPUtils.getInt(names[2],25000)));
+        mBinding.etNorth.setText(String.valueOf(SPUtils.getInt(names[3],25000)));
     }
 
     @Override
     public void initView() {
-        setContentView(R.layout.activity_set_game_score);
-        ButterKnife.bind(this);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_set_game_score);
 
-        CommonApi.setToolbar(this, mToolbar, "设置全局得点");
+        CommonApi.setToolbar(this, (Toolbar) findViewById(R.id.toolbar), "设置全局得点");
     }
 
     @Override
@@ -91,14 +75,14 @@ public class SetGameScoreActiivty extends BaseActivity{
     }
 
 
-    @OnClick(R.id.btn_save)
+//    @OnClick(R.id.btn_save)
     public void onClick() {
 
 
-        String east = mEtEast.getText().toString().trim();
-        String west = mEtWest.getText().toString().trim();
-        String north = mEtNorth.getText().toString().trim();
-        String south = mEtSouth.getText().toString().trim();
+        String east = mBinding.etEast.getText().toString().trim();
+        String west = mBinding.etWest.getText().toString().trim();
+        String north = mBinding.etNorth.getText().toString().trim();
+        String south = mBinding.etSouth.getText().toString().trim();
 
         if(TextUtils.isEmpty(east) || TextUtils.isEmpty(west) || TextUtils.isEmpty(south) || TextUtils.isEmpty(north)) {
             Toast.makeText(this, "4个人都填了再保存啊喂！", Toast.LENGTH_SHORT).show();

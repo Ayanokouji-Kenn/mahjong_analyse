@@ -3,23 +3,20 @@ package com.uu.mahjong_analyse.activity;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 
 import com.uu.mahjong_analyse.R;
-import com.uu.mahjong_analyse.Utils.Constant;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.base.MyViewPagerAdapter;
+import com.uu.mahjong_analyse.databinding.ActivityModifydbBinding;
 import com.uu.mahjong_analyse.db.DBDao;
 import com.uu.mahjong_analyse.fragment.ModifyDBFfragment;
+import com.uu.mahjong_analyse.utils.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * @auther xuzijian
@@ -27,15 +24,12 @@ import butterknife.ButterKnife;
  */
 
 public class ModifyDbActivity extends BaseActivity {
-    @BindView(R.id.tablayout)
-    TabLayout tablayout;
-    @BindView(R.id.viewpager)
-    ViewPager viewpager;
+
+    private ActivityModifydbBinding mBinding;
 
     @Override
     public void initView() {
-        setContentView(R.layout.activity_modifydb);
-        ButterKnife.bind(this);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_modifydb);
     }
 
     @Override
@@ -56,8 +50,8 @@ public class ModifyDbActivity extends BaseActivity {
         db.close();
 
 
-        viewpager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(),tableFragments));
-        tablayout.setupWithViewPager(viewpager);
+        mBinding.viewpager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(),tableFragments));
+        mBinding.tablayout.setupWithViewPager(mBinding.viewpager);
     }
 
     @Override

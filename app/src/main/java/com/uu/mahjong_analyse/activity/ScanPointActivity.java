@@ -12,27 +12,20 @@ import com.uu.mahjong_analyse.base.BaseActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * @auther xuzijian
  * @date 2017/6/30 17:01.
  */
 
 public class ScanPointActivity extends BaseActivity {
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    //    @BindView(R.id.photo_view)
-//    PhotoView photoView;
-//    @BindView(R.id.rv_point)
-//    RecyclerView mRvPoint;
 
     private int spanCount = 9;
+    private Toolbar toolbar;
+
     @Override
     public void initView() {
         setContentView(R.layout.activity_scan_point);
-        ButterKnife.bind(this);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("点数速查");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

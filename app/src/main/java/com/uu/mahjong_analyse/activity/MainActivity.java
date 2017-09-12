@@ -2,10 +2,10 @@ package com.uu.mahjong_analyse.activity;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -13,28 +13,25 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SpanUtils;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.blankj.utilcode.util.ToastUtils;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 import com.uu.mahjong_analyse.R;
-import com.uu.mahjong_analyse.Utils.BitmapUtils;
-import com.uu.mahjong_analyse.Utils.Constant;
-import com.uu.mahjong_analyse.Utils.MagicFileChooser;
-import com.uu.mahjong_analyse.Utils.SPUtils;
-import com.uu.mahjong_analyse.Utils.ToastUtils;
-import com.uu.mahjong_analyse.Utils.rx.RxBus;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.bean.LiujuResult;
+import com.uu.mahjong_analyse.databinding.ActivityMainBinding;
 import com.uu.mahjong_analyse.db.DBDao;
 import com.uu.mahjong_analyse.fragment.LeftMenuFragment;
+import com.uu.mahjong_analyse.utils.BitmapUtils;
+import com.uu.mahjong_analyse.utils.Constant;
+import com.uu.mahjong_analyse.utils.MagicFileChooser;
+import com.uu.mahjong_analyse.utils.SPUtils;
+import com.uu.mahjong_analyse.utils.rx.RxBus;
 import com.uu.mahjong_analyse.view.LiuJuDialog;
 import com.uu.mahjong_analyse.view.RichiDialog;
 
@@ -43,10 +40,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 import rx.functions.Action1;
 
 public class MainActivity extends BaseActivity {
@@ -54,61 +47,20 @@ public class MainActivity extends BaseActivity {
     private static final int RC_GET_SCORE = 2;
     private static final int RC_ALBUM = 3;
 
-    @BindView(R.id.fab_menu)
-    FloatingActionsMenu mFabMenu;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-    @BindView(R.id.drawerlayout)
-    DrawerLayout mDrawerLayout;
-
-    ActionBarDrawerToggle mDrawerToggle;
-    @BindView(R.id.tv_east)
-    ShimmerTextView mTvEast;
-    @BindView(R.id.tv_south)
-    ShimmerTextView mTvSouth;
-    @BindView(R.id.tv_west)
-    ShimmerTextView mTvWest;
-    @BindView(R.id.tv_north)
-    ShimmerTextView mTvNorth;
-    @BindView(R.id.rl_table)
-    RelativeLayout mRlTable;
-    @BindView(R.id.rightmenu_rg)
-    RadioGroup rightmenu_radiogroup;
-    @BindView(R.id.tv_east_point)
-    TextView mTvEastPoint;
-    @BindView(R.id.tv_south_point)
-    TextView mTvSouthPoint;
-    @BindView(R.id.tv_west_point)
-    TextView mTvWestPoint;
-    @BindView(R.id.tv_north_point)
-    TextView mTvNorthPoint;
-    @BindView(R.id.ll_south)
-    LinearLayout mLLSouth;
-    @BindView(R.id.ll_north)
-    LinearLayout mLLNorth;
-    @BindView(R.id.ll_west)
-    LinearLayout mLLWest;
-    @BindView(R.id.fab_select_player)
-    com.getbase.floatingactionbutton.FloatingActionButton mFabSelectPlayer;
-    @BindView(R.id.fab_start)
-    com.getbase.floatingactionbutton.FloatingActionButton mFabStart;
-    @BindView(R.id.tv_chang)
-    TextView mTvChang;
-    @BindView(R.id.tv_gong)
-    TextView mTvGong;        //供托
 
     private String[] mPlayers;
     private LeftMenuFragment mLeftMenuFragment;
     private Shimmer mShimmer;
     private String hePlayer;
     private ArrayList<ShimmerTextView> textViews;
-    private Unbinder unbinder;
     private MagicFileChooser magicFileChooser;
     private int chang = 0;  //0-7 代表东1到南4；
     private int gong = 0;  //流局产生的供托,有人和牌则清零
     private int benchang = 0;
     private SparseArray<String> changMap = new SparseArray<>();
     private HashMap<String, TextView> playerTvMap = new HashMap<>();
+    private ActivityMainBinding mBinding;
+    private Toolbar toolbar;
 
     @Override
     public void initData() {
@@ -123,31 +75,32 @@ public class MainActivity extends BaseActivity {
         changMap.append(6, getString(R.string.south3));
         changMap.append(7, getString(R.string.south4));
         textViews = new ArrayList<>();
-        textViews.add(mTvEast);
-        textViews.add(mTvSouth);
-        textViews.add(mTvWest);
-        textViews.add(mTvNorth);
+        textViews.add(mBinding.tvEast);
+        textViews.add(mBinding.tvSouth);
+        textViews.add(mBinding.tvWest);
+        textViews.add(mBinding.tvNorth);
 
     }
 
     private void rotatePlayerName() {
-        ObjectAnimator.ofFloat(mLLSouth, "rotation", 0F, -90F).start();
-        ObjectAnimator.ofFloat(mLLWest, "rotation", 0F, 180F).start();
-        ObjectAnimator.ofFloat(mLLNorth, "rotation", 0F, 90F).start();
+        ObjectAnimator.ofFloat(mBinding.llSouth, "rotation", 0F, -90F).start();
+        ObjectAnimator.ofFloat(mBinding.llWest, "rotation", 0F, 180F).start();
+        ObjectAnimator.ofFloat(mBinding.llNorth, "rotation", 0F, 90F).start();
     }
 
     @Override
     public void initView() {
-        setContentView(R.layout.activity_main);
-        unbinder = ButterKnife.bind(this);
-        setSupportActionBar(mToolbar);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mBinding.setListener(mListener);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         setTitle("日麻分析");
-        mToolbar.setPopupTheme(R.style.PopupMenu);
+        toolbar.setPopupTheme(R.style.PopupMenu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.drawer_open,
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mBinding.drawerlayout, toolbar, R.string.drawer_open,
                 R.string.drawer_close);
         mDrawerToggle.syncState();
-        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        mBinding.drawerlayout.addDrawerListener(mDrawerToggle);
 
         mLeftMenuFragment = new LeftMenuFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.fl_leftmenu, mLeftMenuFragment)
@@ -186,7 +139,7 @@ public class MainActivity extends BaseActivity {
                         if (!liujuResult.tingpaiPlayers.contains(getOyaName())) {
                             nextChang();
                         } else {
-                            mTvChang.setText(new SpanUtils().append(changMap.get(chang)).append(++benchang + "本场").setFontSize(14, true).create());
+                            mBinding.tvChang.setText(new SpanUtils().append(changMap.get(chang)).append(++benchang + "本场").setFontSize(14, true).create());
                         }
                         Set<String> players = playerTvMap.keySet();
                         switch (liujuResult.tingpaiPlayers.size()) {
@@ -252,7 +205,7 @@ public class MainActivity extends BaseActivity {
             SPUtils.putInt(richiPlayer, score - 1000);
             gong += 1000;
         }
-        mTvGong.setText(gong == 0 ? "" : String.valueOf(gong));
+        mBinding.tvGong.setText(gong == 0 ? "" : String.valueOf(gong));
     }
 
     @Override
@@ -266,14 +219,14 @@ public class MainActivity extends BaseActivity {
                     DBDao.insertPlayer(Constant.Table.TABLE_PLAYER_RECORD, mPlayers[i]);
                 }
             }
-            mTvEast.setText(mPlayers[0]);
-            mTvSouth.setText(mPlayers[1]);
-            mTvWest.setText(mPlayers[2]);
-            mTvNorth.setText(mPlayers[3]);
-            playerTvMap.put(mPlayers[0], mTvEastPoint);
-            playerTvMap.put(mPlayers[1], mTvSouthPoint);
-            playerTvMap.put(mPlayers[2], mTvWestPoint);
-            playerTvMap.put(mPlayers[3], mTvNorthPoint);
+            mBinding.tvEast.setText(mPlayers[0]);
+            mBinding.tvSouth.setText(mPlayers[1]);
+            mBinding.tvWest.setText(mPlayers[2]);
+            mBinding.tvNorth.setText(mPlayers[3]);
+            playerTvMap.put(mPlayers[0], mBinding.tvEastPoint);
+            playerTvMap.put(mPlayers[1], mBinding.tvSouthPoint);
+            playerTvMap.put(mPlayers[2], mBinding.tvWestPoint);
+            playerTvMap.put(mPlayers[3], mBinding.tvNorthPoint);
 
             mLeftMenuFragment.mLeftmenuDatas.clear();
             mLeftMenuFragment.mLeftmenuDatas.add("东家：" + SPUtils.getString(Constant.EAST, ""));
@@ -284,7 +237,7 @@ public class MainActivity extends BaseActivity {
 
             startGame();
 
-            Snackbar.make(mToolbar, "谁和牌就点击谁的名字设置点数即可", Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(toolbar, "谁和牌就点击谁的名字设置点数即可", Snackbar.LENGTH_INDEFINITE)
                     .setAction("知道了", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -297,11 +250,11 @@ public class MainActivity extends BaseActivity {
                 //改变场风和庄家闪光效果
                 nextChang();
             } else {
-                mTvChang.setText(new SpanUtils().append(changMap.get(chang)).append(++benchang + "本场").setFontSize(14, true).create());
+                mBinding.tvChang.setText(new SpanUtils().append(changMap.get(chang)).append(++benchang + "本场").setFontSize(14, true).create());
             }
             //供托要清零
             gong = 0;
-            mTvGong.setText(null);
+            mBinding.tvGong.setText(null);
             //改变四家分数
             for (String player : mPlayers) {
                 playerTvMap.get(player).setText(String.valueOf(SPUtils.getInt(player, Integer.MIN_VALUE)));
@@ -343,7 +296,7 @@ public class MainActivity extends BaseActivity {
      */
     private void nextChang() {
         benchang = 0;
-        mTvChang.setText(changMap.get(++chang));
+        mBinding.tvChang.setText(changMap.get(++chang));
         mShimmer.cancel();
         mShimmer.start(getOyaTextView());
     }
@@ -389,7 +342,7 @@ public class MainActivity extends BaseActivity {
                     }
                     mLiujuDialog.show();
                 } else {
-                    ToastUtils.show(mContext, "对局未开始");
+                   ToastUtils.showShortSafe("对局未开始");
                 }
                 break;
 //            点数早见表
@@ -412,73 +365,70 @@ public class MainActivity extends BaseActivity {
     private boolean isStart = false;
     private LiuJuDialog mLiujuDialog;
 
-    @OnClick({R.id.ll_east, R.id.ll_south, R.id.ll_west, R.id.ll_north, R.id.fab_select_player, R.id.fab_start})
-    public void onClick(View view) {
-//        final String east = SPUtils.getString(Constant.EAST, "");
-//        final String south = SPUtils.getString(Constant.SOUTH, "");
-//        final String north = SPUtils.getString(Constant.NORTH, "");
-//        final String west = SPUtils.getString(Constant.WEST, "");
-        switch (view.getId()) {
-            case R.id.ll_east:
-                openScorePage(mPlayers == null ? null : mPlayers[0]);
-                break;
-            case R.id.ll_south:
-                openScorePage(mPlayers == null ? null : mPlayers[1]);
-                break;
-            case R.id.ll_west:
-                openScorePage(mPlayers == null ? null : mPlayers[2]);
-                break;
-            case R.id.ll_north:
-                openScorePage(mPlayers == null ? null : mPlayers[3]);
-                break;
+    View.OnClickListener mListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ll_east:
+                    openScorePage(mPlayers == null ? null : mPlayers[0]);
+                    break;
+                case R.id.ll_south:
+                    openScorePage(mPlayers == null ? null : mPlayers[1]);
+                    break;
+                case R.id.ll_west:
+                    openScorePage(mPlayers == null ? null : mPlayers[2]);
+                    break;
+                case R.id.ll_north:
+                    openScorePage(mPlayers == null ? null : mPlayers[3]);
+                    break;
 
-            case R.id.fab_select_player:
-                if (isStart) {
-                    ToastUtils.show(mContext,"不支持中途换人，请先结束当前对局");
-                }else {
-                    openPage(true, RC_PLAYERS, AddNewGameActivity.class);
-                    mFabMenu.collapse();
-                }
-                break;
-            case R.id.fab_start:
-                mFabMenu.collapse();
-                if (mPlayers == null) {
-                    Toast.makeText(this, "还没选人呢", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                startGame();
-                break;
+                case R.id.fab_select_player:
+                    if (isStart) {
+                        ToastUtils.showShortSafe("不支持中途换人，请先结束当前对局");
+                    }else {
+                        openPage(true, RC_PLAYERS, AddNewGameActivity.class);
+                        mBinding.fabMenu.collapse();
+                    }
+                    break;
+                case R.id.fab_start:
+                    mBinding.fabMenu.collapse();
+                    if (mPlayers == null) {
+                        ToastUtils.showShortSafe("还没选人呢");
+                        return;
+                    }
+                    startGame();
+                    break;
 
+            }
         }
-    }
+    };
 
     public void startGame() {
         if (!isStart) {
-            mFabStart.setTitle("结束对局");
-            mFabStart.setIcon(R.drawable.stop);
+            mBinding.fabStart.setTitle("结束对局");
+            mBinding.fabStart.setIcon(R.drawable.stop);
             isStart = true;
             //开局就将场次变成东一局
             SPUtils.putInt(Constant.CHANG, 1);
-            mTvChang.setText(changMap.get(0));
+            mBinding.tvChang.setText(changMap.get(0));
             //东家闪光，右边栏东一变色
-            mShimmer.start(mTvEast);
-            rightmenu_radiogroup.check(R.id.rb_east1);
+            mShimmer.start(mBinding.tvEast);
 
             //将所有人分数初始化为25000
             initScore();
         } else {
             openPage(true, -1, SetGameScoreActiivty.class);
-            mFabStart.setTitle("开局");
-            mFabStart.setIcon(R.mipmap.start_game);
+            mBinding.fabStart.setTitle("开局");
+            mBinding.fabStart.setIcon(R.mipmap.start_game);
             isStart = false;
         }
     }
 
     private void initScore() {
-        mTvEastPoint.setText(getString(R.string._25000));
-        mTvSouthPoint.setText(getString(R.string._25000));
-        mTvWestPoint.setText(getString(R.string._25000));
-        mTvNorthPoint.setText(getString(R.string._25000));
+        mBinding.tvEastPoint.setText(getString(R.string._25000));
+        mBinding.tvSouthPoint.setText(getString(R.string._25000));
+        mBinding.tvWestPoint.setText(getString(R.string._25000));
+        mBinding.tvNorthPoint.setText(getString(R.string._25000));
         SPUtils.putInt(mPlayers[0], 25000);
         SPUtils.putInt(mPlayers[1], 25000);
         SPUtils.putInt(mPlayers[2], 25000);
@@ -521,12 +471,12 @@ public class MainActivity extends BaseActivity {
             super.onBackPressed();
         } else {
             backPressedTime = System.currentTimeMillis();
-            ToastUtils.show(mContext, "你可能手滑了，再次点击退出应用");
+            ToastUtils.showShortSafe("你可能手滑了，再次点击退出应用");
         }
     }
 
     public void closeDrawerLayout() {
-        mDrawerLayout.closeDrawers();
+        mBinding.drawerlayout.closeDrawers();
     }
 
     /**

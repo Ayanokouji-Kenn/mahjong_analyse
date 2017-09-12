@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.uu.mahjong_analyse.Utils.Constant;
+import com.uu.mahjong_analyse.utils.Constant;
 import com.uu.mahjong_analyse.adapter.ModifyDBGridViewAdapter;
 import com.uu.mahjong_analyse.db.DBDao;
 

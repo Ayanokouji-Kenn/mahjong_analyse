@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<layout>
+    <data>
+
+        <variable
+            name="vm"
+            type="com.uu.mahjong_analyse.vm.PracticeVM"/>
+    </data>
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.uu.mahjong_analyse.activity.PracticeActivity">
-
-</android.support.constraint.ConstraintLayout>
+<android.support.v7.widget.RecyclerView
+    android:layout_alignParentBottom="true"
+    android:id="@+id/my_hai"
+    app:itemBinding="@{vm.myItemBinding}"
+    app:items="@{vm.player1}"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"/>
+</RelativeLayout>
+</layout>

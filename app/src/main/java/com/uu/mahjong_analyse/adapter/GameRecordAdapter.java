@@ -1,7 +1,6 @@
 package com.uu.mahjong_analyse.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -11,10 +10,6 @@ import com.uu.mahjong_analyse.base.MyBaseAdapter;
 import com.uu.mahjong_analyse.bean.GameRecord;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * @auther Nagisa.
  * @date 2016/7/20.
@@ -44,19 +39,18 @@ public class GameRecordAdapter extends MyBaseAdapter<GameRecord> {
 
 
     class ViewHolder {
-        @BindView(R.id.tv_top)
         TextView mTvTop;
-        @BindView(R.id.tv_second)
         TextView mTvSecond;
-        @BindView(R.id.tv_third)
         TextView mTvThird;
-        @BindView(R.id.tv_last)
         TextView mTvLast;
-        @BindView(R.id.tv_date)
         TextView mTvDate;
 
         ViewHolder(View view) {
-            ButterKnife.bind(this, view);
+            mTvTop = (TextView) view.findViewById(R.id.tv_top);
+            mTvSecond = (TextView) view.findViewById(R.id.tv_second);
+            mTvThird = (TextView) view.findViewById(R.id.tv_third);
+            mTvLast = (TextView) view.findViewById(R.id.tv_last);
+            mTvDate = (TextView) view.findViewById(R.id.tv_date);
         }
 
         public void setData(int position) {

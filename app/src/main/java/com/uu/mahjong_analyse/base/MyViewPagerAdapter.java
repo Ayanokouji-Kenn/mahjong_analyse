@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.uu.mahjong_analyse.Utils.Constant;
+import com.uu.mahjong_analyse.utils.Constant;
 
 import java.util.List;
 

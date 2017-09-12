@@ -5,8 +5,8 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
 import com.uu.mahjong_analyse.R;
-import com.uu.mahjong_analyse.Utils.Constant;
-import com.uu.mahjong_analyse.Utils.rx.RxBus;
+import com.uu.mahjong_analyse.utils.Constant;
+import com.uu.mahjong_analyse.utils.rx.RxBus;
 import com.uu.mahjong_analyse.bean.LiujuResult;
 
 import java.util.ArrayList;

@@ -2,66 +2,37 @@ package com.uu.mahjong_analyse.activity;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.uu.mahjong_analyse.R;
-import com.uu.mahjong_analyse.Utils.Constant;
-import com.uu.mahjong_analyse.Utils.SPUtils;
-import com.uu.mahjong_analyse.Utils.ToastUtils;
 import com.uu.mahjong_analyse.base.BaseActivity;
 import com.uu.mahjong_analyse.bean.PlayerRecord;
+import com.uu.mahjong_analyse.databinding.ActivityGetscoreBinding;
 import com.uu.mahjong_analyse.db.DBDao;
+import com.uu.mahjong_analyse.utils.Constant;
+import com.uu.mahjong_analyse.utils.SPUtils;
+import com.uu.mahjong_analyse.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 /**
  * Created by Nagisa on 2016/7/1.
  */
 public class GetScoreActivity extends BaseActivity {
 
-
-    @BindView(R.id.cb_richi)
-    CheckBox mCbRichi;
-    @BindView(R.id.cb_ihhatsu)
-    CheckBox mCbIhhatsu;
-    @BindView(R.id.rg_hepai)
-    RadioGroup mRg;
-    @BindView(R.id.rb_tsumo)
-    RadioButton mRbTsumo;
-    @BindView(R.id.rb_ronn)
-    RadioButton mRbRonn;
-    @BindView(R.id.tv_chong)
-    TextView mTvChong;
-    @BindView(R.id.et_point)
-    TextView mEtPoint;
-    @BindView(R.id.btn_confirm)
-    Button mBtnConfirm;
-    @BindView(R.id.tv_fan)
-    TextView mTvFan;
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-    @BindView(R.id.tv_voice)
-    TextView mTvVoice;
     private List<String> mPlayers;
     private String mChongPlayer;
     private String mPlayer;
@@ -90,6 +61,7 @@ public class GetScoreActivity extends BaseActivity {
     }
 
     private boolean isOya;
+    private ActivityGetscoreBinding mBinding;
 
 
     @Override
@@ -110,10 +82,9 @@ public class GetScoreActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        setContentView(R.layout.activity_getscore);
-        ButterKnife.bind(this);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_getscore);
 
-        setSupportActionBar(mToolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         setTitle("当局数据");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -121,14 +92,14 @@ public class GetScoreActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
-        mRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        mBinding.rgHepai.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                 if (checkedId == R.id.rb_tsumo) {
-                    mTvChong.setVisibility(View.GONE);
+                    mBinding.tvChong.setVisibility(View.GONE);
                     mChongPlayer = "";
                 } else {
-                    mTvChong.setVisibility(View.VISIBLE);
+                    mBinding.tvChong.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -159,38 +130,40 @@ public class GetScoreActivity extends BaseActivity {
 ////        mDialog.setParameter(SpeechConstant.SUBJECT, "asr");
 //    }
 
-    @OnClick({R.id.tv_chong, R.id.btn_confirm, R.id.tv_fan})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tv_chong:
-                if (!mRbRonn.isChecked()) {
-                    mRbRonn.setChecked(true);
-                }
-                showChongPlayerDialog();
-                break;
-            case R.id.tv_fan:
-                if (mRbRonn.isChecked() || mRbTsumo.isChecked()) {
-                    showFanDialog();
-                } else {
-                    ToastUtils.show(mContext, "请选点击自摸或荣和");
-                }
-                break;
-            case R.id.btn_confirm:
-                if (checkData()) {
-                    saveData();
-                }
-                break;
+    View.OnClickListener mListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.tv_chong:
+                    if (!mBinding.rbRonn.isChecked()) {
+                        mBinding.rbRonn.setChecked(true);
+                    }
+                    showChongPlayerDialog();
+                    break;
+                case R.id.tv_fan:
+                    if (mBinding.rbRonn.isChecked() || mBinding.rbTsumo.isChecked()) {
+                        showFanDialog();
+                    } else {
+                        ToastUtils.show(mContext, "请选点击自摸或荣和");
+                    }
+                    break;
+                case R.id.btn_confirm:
+                    if (checkData()) {
+                        saveData();
+                    }
+                    break;
+            }
         }
-    }
+    };
 
     private boolean checkData() {
-        if (mRbRonn.isChecked() && TextUtils.isEmpty(mChongPlayer)) {
+        if (mBinding.rbRonn.isChecked() && TextUtils.isEmpty(mChongPlayer)) {
             ToastUtils.show(mContext, "没有选择放铳人");
             return false;
         } else if (TextUtils.isEmpty(mFan)) {
             ToastUtils.show(mContext, "没有选择番种");
             return false;
-        } else if (mEtPoint.getText().length() == 0) {
+        } else if (mBinding.etPoint.getText().length() == 0) {
             ToastUtils.show(mContext, "没有输入点数");
             return false;
         }
@@ -232,27 +205,27 @@ public class GetScoreActivity extends BaseActivity {
                 } else {
                     key = mFanList.get(options1);
                 }
-                if (TextUtils.equals("25符2翻", key) && mRbTsumo.isChecked()) {
+                if (TextUtils.equals("25符2翻", key) && mBinding.rbTsumo.isChecked()) {
                     ToastUtils.show(mContext, "2翻的七对子不可能自摸哦~");
                     return;
                 }
                 if (isOya) {
-                    if (mRbTsumo.isChecked()) {
+                    if (mBinding.rbTsumo.isChecked()) {
                         mPoint_int = qinTsumoMap.get(key);
-                    } else if (mRbRonn.isChecked()) {
+                    } else if (mBinding.rbRonn.isChecked()) {
                         mPoint_int = qinRonnMap.get(key);
                     }
                 } else {
-                    if (mRbTsumo.isChecked()) {
+                    if (mBinding.rbTsumo.isChecked()) {
 
                         mPoint_int = ziTsumoMap.get(key);
-                    } else if (mRbRonn.isChecked()) {
+                    } else if (mBinding.rbRonn.isChecked()) {
                         mPoint_int = ziRonnMap.get(key);
                     }
                 }
 
                 setFan(key);
-                mEtPoint.setText(String.valueOf(mPoint_int));
+                mBinding.etPoint.setText(String.valueOf(mPoint_int));
             }
         })
                 .setSubmitColor(getResources().getColor(R.color.colorAccent))
@@ -277,7 +250,7 @@ public class GetScoreActivity extends BaseActivity {
 
     private void setFan(String s) {
         mFan = s;
-        mTvFan.setText("番数：" + mFan);
+        mBinding.tvFan.setText("番数：" + mFan);
     }
 
     private void showChongPlayerDialog() {
@@ -285,7 +258,7 @@ public class GetScoreActivity extends BaseActivity {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 mChongPlayer = mPlayers.get(options1);
-                mTvChong.setText("放铳人：" + mChongPlayer);
+                mBinding.tvFan.setText("放铳人：" + mChongPlayer);
             }
         })
                 .setTitleText("选择放铳人")
@@ -310,24 +283,24 @@ public class GetScoreActivity extends BaseActivity {
     private void saveData() {
         PlayerRecord playerRecord = DBDao.selectPlayer(mPlayer);
         ContentValues cv = new ContentValues();
-        if (mCbRichi.isChecked()) {  //立直
+        if (mBinding.cbRichi.isChecked()) {  //立直
             cv.put("richi_count", playerRecord.richi_count + 1);
         }
-        if (mRbTsumo.isChecked()) {  //自摸
+        if (mBinding.rbTsumo.isChecked()) {  //自摸
             cv.put("tsumo", playerRecord.tsumo + 1);
-            if (mCbRichi.isChecked()) {  //立直和了
+            if (mBinding.cbRichi.isChecked()) {  //立直和了
                 cv.put("richi_he", playerRecord.richi_he + 1);
             }
             cv.put("he_count", playerRecord.he_count + 1);
         }
-        if (mRbRonn.isChecked()) {   //荣和
+        if (mBinding.rbRonn.isChecked()) {   //荣和
             cv.put("ronn", playerRecord.ronn + 1);
-            if (mCbRichi.isChecked()) {  //立直和了
+            if (mBinding.cbRichi.isChecked()) {  //立直和了
                 cv.put("richi_he", playerRecord.richi_he + 1);
             }
             cv.put("he_count", playerRecord.he_count + 1);
         }
-        if (mCbIhhatsu.isChecked()) {    //一发
+        if (mBinding.cbIhhatsu.isChecked()) {    //一发
             cv.put("ihhatsu_count", playerRecord.ihhatsu_count + 1);
         }
 
@@ -361,7 +334,7 @@ public class GetScoreActivity extends BaseActivity {
             }
         }
 
-        String point = mEtPoint.getText().toString().trim();
+        String point = mBinding.etPoint.getText().toString().trim();
         if (!TextUtils.isEmpty(point)) {
             mPoint_int = Integer.parseInt(point);
 //            和牌最大值要加上供托的
@@ -386,7 +359,7 @@ public class GetScoreActivity extends BaseActivity {
 
         //当有人自摸或者荣和的话，所有人的发牌次数都要+1
 
-        if (mRbTsumo.isChecked() || mRbRonn.isChecked()) {
+        if (mBinding.rbTsumo.isChecked() || mBinding.rbRonn.isChecked()) {
             for (String player : mPlayers) {
                 PlayerRecord playerRecord1 = DBDao.selectPlayer(player);
                 ContentValues cv1 = new ContentValues();
@@ -399,7 +372,7 @@ public class GetScoreActivity extends BaseActivity {
         //和牌人点数
         SPUtils.putInt(mPlayer, SPUtils.getInt(mPlayer, Integer.MIN_VALUE) + mPoint_int + gong + benchang * 300);
         //如果放铳的话，放铳人点数变化
-        if (mRbRonn.isChecked() && !TextUtils.isEmpty(mChongPlayer)) {
+        if (mBinding.rbRonn.isChecked() && !TextUtils.isEmpty(mChongPlayer)) {
             SPUtils.putInt(mChongPlayer, SPUtils.getInt(mChongPlayer, Integer.MIN_VALUE) - mPoint_int - benchang * 300);
         } else {
             //亲家自摸，那么其他三家平分点数
