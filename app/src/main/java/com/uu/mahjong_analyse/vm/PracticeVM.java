@@ -28,6 +28,7 @@ public class PracticeVM extends BaseVM {
     public ArrayList<Integer> player3 = new ArrayList<>();
     public ArrayList<Integer> player4 = new ArrayList<>();
     public final ItemBinding<Integer> myItemBinding = ItemBinding.of(BR.item, R.layout.item_my_hais);
+    public ArrayList<Integer> riverList = new ArrayList<>();
     public List<Integer> haiHills = new ArrayList<>();
 
 
@@ -36,6 +37,7 @@ public class PracticeVM extends BaseVM {
     }
 
     public void init() {
+        haiHills.clear();
         haiHills.addAll(HaiUtils.getHaiHills());
         Collections.shuffle(haiHills);
 
@@ -96,5 +98,9 @@ public class PracticeVM extends BaseVM {
     public void getHai(List<Integer> who, List<Integer> haiHills) {
         who.add(haiHills.get(0));
         haiHills.remove(0);
+    }
+
+    public void addToRiver(int i) {
+        riverList.add(i);
     }
 }
