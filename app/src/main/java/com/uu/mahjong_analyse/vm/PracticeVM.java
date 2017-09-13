@@ -1,7 +1,6 @@
 package com.uu.mahjong_analyse.vm;
 
 import android.app.Application;
-import android.support.v7.widget.RecyclerView;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.uu.mahjong_analyse.BR;
@@ -75,10 +74,13 @@ public class PracticeVM extends BaseVM {
         LogUtils.d(player1.size());
     }
 
-    public void dapai(int position, RecyclerView.Adapter adapter) {
-        int lastPai = player1.get(position);
+    public void dapai(int position) {
+        if (position == player1.size() - 1) {
+            player1.remove(position);
+            return;
+        }
         player1.remove(position);
-
+        int lastPai = player1.get(player1.size()-1);
         int insertPosition = 0;
         for (int i = 0; i < player1.size(); i++) {
             if (lastPai <= player1.get(i)) {

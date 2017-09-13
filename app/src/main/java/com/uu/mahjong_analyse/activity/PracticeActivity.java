@@ -42,11 +42,11 @@ public class PracticeActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (checkHaiPosition == position) {
-                    practiceVM.dapai(position, adapter);
-                    checkHaiPosition = -1;
-
+                    mBinding.myHai.getLayoutManager().findViewByPosition(checkHaiPosition).setTranslationY(0);
+                    practiceVM.dapai(position);
                     practiceVM.getHai(practiceVM.player1, practiceVM.haiHills);
                     adapter.notifyDataSetChanged();
+                    checkHaiPosition = -1;
                 } else {
                     view.setTranslationY(-30F);
                     if (checkHaiPosition != -1) {
