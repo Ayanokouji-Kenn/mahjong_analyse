@@ -1,7 +1,7 @@
 package com.uu.mahjong_analyse.vm;
 
 import android.app.Application;
-import android.databinding.ObservableArrayList;
+import android.support.v7.widget.RecyclerView;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.uu.mahjong_analyse.BR;
@@ -24,11 +24,12 @@ import me.tatarka.bindingcollectionadapter2.ItemBinding;
  */
 
 public class PracticeVM extends BaseVM {
-    public final ObservableArrayList<Integer> player1 = new ObservableArrayList<>();
-    public final ObservableArrayList<Integer> player2 = new ObservableArrayList<>();
-    public final ObservableArrayList<Integer> player3 = new ObservableArrayList<>();
-    public final ObservableArrayList<Integer> player4 = new ObservableArrayList<>();
+    public ArrayList<Integer> player1 = new ArrayList<>();
+    public ArrayList<Integer> player2 = new ArrayList<>();
+    public ArrayList<Integer> player3 = new ArrayList<>();
+    public ArrayList<Integer> player4 = new ArrayList<>();
     public final ItemBinding<Integer> myItemBinding = ItemBinding.of(BR.item, R.layout.item_my_hais);
+    public List<Integer> haiHills = new ArrayList<>();
 
 
     public PracticeVM(Application application) {
@@ -36,7 +37,6 @@ public class PracticeVM extends BaseVM {
     }
 
     public void init() {
-        List<Integer> haiHills = new ArrayList<>();
         haiHills.addAll(HaiUtils.getHaiHills());
         Collections.shuffle(haiHills);
 
@@ -61,8 +61,8 @@ public class PracticeVM extends BaseVM {
         TreeSet<Integer> set = new TreeSet<>(new Comparator<Integer>() {
             @Override
             public int compare(Integer o1, Integer o2) {
-                int d = o1-o2;
-                return d==0?1:d;
+                int d = o1 - o2;
+                return d == 0 ? 1 : d;
             }
         });
         for (Integer integer : player1) {
@@ -75,7 +75,23 @@ public class PracticeVM extends BaseVM {
         LogUtils.d(player1.size());
     }
 
-    private void getHai(List<Integer> who, List<Integer> haiHills) {
+    public void dapai(int position, RecyclerView.Adapter adapter) {
+        int lastPai = player1.get(position);
+        player1.remove(position);
+
+        int insertPosition = 0;
+        for (int i = 0; i < player1.size(); i++) {
+            if (lastPai <= player1.get(i)) {
+                insertPosition = i;
+                player1.remove(player1.size() - 1);
+                player1.add(insertPosition, lastPai);
+                break;
+            }
+        }
+
+    }
+
+    public void getHai(List<Integer> who, List<Integer> haiHills) {
         who.add(haiHills.get(0));
         haiHills.remove(0);
     }
