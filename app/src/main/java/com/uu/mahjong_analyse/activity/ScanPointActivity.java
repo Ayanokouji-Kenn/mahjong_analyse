@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @description 点数速查
  * @auther xuzijian
  * @date 2017/6/30 17:01.
  */

@@ -30,7 +30,7 @@ import java.util.TreeSet;
  * @date 2016/7/2.
  * 设置每一局的和牌点数
  */
-public class SetGameScoreActiivty extends BaseActivity{
+public class SetGameScoreActiivty extends BaseActivity implements View.OnClickListener {
 
 
 
@@ -71,14 +71,12 @@ public class SetGameScoreActiivty extends BaseActivity{
 
     @Override
     public void initEvent() {
-
+        mBinding.btnSave.setOnClickListener(this);
     }
 
 
 //    @OnClick(R.id.btn_save)
-    public void onClick() {
-
-
+    public void onClick(View view) {
         String east = mBinding.etEast.getText().toString().trim();
         String west = mBinding.etWest.getText().toString().trim();
         String north = mBinding.etNorth.getText().toString().trim();
@@ -212,6 +210,5 @@ public class SetGameScoreActiivty extends BaseActivity{
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 }

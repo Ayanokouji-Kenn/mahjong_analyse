@@ -2,6 +2,9 @@
 <layout>
     <data>
 
+        <variable
+            name="listener"
+            type="android.view.View.OnClickListener"/>
     </data>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -50,6 +53,7 @@
     </RadioGroup>
 
     <TextView
+        android:onClick="@{listener::onClick}"
         android:padding="16dp"
         android:id="@+id/tv_chong"
         android:textSize="@dimen/sp18"
@@ -58,6 +62,7 @@
         android:text="放铳人：" />
 
     <TextView
+        android:onClick="@{listener::onClick}"
         android:padding="16dp"
         android:id="@+id/tv_fan"
         android:textSize="@dimen/sp18"
@@ -86,6 +91,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content" />
     <Button
+        android:onClick="@{listener::onClick}"
         android:layout_gravity="center_horizontal"
         android:id="@+id/btn_confirm"
         android:layout_width="match_parent"

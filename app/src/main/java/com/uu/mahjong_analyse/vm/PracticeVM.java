@@ -37,7 +37,6 @@ public class PracticeVM extends BaseVM {
     }
 
     public void init() {
-        haiHills.clear();
         haiHills.addAll(HaiUtils.getHaiHills());
         Collections.shuffle(haiHills);
 
@@ -74,6 +73,12 @@ public class PracticeVM extends BaseVM {
             player1.add(integer);
         }
         LogUtils.d(player1.size());
+    }
+
+    public void reset() {
+        player1.clear();
+        haiHills.clear();
+        init();
     }
 
     public void dapai(int position) {

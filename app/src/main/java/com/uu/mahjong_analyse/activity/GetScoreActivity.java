@@ -83,7 +83,7 @@ public class GetScoreActivity extends BaseActivity {
     @Override
     public void initView() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_getscore);
-
+        mBinding.setListener(mListener);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         setTitle("当局数据");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -258,7 +258,7 @@ public class GetScoreActivity extends BaseActivity {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 mChongPlayer = mPlayers.get(options1);
-                mBinding.tvFan.setText("放铳人：" + mChongPlayer);
+                mBinding.tvChong.setText("放铳人：" + mChongPlayer);
             }
         })
                 .setTitleText("选择放铳人")

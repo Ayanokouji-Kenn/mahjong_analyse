@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
     <data>
 
         <variable
@@ -7,22 +8,24 @@
             type="com.uu.mahjong_analyse.vm.PracticeVM"/>
     </data>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.uu.mahjong_analyse.activity.PracticeActivity">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/river_hai"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-<android.support.v7.widget.RecyclerView
-    android:layout_alignParentBottom="true"
-    android:id="@+id/my_hai"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"/>
+        android:layout_height="match_parent"
+        tools:context="com.uu.mahjong_analyse.activity.PracticeActivity">
 
-</RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/river_hai"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/my_hai"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
 </layout>

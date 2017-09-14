@@ -38,9 +38,8 @@ public class PracticeActivity extends BaseActivity {
                 HaiUtils.trans(iv, item);
             }
         };
-        mBinding.riverHai.setLayoutManager(new GridLayoutManager(this,6,LinearLayoutManager.HORIZONTAL,false));
+        mBinding.riverHai.setLayoutManager(new GridLayoutManager(this,6));
         mBinding.riverHai.setAdapter(riverAdapter);
-
 
 
 
@@ -58,17 +57,21 @@ public class PracticeActivity extends BaseActivity {
                 if (checkHaiPosition == position) {
                     practiceVM.addToRiver(practiceVM.player1.get(position));
                     riverAdapter.notifyDataSetChanged();
+                    mBinding.riverHai.smoothScrollToPosition(practiceVM.riverList.size()-1);
+
                     mBinding.myHai.getLayoutManager().findViewByPosition(checkHaiPosition).setTranslationY(0);
                     practiceVM.dapai(position);
                     practiceVM.getHai(practiceVM.player1, practiceVM.haiHills);
                     adapter.notifyDataSetChanged();
                     checkHaiPosition = -1;
                     if (HaiUtils.checkHu(practiceVM.player1)) {
-                        SnackbarUtils.with(mBinding.myHai).setMessage("Congratulations!")
-                                .setAction("Once More?", new View.OnClickListener() {
+                        SnackbarUtils.with(mBinding.myHai).setMessage("嗯..似乎和了")
+                                .setDuration(SnackbarUtils.LENGTH_INDEFINITE)
+                                .setAction("再来一局?", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        practiceVM.init();
+                                        practiceVM.reset();
+                                        riverAdapter.notifyDataSetChanged();
                                         adapter.notifyDataSetChanged();
                                     }
                                 }).show();

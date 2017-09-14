@@ -20,7 +20,7 @@ import java.util.Locale;
  * @auther Nagisa.
  * @date 2016/7/3.
  */
-public class PlayerInfoActivity extends BaseActivity {
+public class PlayerInfoActivity extends BaseActivity implements View.OnClickListener {
 
     private OptionsPickerView mSelectPlayerDialog;
     private String mPlayer;
@@ -45,6 +45,7 @@ public class PlayerInfoActivity extends BaseActivity {
 
     @Override
     public void initEvent() {
+        mBinding.tvSelect.setOnClickListener(this);
     }
 
 //    @OnClick(R.id.tv_select)
