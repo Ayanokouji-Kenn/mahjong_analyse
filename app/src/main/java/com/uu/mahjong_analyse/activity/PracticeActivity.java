@@ -56,7 +56,7 @@ public class PracticeActivity extends BaseActivity {
             public void onItemClick(final BaseQuickAdapter adapter, View view, int position) {
                 if (checkHaiPosition == position) {
                     practiceVM.addToRiver(practiceVM.player1.get(position));
-                    riverAdapter.notifyDataSetChanged();
+                    riverAdapter.notifyItemInserted(practiceVM.riverList.size());
                     mBinding.riverHai.smoothScrollToPosition(practiceVM.riverList.size()-1);
 
                     mBinding.myHai.getLayoutManager().findViewByPosition(checkHaiPosition).setTranslationY(0);
@@ -70,6 +70,7 @@ public class PracticeActivity extends BaseActivity {
                                 .setAction("再来一局?", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+
                                         practiceVM.reset();
                                         riverAdapter.notifyDataSetChanged();
                                         adapter.notifyDataSetChanged();

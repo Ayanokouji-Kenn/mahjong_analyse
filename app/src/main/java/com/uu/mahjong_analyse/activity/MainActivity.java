@@ -1,18 +1,25 @@
 package com.uu.mahjong_analyse.activity;
 
 import android.animation.ObjectAnimator;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +41,7 @@ import com.uu.mahjong_analyse.utils.SPUtils;
 import com.uu.mahjong_analyse.utils.rx.RxBus;
 import com.uu.mahjong_analyse.view.LiuJuDialog;
 import com.uu.mahjong_analyse.view.RichiDialog;
+import com.uu.mahjong_analyse.vm.MainVM;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,9 +69,12 @@ public class MainActivity extends BaseActivity {
     private HashMap<String, TextView> playerTvMap = new HashMap<>();
     private ActivityMainBinding mBinding;
     private Toolbar toolbar;
+    private MainVM vm;
+    private AlertDialog feedbackDialog;
 
     @Override
     public void initData() {
+        vm = ViewModelProviders.of(this).get(MainVM.class);
         rotatePlayerName();
         mShimmer = new Shimmer();
         changMap.append(0, getString(R.string.east1));
@@ -94,7 +105,7 @@ public class MainActivity extends BaseActivity {
         mBinding.setListener(mListener);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("日麻分析");
+        setTitle(getString(R.string.app_name));
         toolbar.setPopupTheme(R.style.PopupMenu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mBinding.drawerlayout, toolbar, R.string.drawer_open,
@@ -342,7 +353,7 @@ public class MainActivity extends BaseActivity {
                     }
                     mLiujuDialog.show();
                 } else {
-                   ToastUtils.showShortSafe("对局未开始");
+                    ToastUtils.showShortSafe(R.string.game_not_start);
                 }
                 break;
 //            点数早见表
@@ -350,7 +361,36 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(mContext, ScanPointActivity.class));
                 break;
             case R.id.toolbar_practice:
-                startActivity(new Intent(mContext,PracticeActivity.class));
+                startActivity(new Intent(mContext, PracticeActivity.class));
+                break;
+            case R.id.toolbar_about:
+                if (feedbackDialog == null) {
+                    View feedbackView = View.inflate(mContext, R.layout.dialog_feedback, null);
+                    final EditText etFeedback = (EditText) feedbackView.findViewById(R.id.et_feedback);
+                    TextView tv = (TextView) feedbackView.findViewById(R.id.tv);
+                    PackageManager pm = getPackageManager();
+                    PackageInfo pi = null;
+                    try {
+                        pi = pm.getPackageInfo(getPackageName(), 0);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    tv.setText("当前版本：v" +pi.versionName);
+                    feedbackDialog = new AlertDialog.Builder(mContext,R.style.Theme_AppCompat_Light_Dialog_Alert).setTitle(R.string.welcome_feedback)
+                            .setView(feedbackView)
+                            .setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent data = new Intent(Intent.ACTION_SENDTO);
+                                    data.setData(Uri.parse("mailto:nishino8818@qq.com"));
+                                    data.putExtra(Intent.EXTRA_SUBJECT, "日麻分析反馈");
+                                    data.putExtra(Intent.EXTRA_TEXT, etFeedback.getText().toString());
+                                    startActivity(data);
+                                }
+                            }).create();
+                }
+                feedbackDialog.show();
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -385,7 +425,7 @@ public class MainActivity extends BaseActivity {
                 case R.id.fab_select_player:
                     if (isStart) {
                         ToastUtils.showShortSafe("不支持中途换人，请先结束当前对局");
-                    }else {
+                    } else {
                         openPage(true, RC_PLAYERS, AddNewGameActivity.class);
                         mBinding.fabMenu.collapse();
                     }

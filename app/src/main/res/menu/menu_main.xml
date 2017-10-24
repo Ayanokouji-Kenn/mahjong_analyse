@@ -36,4 +36,9 @@
         android:orderInCategory="100"
         android:title="更改桌面"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/toolbar_about"
+        android:orderInCategory="100"
+        android:title="关于"
+        app:showAsAction="never" />
 </menu>

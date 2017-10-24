@@ -1,16 +1,15 @@
 package com.uu.mahjong_analyse.db;
 
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Environment;
 
 /**
  * Created by Nagisa on 2016/6/25.
  */
 public class MyOpenHelper extends SQLiteOpenHelper {
     static String db_name = "mahjong_data.db";
+//    /storage/emulated/0/mahjong/mahjong_data.db
     public MyOpenHelper(Context context) {
         super(context, db_name, null, 1);
     }

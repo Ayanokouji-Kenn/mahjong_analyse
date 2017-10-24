@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
 import com.facebook.stetho.Stetho;
 
@@ -74,8 +75,10 @@ public class MyApplication extends Application {
             isFileCreateSuccess = true;
 
         //返回数据库文件对象
-        if(isFileCreateSuccess)
+        if(isFileCreateSuccess) {
+            LogUtils.d(dbFile.getAbsolutePath());
             return dbFile;
+        }
         else
             return null;
 

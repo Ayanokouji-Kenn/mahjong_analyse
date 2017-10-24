@@ -47,6 +47,7 @@ public class AddNewGameActivity extends BaseActivity implements TextView.OnEdito
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_new_game);
         mBinding.setListener(mListener);
         mBinding.textInputLayout.setHint("输入新来小伙伴名字");
+        mBinding.et.setInputType(EditorInfo.TYPE_CLASS_TEXT);
         CommonApi.setToolbar(this, (Toolbar) findViewById(R.id.toolbar), "设置该局玩家");
     }
 

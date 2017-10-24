@@ -40,4 +40,6 @@
     <string name="fu90">90符</string>
     <string name="fu100">100符</string>
     <string name="fu110">110符</string>
+    <string name="welcome_feedback">欢迎反馈</string>
+    <string name="game_not_start">对局未开始</string>
 </resources>
