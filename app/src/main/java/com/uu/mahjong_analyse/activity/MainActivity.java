@@ -353,7 +353,7 @@ public class MainActivity extends BaseActivity {
                     }
                     mLiujuDialog.show();
                 } else {
-                    ToastUtils.showShortSafe(R.string.game_not_start);
+                    ToastUtils.showShort(R.string.game_not_start);
                 }
                 break;
 //            点数早见表
@@ -424,7 +424,7 @@ public class MainActivity extends BaseActivity {
 
                 case R.id.fab_select_player:
                     if (isStart) {
-                        ToastUtils.showShortSafe("不支持中途换人，请先结束当前对局");
+                        ToastUtils.showShort("不支持中途换人，请先结束当前对局");
                     } else {
                         openPage(true, RC_PLAYERS, AddNewGameActivity.class);
                         mBinding.fabMenu.collapse();
@@ -433,7 +433,7 @@ public class MainActivity extends BaseActivity {
                 case R.id.fab_start:
                     mBinding.fabMenu.collapse();
                     if (mPlayers == null) {
-                        ToastUtils.showShortSafe("还没选人呢");
+                        ToastUtils.showShort("还没选人呢");
                         return;
                     }
                     startGame();
@@ -511,7 +511,7 @@ public class MainActivity extends BaseActivity {
             super.onBackPressed();
         } else {
             backPressedTime = System.currentTimeMillis();
-            ToastUtils.showShortSafe("你可能手滑了，再次点击退出应用");
+            ToastUtils.showShort("你可能手滑了，再次点击退出应用");
         }
     }
 
