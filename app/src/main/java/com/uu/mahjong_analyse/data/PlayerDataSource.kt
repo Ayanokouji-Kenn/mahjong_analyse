@@ -9,4 +9,5 @@ package com.uu.mahjong_analyse.data
  */
 
 interface PlayerDataSource {
+
 }
