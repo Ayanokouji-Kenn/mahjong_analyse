@@ -12,8 +12,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.uu.mahjong_analyse.R;
-import com.uu.mahjong_analyse.activity.MainActivity;
-import com.uu.mahjong_analyse.activity.PlayerInfoActivity;
+import com.uu.mahjong_analyse.ui.MainActivity;
+import com.uu.mahjong_analyse.ui.PlayerInfoActivity;
 import com.uu.mahjong_analyse.adapter.LeftMenuAdapter;
 
 import java.util.ArrayList;

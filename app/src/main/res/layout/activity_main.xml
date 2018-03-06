@@ -2,9 +2,15 @@
 <layout>
     <data>
 
+        <import type="com.uu.mahjong_analyse.ui.MainActivity.Companion"/>
+        <import type="android.view.View"/>
+        <variable
+            name="vm"
+            type="com.uu.mahjong_analyse.ui.MainVM"/>
         <variable
             name="listener"
             type="android.view.View.OnClickListener"/>
+
     </data>
 
 <android.support.design.widget.CoordinatorLayout
@@ -15,14 +21,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activity.MainActivity">
+    tools:context=".ui.MainActivity">
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawerlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         fab:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".activity.MainActivity"
+        tools:context=".ui.MainActivity"
         tools:showIn="@layout/activity_main">
         <LinearLayout
             android:keepScreenOn="true"
@@ -33,157 +39,26 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context=".activity.MainActivity"
+            tools:context=".ui.MainActivity"
             tools:showIn="@layout/activity_main">
 
-            <include
-                android:id="@+id/layout_toolbar"
-                layout="@layout/layout_toolbar"/>
-
-            <RelativeLayout
-                android:id="@+id/rl_table"
+            <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center">
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay">
 
-                <LinearLayout
-                    android:onClick="@{listener::onClick}"
-                    android:id="@+id/ll_north"
-                    android:layout_width="96dp"
-                    android:layout_height="96dp"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary" />
 
-                    <com.romainpiel.shimmer.ShimmerTextView
-                        android:id="@+id/tv_north"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:lines="1"
-                        android:clickable="false"
-                        android:gravity="center"
-                        android:text="北"
-                        android:textSize="24sp"/>
-
-                    <TextView
-                        android:id="@+id/tv_north_point"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:gravity="center"
-                        android:text="@string/_25000"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:onClick="@{listener::onClick}"
-                    android:id="@+id/ll_east"
-                    android:layout_width="@dimen/dp96"
-                    android:layout_height="@dimen/dp96"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.romainpiel.shimmer.ShimmerTextView
-
-                        android:id="@+id/tv_east"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:lines="1"
-                        android:gravity="center"
-                        android:text="东"
-                        android:textSize="24sp"/>
-
-                    <TextView
-                        android:id="@+id/tv_east_point"
-                        android:layout_width="96dp"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:gravity="center"
-                        android:text="@string/_25000"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:onClick="@{listener::onClick}"
-                    android:id="@+id/ll_south"
-                    android:layout_width="@dimen/dp96"
-                    android:layout_height="@dimen/dp96"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.romainpiel.shimmer.ShimmerTextView
-                        android:id="@+id/tv_south"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:lines="1"
-                        android:gravity="center"
-                        android:text="南"
-                        android:textSize="24sp"/>
-
-                    <TextView
-                        android:id="@+id/tv_south_point"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:gravity="center"
-                        android:text="@string/_25000"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:onClick="@{listener::onClick}"
-                    android:id="@+id/ll_west"
-                    android:layout_width="@dimen/dp96"
-                    android:layout_height="@dimen/dp96"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.romainpiel.shimmer.ShimmerTextView
-                        android:id="@+id/tv_west"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:lines="1"
-                        android:gravity="center"
-                        android:text="西"
-                        android:textSize="24sp"/>
-
-                    <TextView
-                        android:id="@+id/tv_west_point"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        android:gravity="center"
-                        android:text="@string/_25000"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_chang"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_chang"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/sp30"/>
-
-                    <TextView
-                        android:id="@+id/tv_gong"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-            </RelativeLayout>
-
+            </android.support.design.widget.AppBarLayout>
+            <FrameLayout
+                android:id="@+id/fl_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"/>
         </LinearLayout>
 
 
@@ -198,6 +73,7 @@
     </android.support.v4.widget.DrawerLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:visibility="@{vm.fgShow == `TAG_FG_MAIN`?View.VISIBLE:View.GONE}"
         android:id="@+id/fab_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

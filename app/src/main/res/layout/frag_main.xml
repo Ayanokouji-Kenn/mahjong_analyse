@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.MainActivity"
-    tools:showIn="@layout/activity_main">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
 
-    <include
-        android:id="@+id/layout_toolbar"
-        layout="@layout/layout_toolbar"/>
+        <import type="com.uu.mahjong_analyse.utils.BindingParseUtils"/>
+        <variable
+            name="listener"
+            type="android.view.View.OnClickListener"/>
+
+        <variable
+            name="vm"
+            type="com.uu.mahjong_analyse.ui.MainVM"/>
+    </data>
 
     <RelativeLayout
         android:id="@+id/rl_table"
@@ -21,6 +19,7 @@
         android:layout_gravity="center">
 
         <LinearLayout
+            android:onClick="@{listener::onClick}"
             android:id="@+id/ll_north"
             android:layout_width="96dp"
             android:layout_height="96dp"
@@ -35,7 +34,8 @@
                 android:lines="1"
                 android:clickable="false"
                 android:gravity="center"
-                android:text="北"
+                android:hint="北"
+                android:text="@{vm.players[3].name}"
                 android:textSize="24sp"/>
 
             <TextView
@@ -48,6 +48,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:onClick="@{listener::onClick}"
             android:id="@+id/ll_east"
             android:layout_width="@dimen/dp96"
             android:layout_height="@dimen/dp96"
@@ -64,7 +65,8 @@
                 android:clickable="false"
                 android:lines="1"
                 android:gravity="center"
-                android:text="东"
+                android:hint="东"
+                android:text="@{vm.players[0].name}"
                 android:textSize="24sp"/>
 
             <TextView
@@ -77,6 +79,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:onClick="@{listener::onClick}"
             android:id="@+id/ll_south"
             android:layout_width="@dimen/dp96"
             android:layout_height="@dimen/dp96"
@@ -92,7 +95,8 @@
                 android:clickable="false"
                 android:lines="1"
                 android:gravity="center"
-                android:text="南"
+                android:hint="南"
+                android:text="@{vm.players[1].name}"
                 android:textSize="24sp"/>
 
             <TextView
@@ -105,6 +109,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:onClick="@{listener::onClick}"
             android:id="@+id/ll_west"
             android:layout_width="@dimen/dp96"
             android:layout_height="@dimen/dp96"
@@ -121,7 +126,8 @@
                 android:clickable="false"
                 android:lines="1"
                 android:gravity="center"
-                android:text="西"
+                android:hint="西"
+                android:text="@{vm.players[2].name}"
                 android:textSize="24sp"/>
 
             <TextView
@@ -141,17 +147,18 @@
             android:orientation="vertical">
 
             <TextView
+                android:text="@{BindingParseUtils.parseBenchang(vm)}"
                 android:id="@+id/tv_chang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp30"/>
 
             <TextView
+                android:text="@{``+vm.gong}"
                 android:id="@+id/tv_gong"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     </RelativeLayout>
-
-</LinearLayout>
+</layout>

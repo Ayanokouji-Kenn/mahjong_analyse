@@ -115,7 +115,5 @@ public class MyApplication extends Application {
         SQLiteDatabase result = SQLiteDatabase.openOrCreateDatabase(getDatabasePath(name), null);
         return result;
     }
-
-
 }
 

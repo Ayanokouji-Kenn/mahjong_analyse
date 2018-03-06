@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
 import com.uu.mahjong_analyse.R;
-import com.uu.mahjong_analyse.utils.Constant;
-import com.uu.mahjong_analyse.utils.rx.RxBus;
 
 import java.util.ArrayList;
 
@@ -47,7 +45,7 @@ public class RichiDialog implements DialogInterface.OnClickListener, DialogInter
                     richiPlayers.add(mPlayers[i]);
                 }
             }
-            RxBus.getInstance().send(richiPlayers, Constant.RX_RICHI_RESULT);
+//            RxBus.getInstance().send(richiPlayers, Constant.RX_RICHI_RESULT);
         }
         mInstance.dismiss();
     }

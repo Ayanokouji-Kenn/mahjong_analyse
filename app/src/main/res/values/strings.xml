@@ -42,4 +42,16 @@
     <string name="fu110">110符</string>
     <string name="welcome_feedback">欢迎反馈</string>
     <string name="game_not_start">对局未开始</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_players">还没选人呢</string>
+    <string name="cant_change_players_finish_this_game">不支持中途换人，请先结束当前对局</string>
+    <string name="input_new_player">输入新来小伙伴名字</string>
+    <string name="set_players">设置该局玩家</string>
+    <string name="add_success">添加成功</string>
+    <string name="players_num_must_be_4">玩家必须为4人</string>
+    <string name="please_add_players_first">请先添加小伙伴</string>
+    <string name="permission_rationale_message">您拒绝过存储权限，而对战记录是保存在您本地存储上的，请通过一下~咪啪☆</string>
+    <string name="permission_denied_forever_message">您拒绝了存储权限，请去设置中打开，否则可能影响使用哦~咪啪☆</string>
 </resources>

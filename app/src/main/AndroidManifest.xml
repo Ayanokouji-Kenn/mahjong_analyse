@@ -47,7 +47,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".ui.SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             >
@@ -58,16 +58,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name=".activity.AddNewGameActivity"/>
-        <activity android:name=".activity.SetGameScoreActiivty"/>
-        <activity android:name=".activity.GetScoreActivity"/>
-        <activity android:name=".activity.PlayerInfoActivity"/>
-        <activity android:name=".activity.GameRecordActivity"/>
-        <activity android:name=".activity.ModifyDbActivity"/>
-        <activity android:name=".activity.ScanPointActivity"/>
-        <activity android:name=".activity.PracticeActivity"
+        <activity android:name=".ui.SetGameScoreActiivty"/>
+        <activity android:name=".ui.GetScoreActivity"/>
+        <activity android:name=".ui.PlayerInfoActivity"/>
+        <activity android:name=".ui.GameRecordActivity"/>
+        <activity android:name=".ui.ModifyDbActivity"/>
+        <activity android:name=".ui.ScanPointActivity"/>
+        <activity android:name=".ui.PracticeActivity"
                   android:configChanges="orientation|keyboardHidden|screenSize"
                   android:screenOrientation="landscape">
         </activity>

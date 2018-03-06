@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
 
         <variable
             name="listener"
             type="android.view.View.OnClickListener"/>
+
+        <variable
+            name="vm"
+            type="com.uu.mahjong_analyse.ui.MainVM"/>
     </data>
 
 <RelativeLayout
@@ -12,13 +17,8 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:fitsSystemWindows="true"
-    >
+    android:fitsSystemWindows="true" >
 
-    <include
-        android:fitsSystemWindows="true"
-        layout="@layout/layout_toolbar"
-        android:id="@+id/layout_toolbar"/>
     <LinearLayout
         android:layout_below="@id/layout_toolbar"
         android:layout_width="match_parent"
@@ -34,7 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="东家"
+            android:hint="东家"
+            android:text="@{vm.players[0].name}"
             android:textSize="25sp" />
 
         <TextView
@@ -44,7 +45,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="南家"
+            android:text="@{vm.players[1].name}"
+            android:hint="南家"
             android:textSize="25sp" />
 
         <TextView
@@ -54,7 +56,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="西家"
+            android:hint="西家"
+            android:text="@{vm.players[2].name}"
             android:textSize="25sp" />
 
         <TextView
@@ -64,7 +67,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="北家"
+            android:hint="北家"
+            android:text="@{vm.players[3].name}"
             android:textSize="25sp" />
 
         <TextView
@@ -83,8 +87,10 @@
     <android.support.design.widget.TextInputLayout
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
+        android:hint="@string/input_new_player"
         android:id="@+id/text_input_layout"
         android:layout_width="wrap_content"
+        app:passwordToggleEnabled="true"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
@@ -92,12 +98,12 @@
             android:id="@+id/et"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:hint="叫啥"
-            android:lines="1"
+            android:singleLine="true"
+            android:inputType="text"
             android:imeOptions="actionDone"
             android:ellipsize="end"
             android:textColor="@color/colorAccent"
-            android:textSize="24sp" />
+            android:textSize="16sp" />
     </android.support.design.widget.TextInputLayout>
 
 </RelativeLayout>

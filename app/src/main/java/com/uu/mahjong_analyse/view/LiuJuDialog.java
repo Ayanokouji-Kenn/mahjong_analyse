@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
 import com.uu.mahjong_analyse.R;
-import com.uu.mahjong_analyse.utils.Constant;
-import com.uu.mahjong_analyse.utils.rx.RxBus;
 import com.uu.mahjong_analyse.bean.LiujuResult;
 
 import java.util.ArrayList;
@@ -66,7 +64,7 @@ public class LiuJuDialog implements DialogInterface.OnClickListener, DialogInter
                                     liujuResult.richiPlayers.add(mPlayers[i]);
                                 }
                             }
-                            RxBus.getInstance().send(liujuResult, Constant.RX_LIUJU_RESULT);
+//                            RxBus.getInstance().send(liujuResult, Constant.RX_LIUJU_RESULT);
                             dialog.dismiss();
                         }
                     })

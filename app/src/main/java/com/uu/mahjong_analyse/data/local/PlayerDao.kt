@@ -1,8 +1,8 @@
 package com.uu.mahjong_analyse.data.local
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import com.uu.mahjong_analyse.data.entity.Player
+import io.reactivex.Flowable
 
 /**
  * <pre>
@@ -14,5 +14,13 @@ import com.uu.mahjong_analyse.data.entity.Player
 
 @Dao
 interface PlayerDao {
-    @Query("select * FROM player_record")  fun getPlayerList():List<Player>
+    @Query("SELECT * FROM player_record")  fun getPlayerList(): Flowable<List<Player>>
+
+    @Update fun updatePlayer(player:Player)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE) fun insertPlayer(player: Player):Long
+
+    @Query("SELECT * FROM player_record WHERE name=:name") fun selectPlayer(name:String):Flowable<Player>
+
+    @Delete fun deleteALL(list: List<Player>)
 }

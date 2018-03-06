@@ -1,4 +1,4 @@
-package com.uu.mahjong_analyse.activity;
+package com.uu.mahjong_analyse.ui;
 
 
 import android.database.Cursor;

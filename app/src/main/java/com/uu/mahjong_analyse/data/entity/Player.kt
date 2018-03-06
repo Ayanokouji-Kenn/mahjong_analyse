@@ -2,7 +2,9 @@ package com.uu.mahjong_analyse.data.entity
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
+import com.bigkoo.pickerview.model.IPickerViewData
 
 /**
  * <pre>
@@ -12,8 +14,10 @@ import android.arch.persistence.room.PrimaryKey
  * </pre>
  */
 
-@Entity(tableName = "player")
-data class Player  constructor(@PrimaryKey var id:Int) {
+@Entity(tableName = "player_record")
+data class Player @JvmOverloads constructor (@PrimaryKey(autoGenerate = true) var id:Int=0) : IPickerViewData {
+    override fun getPickerViewText(): String =name
+
     var name: String =""                   //名字
     @ColumnInfo(name="total_games") var totalGames: Int=0               //总局数
     @ColumnInfo(name="total_deal") var totalDeal: Int=0                  //发牌数
@@ -40,5 +44,6 @@ data class Player  constructor(@PrimaryKey var id:Int) {
     var sanbeiman: Int=0                   //三倍满
     var yakuman: Int=0                     //役满*/
 
+    @Ignore
     var score: Int = 0  //临时存储每一场的马点数   不存往数据库
 }
