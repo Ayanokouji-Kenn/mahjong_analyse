@@ -87,6 +87,7 @@ class AddNewGameFragment : BaseFragment() {
         mBinding = FragAddNewGameBinding.inflate(inflater, container, false).apply {
             listener = mListener
         }
+        vm.getPlayers()
         setHasOptionsMenu(true)
         registEditorListener()
         return mBinding.root
