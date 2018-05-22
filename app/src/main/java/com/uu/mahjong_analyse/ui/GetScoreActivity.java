@@ -21,7 +21,6 @@ import com.uu.mahjong_analyse.databinding.ActivityGetscoreBinding;
 import com.uu.mahjong_analyse.db.DBDao;
 import com.uu.mahjong_analyse.utils.Constant;
 import com.uu.mahjong_analyse.utils.SPUtils;
-import com.uu.mahjong_analyse.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -144,7 +143,7 @@ public class GetScoreActivity extends BaseActivity {
                     if (mBinding.rbRonn.isChecked() || mBinding.rbTsumo.isChecked()) {
                         showFanDialog();
                     } else {
-                        ToastUtils.show(mContext, "请选点击自摸或荣和");
+                        com.blankj.utilcode.util.ToastUtils.showShort("请选点击自摸或荣和");
                     }
                     break;
                 case R.id.btn_confirm:
@@ -158,13 +157,13 @@ public class GetScoreActivity extends BaseActivity {
 
     private boolean checkData() {
         if (mBinding.rbRonn.isChecked() && TextUtils.isEmpty(mChongPlayer)) {
-            ToastUtils.show(mContext, "没有选择放铳人");
+            com.blankj.utilcode.util.ToastUtils.showShort("没有选择放铳人");
             return false;
         } else if (TextUtils.isEmpty(mFan)) {
-            ToastUtils.show(mContext, "没有选择番种");
+            com.blankj.utilcode.util.ToastUtils.showShort("没有选择番种");
             return false;
         } else if (mBinding.etPoint.getText().length() == 0) {
-            ToastUtils.show(mContext, "没有输入点数");
+            com.blankj.utilcode.util.ToastUtils.showShort("没有输入点数");
             return false;
         }
         return true;
@@ -206,7 +205,7 @@ public class GetScoreActivity extends BaseActivity {
                     key = mFanList.get(options1);
                 }
                 if (TextUtils.equals("25符2翻", key) && mBinding.rbTsumo.isChecked()) {
-                    ToastUtils.show(mContext, "2翻的七对子不可能自摸哦~");
+                    com.blankj.utilcode.util.ToastUtils.showShort("2翻的七对子不可能自摸哦~");
                     return;
                 }
                 if (isOya) {

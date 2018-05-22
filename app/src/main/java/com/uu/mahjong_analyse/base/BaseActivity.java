@@ -11,11 +11,13 @@ import android.view.WindowManager;
 
 import com.uu.mahjong_analyse.R;
 
+import me.yokeyword.fragmentation.SupportActivity;
+
 
 /**
  * Created by Nagisa on 2016/6/24.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends SupportActivity {
     public Context mContext;
     public BaseActivity() {
         mContext = this;

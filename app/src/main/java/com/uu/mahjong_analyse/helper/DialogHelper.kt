@@ -10,6 +10,7 @@ package com.uu.mahjong_analyse.helper
 
 import android.support.v7.app.AlertDialog
 import com.blankj.utilcode.util.ActivityUtils
+import com.blankj.utilcode.util.IntentUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.PermissionUtils.OnRationaleListener.ShouldRequest
 import com.uu.mahjong_analyse.R
@@ -42,7 +43,7 @@ object DialogHelper {
         AlertDialog.Builder(topActivity,R.style.Theme_AppCompat_Light_Dialog_Alert)
                 .setTitle(android.R.string.dialog_alert_title)
                 .setMessage(R.string.permission_denied_forever_message)
-                .setPositiveButton(android.R.string.ok, { _, _ -> PermissionUtils.openAppSettings() })
+                .setPositiveButton(android.R.string.ok, { _, _ -> PermissionUtils.launchAppDetailsSettings() })
                 .setNegativeButton(android.R.string.cancel, { _, _ -> })
                 .setCancelable(false)
                 .create()

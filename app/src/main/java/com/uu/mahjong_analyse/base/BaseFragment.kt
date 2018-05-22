@@ -1,6 +1,7 @@
 package com.uu.mahjong_analyse.base
 
 import android.support.v4.app.Fragment
+import me.yokeyword.fragmentation.SupportFragment
 
 /**
  * <pre>
@@ -11,21 +12,8 @@ import android.support.v4.app.Fragment
  */
 
 
-open class BaseFragment : Fragment() {
+open class BaseFragment : SupportFragment() {
 
-
-    override fun onResume() {
-        super.onResume()
-        onFragShow()
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if(!isHidden) onFragShow()
-    }
-
-    open fun onFragShow(){
-    }
     companion object {
         fun getInstance() = BaseFragment()
     }

@@ -34,23 +34,20 @@ class PlayerDataSourceImpl(val playerDao: PlayerDao) : PlayerDataSource {
 
     override fun insertPlayer(name: String) {
         Single.just(name)
-                .doOnSuccess({
-                    playerDao.insertPlayer(Player().apply {
-                        this.name = it
-                    })
-                })
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ ToastUtils.showShort("新建用户成功") }, { LogUtils.d(it.message) })
+                .subscribe({
+                    playerDao.insertPlayer(Player().apply { this.name = it })
+                    ToastUtils.showShort("新建用户成功")
+                }, { LogUtils.d(it.message) })
     }
 
 
     override fun updatePlayer(player: Player) {
         Single.just(player)
-                .doOnSuccess({ playerDao.updatePlayer(it) })
-                .doOnError { com.blankj.utilcode.util.ToastUtils.showShort(it.message) }
                 .subscribeOn(Schedulers.io())
-
+                .subscribe({ playerDao.updatePlayer(it)
+                ToastUtils.showShort("更新用户信息成功")
+                }, { ToastUtils.showShort(it.message) })
     }
 
 

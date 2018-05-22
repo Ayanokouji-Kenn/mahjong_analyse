@@ -25,10 +25,8 @@ class PlayerRepository(private val playerDataSourceImpl: PlayerDataSourceImpl) :
 
 
     companion object {
-
         private var INSTANCE: PlayerRepository? = null
-
-        @JvmStatic fun getInstance(playerDataSourceImpl: PlayerDataSourceImpl) =
+        fun getInstance(playerDataSourceImpl: PlayerDataSourceImpl) =
                 INSTANCE ?: synchronized(PlayerRepository::class.java) {
                     INSTANCE ?: PlayerRepository(playerDataSourceImpl)
                             .also { INSTANCE = it }

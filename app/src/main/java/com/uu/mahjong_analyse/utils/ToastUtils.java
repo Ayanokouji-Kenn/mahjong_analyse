@@ -8,7 +8,7 @@ import android.widget.Toast;
  * @auther xuzijian
  * @date 2017/6/1.
  */
-
+@Deprecated
 public class ToastUtils {
     private static Toast mToast;
 

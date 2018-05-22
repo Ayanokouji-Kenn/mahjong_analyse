@@ -10,6 +10,7 @@ import com.uu.mahjong_analyse.base.MyApplication;
  * @date 2017/6/1 15:35.
  */
 
+@Deprecated
 public class SPUtils {
     private static final String SP_NAME = "sp_data";
 

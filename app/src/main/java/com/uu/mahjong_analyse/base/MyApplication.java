@@ -5,12 +5,16 @@ import android.content.Context;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
 import com.facebook.stetho.Stetho;
+import com.uu.mahjong_analyse.BuildConfig;
 
 import java.io.File;
 import java.io.IOException;
+
+import me.yokeyword.fragmentation.Fragmentation;
 
 /**
  * Created by Nagisa on 2016/6/25.
@@ -25,6 +29,11 @@ public class MyApplication extends Application {
         Utils.init(this);
         //chrome debug bridge
         Stetho.initializeWithDefaults(this);
+        Fragmentation.builder()
+                // show stack view. Mode: BUBBLE, SHAKE, NONE
+                .stackViewMode(Fragmentation.BUBBLE)
+                .debug(AppUtils.isAppDebug())
+             .install();
 
         //初始化bugly
 //        CrashReport.initCrashReport(getApplicationContext(), "2a6c84812d", true);

@@ -72,38 +72,7 @@
         <include layout="@layout/fg_rightmenu"/>
     </android.support.v4.widget.DrawerLayout>
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:visibility="@{vm.fgShow == `TAG_FG_MAIN`?View.VISIBLE:View.GONE}"
-        android:id="@+id/fab_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp16"
-        android:clickable="false"
-        fab:fab_addButtonColorNormal="@color/colorAccent"
-        fab:fab_addButtonColorPressed="@color/white"
-        fab:fab_addButtonPlusIconColor="@color/white"
-        fab:fab_labelStyle="@style/menu_labels_style"
-        fab:layout_anchor="@id/drawerlayout"
-        fab:layout_anchorGravity="bottom|end">
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:onClick="@{listener::onClick}"
-            android:id="@+id/fab_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_icon="@mipmap/start_game"
-            fab:fab_title="@string/start_game"/>
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:onClick="@{listener::onClick}"
-            android:id="@+id/fab_select_player"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_icon="@mipmap/add_player"
-            fab:fab_title="@string/select_player"/>
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </android.support.design.widget.CoordinatorLayout>
 </layout>

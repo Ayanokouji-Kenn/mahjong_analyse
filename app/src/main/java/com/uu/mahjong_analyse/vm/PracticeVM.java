@@ -3,8 +3,6 @@ package com.uu.mahjong_analyse.vm;
 import android.app.Application;
 
 import com.blankj.utilcode.util.LogUtils;
-import com.uu.mahjong_analyse.BR;
-import com.uu.mahjong_analyse.R;
 import com.uu.mahjong_analyse.base.BaseVM;
 import com.uu.mahjong_analyse.utils.HaiUtils;
 
@@ -13,8 +11,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
-
-import me.tatarka.bindingcollectionadapter2.ItemBinding;
 
 /**
  * @description
@@ -27,7 +23,7 @@ public class PracticeVM extends BaseVM {
     public ArrayList<Integer> player2 = new ArrayList<>();
     public ArrayList<Integer> player3 = new ArrayList<>();
     public ArrayList<Integer> player4 = new ArrayList<>();
-    public final ItemBinding<Integer> myItemBinding = ItemBinding.of(BR.item, R.layout.item_my_hais);
+//    public final ItemBinding<Integer> myItemBinding = ItemBinding.of(BR.item, R.layout.item_my_hais);
     public ArrayList<Integer> riverList = new ArrayList<>();
     public List<Integer> haiHills = new ArrayList<>();
 

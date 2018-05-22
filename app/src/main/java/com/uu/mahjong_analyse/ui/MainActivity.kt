@@ -20,7 +20,6 @@ import com.uu.mahjong_analyse.base.BaseActivity
 import com.uu.mahjong_analyse.databinding.ActivityMainBinding
 import com.uu.mahjong_analyse.fragment.LeftMenuFragment
 import com.uu.mahjong_analyse.utils.MagicFileChooser
-import com.uu.mahjong_analyse.utils.addFragmentToActivity
 import com.uu.mahjong_analyse.utils.replaceFragmentInActivity
 import com.uu.mahjong_analyse.utils.setupActionBar
 import com.uu.mahjong_analyse.view.LiuJuDialog
@@ -29,37 +28,11 @@ class MainActivity : BaseActivity() {
 
     private var magicFileChooser: MagicFileChooser? = null
     private lateinit var mBinding: ActivityMainBinding
-    private var toolbar: Toolbar? = null
     private lateinit var vm: MainVM
+    private var toolbar: Toolbar? = null
     private var feedbackDialog: AlertDialog? = null
 
-
     private var mLiujuDialog: LiuJuDialog? = null
-
-    private var mListener: View.OnClickListener = View.OnClickListener { v ->
-        when (v.id) {
-            R.id.fab_select_player -> if (vm.isStart) {
-                ToastUtils.showShort(getString(R.string.cant_change_players_finish_this_game))
-            } else {
-                supportFragmentManager.beginTransaction()
-                        .add(R.id.fl_content, supportFragmentManager.findFragmentByTag(TAG_FG_ADD_NEW_GAME)
-                                ?: AddNewGameFragment.getInstance(), TAG_FG_ADD_NEW_GAME)
-                        .hide(supportFragmentManager.findFragmentByTag(TAG_FG_MAIN))
-                        .addToBackStack(null)
-                        .commit()
-            }
-            R.id.fab_start -> {
-                for (player in vm.players) {
-                    if (player == null) {
-                        ToastUtils.showShort(getString(R.string.no_players))
-                        return@OnClickListener
-                    }
-                }
-            }
-        }//startGame();
-        mBinding.fabMenu.collapse()
-    }
-
 
     private var backPressedTime: Long = 0
 
@@ -74,8 +47,18 @@ class MainActivity : BaseActivity() {
     override fun initView() {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         vm = ViewModelProviders.of(this).get(MainVM::class.java)
-        mBinding.listener = mListener
         mBinding.vm = vm
+        initActionbar()
+
+        if (findFragment(MainFragment::class.java) == null)
+            loadRootFragment(R.id.fl_content, MainFragment.newInstance())
+
+
+        supportFragmentManager.findFragmentById(R.id.fl_leftmenu) ?: LeftMenuFragment()
+                .let { replaceFragmentInActivity(it, R.id.fl_leftmenu) }
+    }
+
+    private fun initActionbar() {
         setupActionBar(R.id.toolbar) {
             title = getString(R.string.app_name)
             setDisplayHomeAsUpEnabled(true)
@@ -85,11 +68,6 @@ class MainActivity : BaseActivity() {
                 R.string.drawer_close)
         mDrawerToggle.syncState()
         mBinding.drawerlayout.addDrawerListener(mDrawerToggle)
-
-//        supportFragmentManager.beginTransaction().add(R.id.fl_content,MainFragment.newInstance()).commit()
-        addFragmentToActivity(MainFragment.newInstance(), R.id.fl_content, TAG_FG_MAIN)
-        supportFragmentManager.findFragmentById(R.id.fl_leftmenu) ?: LeftMenuFragment()
-                .let { replaceFragmentInActivity(it, R.id.fl_leftmenu) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -164,17 +142,8 @@ class MainActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onBackPressed() {
-        if (supportFragmentManager.findFragmentByTag(TAG_FG_MAIN).isHidden) {
-            supportFragmentManager.popBackStack()
-        } else {
-            if (System.currentTimeMillis() - backPressedTime < 3000L) {
-                super.onBackPressed()
-            } else {
-                backPressedTime = System.currentTimeMillis()
-                ToastUtils.showShort("你可能手滑了，再次点击退出应用")
-            }
-        }
+    override fun onBackPressedSupport() {
+        super.onBackPressedSupport()
     }
 
     fun closeDrawerLayout() {

@@ -6,10 +6,6 @@
         <variable
             name="listener"
             type="android.view.View.OnClickListener"/>
-
-        <variable
-            name="vm"
-            type="com.uu.mahjong_analyse.ui.MainVM"/>
     </data>
 
 <RelativeLayout
@@ -35,7 +31,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:hint="东家"
-            android:text="@{vm.players[0].name}"
             android:textSize="25sp" />
 
         <TextView
@@ -45,7 +40,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@{vm.players[1].name}"
             android:hint="南家"
             android:textSize="25sp" />
 
@@ -57,7 +51,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:hint="西家"
-            android:text="@{vm.players[2].name}"
             android:textSize="25sp" />
 
         <TextView
@@ -68,7 +61,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:hint="北家"
-            android:text="@{vm.players[3].name}"
             android:textSize="25sp" />
 
         <TextView

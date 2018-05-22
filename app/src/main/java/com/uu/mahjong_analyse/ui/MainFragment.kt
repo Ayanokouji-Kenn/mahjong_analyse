@@ -1,12 +1,14 @@
 package com.uu.mahjong_analyse.ui
 
 import android.animation.ObjectAnimator
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.blankj.utilcode.util.ToastUtils
 import com.romainpiel.shimmer.Shimmer
 import com.romainpiel.shimmer.ShimmerTextView
 import com.uu.mahjong_analyse.R
@@ -29,10 +31,14 @@ import java.util.*
 
 class MainFragment : BaseFragment() {
     private lateinit var mBinding:FragMainBinding
+    private lateinit var vm:MainVM
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        vm = ViewModelProviders.of(this).get(MainVM::class.java)
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = FragMainBinding.inflate(inflater,container,false).apply {
-            vm = (activity as MainActivity).getVM(MainVM::class.java)
-        }
+        mBinding = FragMainBinding.inflate(inflater,container,false)
+        mBinding.listener = mListener
         rotatePlayerName()
         initData()
         return mBinding.root
@@ -205,15 +211,6 @@ class MainFragment : BaseFragment() {
 
     private var mLiujuDialog: LiuJuDialog? = null
 
-    internal var mListener: View.OnClickListener = View.OnClickListener { v ->
-        when (v.id) {
-//            R.id.ll_east -> openScorePage(if (mPlayers == null) null else mPlayers!![0])
-//            R.id.ll_south -> openScorePage(if (mPlayers == null) null else mPlayers!![1])
-//            R.id.ll_west -> openScorePage(if (mPlayers == null) null else mPlayers!![2])
-//            R.id.ll_north -> openScorePage(if (mPlayers == null) null else mPlayers!![3])
-
-        }
-    }
 
     fun startGame() {
 //        if (!isStart) {
@@ -260,11 +257,41 @@ class MainFragment : BaseFragment() {
 
     private var backPressedTime: Long = 0
 
-    override fun onFragShow() {
-        with((activity as MainActivity).supportActionBar) {
-            this?.title = resources.getString(R.string.app_name)
+    override fun onSupportVisible() {
+        super.onSupportVisible()
+        (activity as MainActivity).supportActionBar?.title = getString(R.string.app_name)
+    }
+
+    private var mListener: View.OnClickListener = View.OnClickListener { v ->
+        when (v.id) {
+
+//            R.id.ll_east -> openScorePage(if (mPlayers == null) null else mPlayers!![0])
+//            R.id.ll_south -> openScorePage(if (mPlayers == null) null else mPlayers!![1])
+//            R.id.ll_west -> openScorePage(if (mPlayers == null) null else mPlayers!![2])
+//            R.id.ll_north -> openScorePage(if (mPlayers == null) null else mPlayers!![3])
+            R.id.fab_select_player -> if (vm.isStart) {
+                ToastUtils.showShort(getString(R.string.cant_change_players_finish_this_game))
+            } else {
+                startForResult(AddNewGameFragment.getInstance(), RC_PLAYERS)
+            }
+            R.id.fab_start -> {
+                for (player in vm.players) {
+                    if (player == null) {
+                        ToastUtils.showShort(getString(R.string.no_players))
+                        return@OnClickListener
+                    }
+                }
+            }
+        }//startGame();
+        mBinding.fabMenu.collapse()
+    }
+
+    override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?) {
+        when (requestCode) {
+            RC_PLAYERS -> {
+
+            }
         }
-        mBinding.vm?.fgShow?.set(MainActivity.TAG_FG_MAIN)
     }
 
     companion object {
