@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
 
-        <import type="com.uu.mahjong_analyse.utils.BindingParseUtils"/>
+        <import type="com.uu.mahjong_analyse.utils.ConvertHelper" />
         <variable
             name="listener"
             type="android.view.View.OnClickListener"/>
@@ -150,6 +150,7 @@
 
             <TextView
                 android:id="@+id/tv_chang"
+                android:text="@{ConvertHelper.parseChang(vm.chang)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp30"/>

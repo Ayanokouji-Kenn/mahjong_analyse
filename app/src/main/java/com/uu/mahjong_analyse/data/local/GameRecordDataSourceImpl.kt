@@ -1,6 +1,5 @@
 package com.uu.mahjong_analyse.data.local
 
-import com.uu.mahjong_analyse.data.GameRecordDataSource
 import com.uu.mahjong_analyse.data.entity.GameRecord
 
 /**
@@ -12,7 +11,7 @@ import com.uu.mahjong_analyse.data.entity.GameRecord
  */
 
 
-class GameRecordDataSourceImpl(val gameRecordDao: GameRecordDao):GameRecordDataSource {
+class GameRecordDataSourceImpl(val gameRecordDao: GameRecordDao): GameRecordDataSource {
     override fun getGameRecordList(getGameRecordListCallBack: GameRecordDataSource.GetGameRecordListCallBack) {
         val list = gameRecordDao.selectList()
         if (list.isEmpty()) {

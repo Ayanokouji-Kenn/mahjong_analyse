@@ -1,4 +1,4 @@
-package com.uu.mahjong_analyse.data
+package com.uu.mahjong_analyse.data.local
 
 import com.uu.mahjong_analyse.data.entity.Player
 import io.reactivex.Flowable

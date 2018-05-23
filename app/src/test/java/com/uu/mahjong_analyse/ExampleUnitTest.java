@@ -1,7 +1,7 @@
 package com.uu.mahjong_analyse;
 
 import com.uu.mahjong_analyse.base.MyApplication;
-import com.uu.mahjong_analyse.data.PlayerRepository;
+import com.uu.mahjong_analyse.data.local.PlayerRepository;
 import com.uu.mahjong_analyse.data.local.MajongDatabase;
 import com.uu.mahjong_analyse.data.local.PlayerDataSourceImpl;
 

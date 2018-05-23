@@ -4,15 +4,10 @@ import android.app.Application
 import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
 import android.databinding.ObservableInt
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.PermissionUtils
-import com.blankj.utilcode.util.ToastUtils
-import com.uu.mahjong_analyse.R
+import android.os.Bundle
 import com.uu.mahjong_analyse.base.BaseVM
-import com.uu.mahjong_analyse.data.PlayerRepository
+import com.uu.mahjong_analyse.data.GameModle
 import com.uu.mahjong_analyse.data.entity.Player
-import com.uu.mahjong_analyse.data.local.MajongDatabase
-import com.uu.mahjong_analyse.data.local.PlayerDataSourceImpl
 
 /**
  * @description
@@ -23,28 +18,33 @@ import com.uu.mahjong_analyse.data.local.PlayerDataSourceImpl
 class MainVM(app: Application) : BaseVM(app) {
     var isStart = false
     var hePlayer: String = ""
-    var chang = ObservableInt(0)  //0-7 代表东1到南4；
+    var chang = ObservableInt(10)  //默认是东一 十位数表示场，个位数表示本场
     var gong = ObservableInt(0)  //流局产生的供托,有人和牌则清零
     var benchang = ObservableInt(0)
     val players = ObservableArrayList<Player?>().apply { for (i in 1..4) add(null) }  //存放开局东一时候的  东南西北player
     var fgShow = ObservableField<String>()
 
-    val playerReposity = PlayerRepository.getInstance(PlayerDataSourceImpl(MajongDatabase.getInstance(app).playerDao()))
-
-    val totalPlayList = mutableListOf<Player>()
-    fun getPlayers() {
-        playerReposity.getPlayers()
-                .subscribe({
-                    LogUtils.d("zfdt---", "$it")
-                    if (it.isNotEmpty()) {
-                        totalPlayList.clear()
-                        totalPlayList.addAll(it)
-                    } else ToastUtils.showShort(mApp.getString(R.string.please_add_players_first))
-                }, {LogUtils.d("zfdt---", it.message)})
+    /**
+     * @see players
+     * 选过人之后，回到MainFg了，从数据库中查出这4个人的信息，设置到players里
+     */
+    fun setPlayers(data: Bundle) {
+        val array = data.getParcelableArray("players")
+        players[0] = array[0] as Player?
+        players[1] = array[1] as Player?
+        players[2] = array[2] as Player?
+        players[3] = array[3] as Player?
     }
 
-    fun insertPlayer(name: String) {
-        playerReposity.insertPlayer(name)
-        PermissionUtils.permission()
+    /**
+     * 恢复数据。从数据库中读取临时对局数据，如果有的话
+     */
+    fun recover() {
+        gameInfoRepository.fetchList()
+                .subscribe({
+                    GameModle.set(it.last())
+                }, {
+                    //没有数据就不管了，需要用的时候掉GameModle.getInstance会初始化
+                })
     }
 }

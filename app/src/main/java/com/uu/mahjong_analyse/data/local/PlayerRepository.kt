@@ -1,7 +1,6 @@
-package com.uu.mahjong_analyse.data
+package com.uu.mahjong_analyse.data.local
 
 import com.uu.mahjong_analyse.data.entity.Player
-import com.uu.mahjong_analyse.data.local.PlayerDataSourceImpl
 
 /**
  * <pre>
@@ -12,7 +11,7 @@ import com.uu.mahjong_analyse.data.local.PlayerDataSourceImpl
  */
 
 
-class PlayerRepository(private val playerDataSourceImpl: PlayerDataSourceImpl) :PlayerDataSource{
+class PlayerRepository(private val playerDataSourceImpl: PlayerDataSourceImpl) : PlayerDataSource {
     override fun delPlayers(list: List<Player>) =playerDataSourceImpl.delPlayers(list)
 
     override fun insertPlayer(name: String) =  playerDataSourceImpl.insertPlayer(name)
@@ -27,8 +26,10 @@ class PlayerRepository(private val playerDataSourceImpl: PlayerDataSourceImpl) :
     companion object {
         private var INSTANCE: PlayerRepository? = null
         fun getInstance(playerDataSourceImpl: PlayerDataSourceImpl) =
-                INSTANCE ?: synchronized(PlayerRepository::class.java) {
-                    INSTANCE ?: PlayerRepository(playerDataSourceImpl)
+                INSTANCE
+                        ?: synchronized(PlayerRepository::class.java) {
+                    INSTANCE
+                            ?: PlayerRepository(playerDataSourceImpl)
                             .also { INSTANCE = it }
                 }
     }

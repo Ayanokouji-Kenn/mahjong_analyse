@@ -12,12 +12,14 @@ import com.blankj.utilcode.util.ToastUtils
 import com.romainpiel.shimmer.Shimmer
 import com.romainpiel.shimmer.ShimmerTextView
 import com.uu.mahjong_analyse.R
+import com.uu.mahjong_analyse.base.BaseActivity
 import com.uu.mahjong_analyse.base.BaseFragment
+import com.uu.mahjong_analyse.data.GameModle
 import com.uu.mahjong_analyse.databinding.FragMainBinding
+import com.uu.mahjong_analyse.utils.ConvertHelper
 import com.uu.mahjong_analyse.utils.MagicFileChooser
-import com.uu.mahjong_analyse.utils.SPUtils
-import com.uu.mahjong_analyse.utils.getVM
 import com.uu.mahjong_analyse.view.LiuJuDialog
+import me.yokeyword.fragmentation.ISupportFragment
 import java.util.*
 
 /**
@@ -32,15 +34,18 @@ import java.util.*
 class MainFragment : BaseFragment() {
     private lateinit var mBinding:FragMainBinding
     private lateinit var vm:MainVM
+    private val tvArr = arrayOfNulls<ShimmerTextView>(4)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         vm = ViewModelProviders.of(this).get(MainVM::class.java)
+        vm.recover()
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragMainBinding.inflate(inflater,container,false)
         mBinding.listener = mListener
         rotatePlayerName()
         initData()
+
         return mBinding.root
     }
 
@@ -143,13 +148,13 @@ class MainFragment : BaseFragment() {
      * 遍历立直玩家集合，取出当前分数，扣掉1000，存回sp，供托+1000
      */
     private fun handleRichi(richiPlayers: ArrayList<String>) {
-        for (richiPlayer in richiPlayers) {
-            val tv = playerTvMap[richiPlayer]
-            val score = SPUtils.getInt(richiPlayer, Integer.MIN_VALUE)
-            tv?.text = (score - 1000).toString()
-            SPUtils.putInt(richiPlayer, score - 1000)
-            mBinding.vm?.gong?.set(mBinding.vm?.gong?.get()!!+1000)
-        }
+//        for (richiPlayer in richiPlayers) {
+//            val tv = playerTvMap[richiPlayer]
+//            val score = SPUtils.getInt(richiPlayer, Integer.MIN_VALUE)
+//            tv?.text = (score - 1000).toString()
+//            SPUtils.putInt(richiPlayer, score - 1000)
+//            mBinding.vm?.gong?.set(mBinding.vm?.gong?.get()!!+1000)
+//        }
     }
 
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -212,37 +217,44 @@ class MainFragment : BaseFragment() {
     private var mLiujuDialog: LiuJuDialog? = null
 
 
-    fun startGame() {
-//        if (!isStart) {
-//            mBinding.fabStart.setTitle("结束对局")
-//            mBinding.fabStart.setIcon(R.drawable.stop)
-//            isStart = true
-//            //开局就将场次变成东一局
-//            SPUtils.putInt(Constant.CHANG, 1)
-//            mBinding.tvChang.setText(changMap.get(0))
-//            //东家闪光，右边栏东一变色
-//            mShimmer!!.start(mBinding.tvEast)
-//
-//            //将所有人分数初始化为25000
-//            initScore()
-//        } else {
-//            (activity as BaseActivity).openPage(true, -1, SetGameScoreActiivty::class.java)
-//            mBinding.fabStart.setTitle("开局")
-//            mBinding.fabStart.setIcon(R.mipmap.start_game)
-//            isStart = false
-//        }
+    private fun startGame() {
+        if (!vm.isStart) {
+            mBinding.fabStart.title = "结束对局"
+            mBinding.fabStart.setIcon(R.drawable.stop)
+            vm.isStart = true
+            //将所有人分数初始化为25000
+            GameModle.init()
+            refreshView()
+        } else {
+            (activity as BaseActivity).openPage(true, -1, SetGameScoreActiivty::class.java)
+            mBinding.fabStart.title = "开局"
+            mBinding.fabStart.setIcon(R.mipmap.start_game)
+            vm.isStart = false
+        }
     }
 
-//    private fun initScore() {
-//        mBinding.tvEastPoint.setText(getString(R.string._25000))
-//        mBinding.tvSouthPoint.setText(getString(R.string._25000))
-//        mBinding.tvWestPoint.setText(getString(R.string._25000))
-//        mBinding.tvNorthPoint.setText(getString(R.string._25000))
-//        SPUtils.putInt(mPlayers!![0], 25000)
-//        SPUtils.putInt(mPlayers!![1], 25000)
-//        SPUtils.putInt(mPlayers!![2], 25000)
-//        SPUtils.putInt(mPlayers!![3], 25000)
-//    }
+    private fun refreshView() {
+//        玩家姓名
+        mBinding.tvEast.text = GameModle.getInstance().eastName
+        mBinding.tvWest.text = GameModle.getInstance().westName
+        mBinding.tvNorth.text = GameModle.getInstance().northName
+        mBinding.tvSouth.text = GameModle.getInstance().southName
+
+//        玩家点数
+        mBinding.tvEastPoint.text = GameModle.getInstance().east.toString()
+        mBinding.tvSouthPoint.text = GameModle.getInstance().south.toString()
+        mBinding.tvWestPoint.text = GameModle.getInstance().west.toString()
+        mBinding.tvNorthPoint.text = GameModle.getInstance().north.toString()
+
+//        场
+        mBinding.tvChang.text = ConvertHelper.parseChang(GameModle.getInstance().chang)
+
+//        庄家动画
+        if(mShimmer.isAnimating) {
+            mShimmer.cancel()
+//            mShimmer.start(GameModle.getInstance().chang/10)
+        }
+    }
 
 //    private fun openScorePage(player: String?) {
 //        if (TextUtils.isEmpty(player)) {
@@ -262,6 +274,9 @@ class MainFragment : BaseFragment() {
         (activity as MainActivity).supportActionBar?.title = getString(R.string.app_name)
     }
 
+    /**
+     * 点击事件
+     */
     private var mListener: View.OnClickListener = View.OnClickListener { v ->
         when (v.id) {
 
@@ -281,15 +296,18 @@ class MainFragment : BaseFragment() {
                         return@OnClickListener
                     }
                 }
+                startGame();
             }
-        }//startGame();
+        }
         mBinding.fabMenu.collapse()
     }
 
     override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?) {
-        when (requestCode) {
-            RC_PLAYERS -> {
-
+        if(resultCode == ISupportFragment.RESULT_OK) {
+            when (requestCode) {
+                RC_PLAYERS -> {
+                    refreshView()
+                }
             }
         }
     }

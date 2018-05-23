@@ -20,6 +20,7 @@ import com.uu.mahjong_analyse.data.entity.Player
 @Database(entities = arrayOf(Player::class, GameRecord::class), version = 2)
 abstract class MajongDatabase : RoomDatabase() {
     abstract fun playerDao(): PlayerDao
+    abstract fun tempGameInfoDao(): TempGameInfoDao
 
     companion object {
         val migration_1_2: Migration = object : Migration(1, 2) {

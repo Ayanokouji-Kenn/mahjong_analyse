@@ -7,15 +7,14 @@ import android.text.TextUtils
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import com.bigkoo.pickerview.OptionsPickerView
-import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.ToastUtils
+import com.blankj.utilcode.util.*
 import com.uu.mahjong_analyse.R
 import com.uu.mahjong_analyse.base.BaseFragment
+import com.uu.mahjong_analyse.data.GameModle
 import com.uu.mahjong_analyse.data.entity.Player
 import com.uu.mahjong_analyse.databinding.FragAddNewGameBinding
 import com.uu.mahjong_analyse.utils.Constant
+import me.yokeyword.fragmentation.ISupportFragment
 
 /**
  * @description  由[MainActivity]的fab跳转，新开一局的选人界面
@@ -31,19 +30,19 @@ class AddNewGameFragment : BaseFragment() {
             when (selectTvId) {
                 R.id.tv_east -> {
                     mBinding.tvEast.text = selectPlayer.name
-                    SPUtils.getInstance().put(Constant.EAST, selectPlayer.name)
+                    GameModle.getInstance().eastName = selectPlayer.name
                 }
                 R.id.tv_south -> {
                     mBinding.tvSouth.text = selectPlayer.name
-                    SPUtils.getInstance().put(Constant.SOUTH, selectPlayer.name)
+                    GameModle.getInstance().southName = selectPlayer.name
                 }
                 R.id.tv_west -> {
                     mBinding.tvWest.text = selectPlayer.name
-                    SPUtils.getInstance().put(Constant.WEST, selectPlayer.name)
+                    GameModle.getInstance().westName = selectPlayer.name
                 }
                 R.id.tv_north -> {
                     mBinding.tvNorth.text = selectPlayer.name
-                    SPUtils.getInstance().put(Constant.NORTH, selectPlayer.name)
+                    GameModle.getInstance().northName= selectPlayer.name
                 }
             }
         })
@@ -60,6 +59,8 @@ class AddNewGameFragment : BaseFragment() {
                     || SPUtils.getInstance().getString(Constant.SOUTH).isEmpty()) {
 
                 ToastUtils.showShort(getString(R.string.players_num_must_be_4))
+                CacheUtils.getInstance().put("gameInfo",GameModle.getInstance())
+                setFragmentResult(ISupportFragment.RESULT_OK, Bundle.EMPTY)
                 return@OnClickListener
             }
         } else if (id == R.id.tv_east
@@ -70,7 +71,6 @@ class AddNewGameFragment : BaseFragment() {
             if (vm.players.isEmpty()) {
                 ToastUtils.showShort("无数据，请在下方输入玩家姓名")
             } else {
-
                 selectPlayerPicker.setPicker(vm.players)
                 selectPlayerPicker.show()
             }
@@ -102,7 +102,7 @@ class AddNewGameFragment : BaseFragment() {
         }
     }
 
-    fun registEditorListener() {
+    private fun registEditorListener() {
         mBinding.et.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 LogUtils.d(v.text.toString())
