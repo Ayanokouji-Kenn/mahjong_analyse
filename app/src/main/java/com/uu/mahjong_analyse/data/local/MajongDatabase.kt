@@ -8,6 +8,7 @@ import android.arch.persistence.room.migration.Migration
 import android.content.Context
 import com.uu.mahjong_analyse.data.entity.GameRecord
 import com.uu.mahjong_analyse.data.entity.Player
+import com.uu.mahjong_analyse.data.entity.TempGameDO
 
 /**
  * <pre>
@@ -17,7 +18,7 @@ import com.uu.mahjong_analyse.data.entity.Player
  * </pre>
  */
 
-@Database(entities = arrayOf(Player::class, GameRecord::class), version = 2)
+@Database(entities = arrayOf(Player::class, GameRecord::class,TempGameDO::class), version = 1)
 abstract class MajongDatabase : RoomDatabase() {
     abstract fun playerDao(): PlayerDao
     abstract fun tempGameInfoDao(): TempGameInfoDao
@@ -120,7 +121,8 @@ abstract class MajongDatabase : RoomDatabase() {
                     INSTANCE ?: Room.databaseBuilder(context.applicationContext
                             , MajongDatabase::class.java
                             , "mahjong_data.db")
-                            .addMigrations(migration_1_2)
+//                            .addMigrations(migration_1_2)
+                            .fallbackToDestructiveMigration()
                             .build()
                 }
     }

@@ -37,7 +37,6 @@
                 android:clickable="false"
                 android:gravity="center"
                 android:hint="北"
-                android:text="@{vm.players[3].name}"
                 android:textSize="24sp"/>
 
             <TextView
@@ -68,7 +67,6 @@
                 android:lines="1"
                 android:gravity="center"
                 android:hint="东"
-                android:text="@{vm.players[0].name}"
                 android:textSize="24sp"/>
 
             <TextView
@@ -98,7 +96,6 @@
                 android:lines="1"
                 android:gravity="center"
                 android:hint="南"
-                android:text="@{vm.players[1].name}"
                 android:textSize="24sp"/>
 
             <TextView
@@ -129,7 +126,6 @@
                 android:lines="1"
                 android:gravity="center"
                 android:hint="西"
-                android:text="@{vm.players[2].name}"
                 android:textSize="24sp"/>
 
             <TextView
@@ -150,7 +146,6 @@
 
             <TextView
                 android:id="@+id/tv_chang"
-                android:text="@{ConvertHelper.parseChang(vm.chang)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp30"/>

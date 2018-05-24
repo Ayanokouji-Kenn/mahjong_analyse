@@ -31,6 +31,7 @@ class AddNewGameVM(app:Application) : BaseVM(app) {
                 .subscribe( {
                     playDao.insertPlayer(Player(name = name))
                     ToastUtils.showShort("新增玩家成功")
+                    if(players.isEmpty()) getPlayers()
                 },{ToastUtils.showShort(it.message)})
     }
 

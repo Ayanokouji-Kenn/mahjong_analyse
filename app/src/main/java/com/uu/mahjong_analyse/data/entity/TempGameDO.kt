@@ -32,52 +32,5 @@ data class TempGameDO(
         @Ignore var westName:String="",
         @Ignore var southName:String="",
         @Ignore var northName:String=""
-        ):Parcelable {
-        constructor(parcel: Parcel) : this(
-                parcel.readValue(Int::class.java.classLoader) as? Int,
-                parcel.readInt(),
-                parcel.readInt(),
-                parcel.readInt(),
-                parcel.readInt(),
-                parcel.readInt(),
-                parcel.readString(),
-                parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
-                parcel.readString(),
-                parcel.readInt(),
-                parcel.readInt(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString()) {
-        }
-
-        override fun writeToParcel(dest: Parcel?, flags: Int) {
-                dest?.writeValue(id)
-                dest?.writeInt(east)
-                dest?.writeInt(south)
-                dest?.writeInt(west)
-                dest?.writeInt(north)
-                dest?.writeInt(hePoint)
-                dest?.writeString(heName)
-                dest?.writeValue(isTsumo)
-                dest?.writeString(chong)
-                dest?.writeInt(chang)
-                dest?.writeInt(gong)
-                dest?.writeString(eastName)
-                dest?.writeString(westName)
-                dest?.writeString(southName)
-                dest?.writeString(northName)
-        }
-
-        override fun describeContents(): Int =0
-
-        companion object CREATOR : Parcelable.Creator<TempGameDO> {
-                override fun createFromParcel(parcel: Parcel): TempGameDO {
-                        return TempGameDO(parcel)
-                }
-
-                override fun newArray(size: Int): Array<TempGameDO?> {
-                        return arrayOfNulls(size)
-                }
-        }
+        ) {
 }

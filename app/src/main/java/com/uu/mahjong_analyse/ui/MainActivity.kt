@@ -32,7 +32,9 @@ class MainActivity : BaseActivity() {
     private var toolbar: Toolbar? = null
     private var feedbackDialog: AlertDialog? = null
 
-    private var mLiujuDialog: LiuJuDialog? = null
+    private val mLiujuDialog: LiuJuDialog by lazy {
+        LiuJuDialog(this)
+    }
 
     private var backPressedTime: Long = 0
 
@@ -52,10 +54,8 @@ class MainActivity : BaseActivity() {
 
         if (findFragment(MainFragment::class.java) == null)
             loadRootFragment(R.id.fl_content, MainFragment.newInstance())
-
-
-        supportFragmentManager.findFragmentById(R.id.fl_leftmenu) ?: LeftMenuFragment()
-                .let { replaceFragmentInActivity(it, R.id.fl_leftmenu) }
+        if(findFragment(LeftMenuFragment::class.java) == null)
+            loadRootFragment(R.id.fl_leftmenu,LeftMenuFragment.getInstance())
     }
 
     private fun initActionbar() {
@@ -102,10 +102,7 @@ class MainActivity : BaseActivity() {
             R.id.toolbar_liuju ->
                 //开始对局了才可以点击流局
                 if (vm.isStart) {
-                    if (mLiujuDialog == null) {
-                        mLiujuDialog = LiuJuDialog(this, vm.players.map { it!!.name }.toTypedArray())
-                    }
-                    mLiujuDialog!!.show()
+                    mLiujuDialog.show()
                 } else {
                     ToastUtils.showShort(R.string.game_not_start)
                 }

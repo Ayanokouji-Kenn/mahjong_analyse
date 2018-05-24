@@ -4,21 +4,26 @@ import android.animation.ObjectAnimator
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import com.blankj.rxbus.RxBus
 import com.blankj.utilcode.util.ToastUtils
 import com.romainpiel.shimmer.Shimmer
 import com.romainpiel.shimmer.ShimmerTextView
 import com.uu.mahjong_analyse.R
 import com.uu.mahjong_analyse.base.BaseActivity
 import com.uu.mahjong_analyse.base.BaseFragment
+import com.uu.mahjong_analyse.bean.LiujuResult
 import com.uu.mahjong_analyse.data.GameModle
 import com.uu.mahjong_analyse.databinding.FragMainBinding
 import com.uu.mahjong_analyse.utils.ConvertHelper
 import com.uu.mahjong_analyse.utils.MagicFileChooser
 import com.uu.mahjong_analyse.view.LiuJuDialog
+import com.uu.mahjong_analyse.view.RichiDialog
 import me.yokeyword.fragmentation.ISupportFragment
 import java.util.*
 
@@ -32,16 +37,30 @@ import java.util.*
 
 
 class MainFragment : BaseFragment() {
-    private lateinit var mBinding:FragMainBinding
-    private lateinit var vm:MainVM
+    private lateinit var mBinding: FragMainBinding
+    private lateinit var vm: MainVM
     private val tvArr = arrayOfNulls<ShimmerTextView>(4)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        vm = ViewModelProviders.of(this).get(MainVM::class.java)
+        vm = ViewModelProviders.of(activity).get(MainVM::class.java)
         vm.recover()
+        initObserver()
     }
+
+    private fun initObserver() {
+        RxBus.getDefault().subscribe<LiujuResult>(this,RxBus.Callback {
+            refreshView()
+            nextChang()
+        })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        RxBus.getDefault().unregister(this)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = FragMainBinding.inflate(inflater,container,false)
+        mBinding = FragMainBinding.inflate(inflater, container, false)
         mBinding.listener = mListener
         rotatePlayerName()
         initData()
@@ -56,10 +75,8 @@ class MainFragment : BaseFragment() {
     }
 
 
-
-
-    val mShimmer=Shimmer()
-    private var textViews= mutableListOf<ShimmerTextView>()//根据场次确定亲家
+    val mShimmer = Shimmer()
+    private var textViews = mutableListOf<ShimmerTextView>()//根据场次确定亲家
     private val playerTvMap = mapOf<String, TextView>()
     private var magicFileChooser: MagicFileChooser? = null
     private var feedbackDialog: AlertDialog? = null
@@ -204,14 +221,20 @@ class MainFragment : BaseFragment() {
      * 庄家下庄，进行下一场了
      */
     private fun nextChang() {
-        if(mBinding.vm !=null) {
-            mBinding.vm!!.benchang.set(0)
-            mBinding.vm!!.chang.set(mBinding.vm!!.chang.get() + 1)
+        if (mShimmer.isAnimating) {
             mShimmer.cancel()
         }
-//        mShimmer.start(getOyaTextView())
+        mShimmer.start(getOyaTextView())
     }
 
+    private fun getOyaTextView(): ShimmerTextView {
+        return when (GameModle.getInstance().chang / 10 % 4) {
+            1 -> mBinding.tvEast
+            2 -> mBinding.tvSouth
+            3 -> mBinding.tvWest
+            else -> mBinding.tvNorth
+        }
+    }
 
 
     private var mLiujuDialog: LiuJuDialog? = null
@@ -222,9 +245,7 @@ class MainFragment : BaseFragment() {
             mBinding.fabStart.title = "结束对局"
             mBinding.fabStart.setIcon(R.drawable.stop)
             vm.isStart = true
-            //将所有人分数初始化为25000
-            GameModle.init()
-            refreshView()
+            vm.isStart = true
         } else {
             (activity as BaseActivity).openPage(true, -1, SetGameScoreActiivty::class.java)
             mBinding.fabStart.title = "开局"
@@ -250,21 +271,22 @@ class MainFragment : BaseFragment() {
         mBinding.tvChang.text = ConvertHelper.parseChang(GameModle.getInstance().chang)
 
 //        庄家动画
-        if(mShimmer.isAnimating) {
+        if (mShimmer.isAnimating) {
             mShimmer.cancel()
-//            mShimmer.start(GameModle.getInstance().chang/10)
         }
+        onBackPressedSupport()
+        mShimmer.start(getOyaTextView())
     }
 
-//    private fun openScorePage(player: String?) {
-//        if (TextUtils.isEmpty(player)) {
-//            Toast.makeText(activity, "人都还没选呢", Toast.LENGTH_SHORT).show()
-//            return
-//        }
+    private fun openScorePage(player: String?) {
+        if (TextUtils.isEmpty(player)) {
+            Toast.makeText(activity, "人都还没选呢", Toast.LENGTH_SHORT).show()
+            return
+        }
 //        hePlayer = player
 //        RichiDialog(activity, mPlayers).show()
-//        //        点击对话框的确定和取消后跳转到GetScoreActivity，逻辑在initEvent（）里
-//    }
+        //        点击对话框的确定和取消后跳转到GetScoreActivity，逻辑在initEvent（）里
+    }
 
 
     private var backPressedTime: Long = 0
@@ -290,20 +312,22 @@ class MainFragment : BaseFragment() {
                 startForResult(AddNewGameFragment.getInstance(), RC_PLAYERS)
             }
             R.id.fab_start -> {
-                for (player in vm.players) {
-                    if (player == null) {
-                        ToastUtils.showShort(getString(R.string.no_players))
-                        return@OnClickListener
-                    }
+                if(GameModle.getInstance().eastName.isEmpty()
+                ||GameModle.getInstance().westName.isEmpty()
+                ||GameModle.getInstance().northName.isEmpty()
+                ||GameModle.getInstance().southName.isEmpty()){
+                    ToastUtils.showShort(getString(R.string.no_players))
+                    return@OnClickListener
+                }else {
+                    startGame();
                 }
-                startGame();
             }
         }
         mBinding.fabMenu.collapse()
     }
 
     override fun onFragmentResult(requestCode: Int, resultCode: Int, data: Bundle?) {
-        if(resultCode == ISupportFragment.RESULT_OK) {
+        if (resultCode == ISupportFragment.RESULT_OK) {
             when (requestCode) {
                 RC_PLAYERS -> {
                     refreshView()

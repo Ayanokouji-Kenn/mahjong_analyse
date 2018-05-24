@@ -2,18 +2,17 @@ package com.uu.mahjong_analyse.ui
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.provider.SyncStateContract
 import android.text.TextUtils
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import com.bigkoo.pickerview.OptionsPickerView
-import com.blankj.utilcode.util.*
+import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.uu.mahjong_analyse.R
 import com.uu.mahjong_analyse.base.BaseFragment
 import com.uu.mahjong_analyse.data.GameModle
 import com.uu.mahjong_analyse.data.entity.Player
 import com.uu.mahjong_analyse.databinding.FragAddNewGameBinding
-import com.uu.mahjong_analyse.utils.Constant
 import me.yokeyword.fragmentation.ISupportFragment
 
 /**
@@ -42,7 +41,7 @@ class AddNewGameFragment : BaseFragment() {
                 }
                 R.id.tv_north -> {
                     mBinding.tvNorth.text = selectPlayer.name
-                    GameModle.getInstance().northName= selectPlayer.name
+                    GameModle.getInstance().northName = selectPlayer.name
                 }
             }
         })
@@ -53,15 +52,16 @@ class AddNewGameFragment : BaseFragment() {
     private val mListener: View.OnClickListener = View.OnClickListener { v ->
         val id = v.id
         if (id == R.id.tv_ok) {
-            if (SPUtils.getInstance().getString(Constant.EAST).isEmpty()
-                    || SPUtils.getInstance().getString(Constant.WEST).isEmpty()
-                    || SPUtils.getInstance().getString(Constant.NORTH).isEmpty()
-                    || SPUtils.getInstance().getString(Constant.SOUTH).isEmpty()) {
-
+            if (GameModle.getInstance().eastName.isEmpty()
+                    || GameModle.getInstance().westName.isEmpty()
+                    || GameModle.getInstance().southName.isEmpty()
+                    || GameModle.getInstance().northName.isEmpty()
+            ) {
                 ToastUtils.showShort(getString(R.string.players_num_must_be_4))
-                CacheUtils.getInstance().put("gameInfo",GameModle.getInstance())
-                setFragmentResult(ISupportFragment.RESULT_OK, Bundle.EMPTY)
                 return@OnClickListener
+            }else {
+                setFragmentResult(ISupportFragment.RESULT_OK, Bundle.EMPTY)
+                pop()
             }
         } else if (id == R.id.tv_east
                 || id == R.id.tv_south
@@ -105,7 +105,6 @@ class AddNewGameFragment : BaseFragment() {
     private fun registEditorListener() {
         mBinding.et.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                LogUtils.d(v.text.toString())
                 KeyboardUtils.hideSoftInput(v)
                 val name = v.text.toString().trim()
                 if (!TextUtils.isEmpty(name)) {

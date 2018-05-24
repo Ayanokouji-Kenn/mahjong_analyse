@@ -4,13 +4,9 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
-import android.view.textservice.SpellCheckerInfo
 import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
-import com.iflytek.cloud.thirdparty.P
 import com.uu.mahjong_analyse.data.entity.TempGameDO
 import io.reactivex.Single
-import io.reactivex.internal.operators.completable.CompletableToSingle
 import io.reactivex.schedulers.Schedulers
 
 @Dao
@@ -20,7 +16,7 @@ interface TempGameInfoDao {
     @Query("SELECT * FROM temp_game") fun fetchInfoList():Single<List<TempGameDO>>
     @Delete
     fun delete(tempGameDO: TempGameDO)
-    @Query("DELETE FROM TEMP_GAME") fun clear()
+    @Query("DELETE FROM temp_game") fun clear()
 }
 
 interface TempGameInfoDataSource {
