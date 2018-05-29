@@ -17,6 +17,7 @@ object ConvertHelper {
             6 -> "南二"
             7 -> "南三"
             8 -> "南四"
+            9 -> "西一"   //半庄结束所有人不过3W 会西入
             else -> ""
         })
                 .append(

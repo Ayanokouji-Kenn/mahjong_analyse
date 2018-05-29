@@ -43,14 +43,15 @@ class MainFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         vm = ViewModelProviders.of(activity).get(MainVM::class.java)
-        vm.recover()
-        initObserver()
+//        vm.recover()
     }
+
 
     private fun initObserver() {
         RxBus.getDefault().subscribe<LiujuResult>(this,RxBus.Callback {
             refreshView()
             nextChang()
+            vm.liuju()
         })
     }
 
@@ -64,8 +65,13 @@ class MainFragment : BaseFragment() {
         mBinding.listener = mListener
         rotatePlayerName()
         initData()
-
+        initObserver()
         return mBinding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        vm.mComposite.dispose()
     }
 
     private fun rotatePlayerName() {
@@ -246,11 +252,15 @@ class MainFragment : BaseFragment() {
             mBinding.fabStart.setIcon(R.drawable.stop)
             vm.isStart = true
             vm.isStart = true
+            mShimmer.start(getOyaTextView())
         } else {
-            (activity as BaseActivity).openPage(true, -1, SetGameScoreActiivty::class.java)
+            vm.clearTempData()
+            refreshView()
+//            (activity as BaseActivity).openPage(true, -1, SetGameScoreActiivty::class.java)
             mBinding.fabStart.title = "开局"
             mBinding.fabStart.setIcon(R.mipmap.start_game)
             vm.isStart = false
+            mShimmer.cancel()
         }
     }
 
@@ -269,13 +279,6 @@ class MainFragment : BaseFragment() {
 
 //        场
         mBinding.tvChang.text = ConvertHelper.parseChang(GameModle.getInstance().chang)
-
-//        庄家动画
-        if (mShimmer.isAnimating) {
-            mShimmer.cancel()
-        }
-        onBackPressedSupport()
-        mShimmer.start(getOyaTextView())
     }
 
     private fun openScorePage(player: String?) {

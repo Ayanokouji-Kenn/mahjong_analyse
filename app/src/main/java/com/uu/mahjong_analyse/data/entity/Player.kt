@@ -1,9 +1,6 @@
 package com.uu.mahjong_analyse.data.entity
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 import android.os.Parcel
 import android.os.Parcelable
 import com.bigkoo.pickerview.model.IPickerViewData
@@ -16,8 +13,8 @@ import com.bigkoo.pickerview.model.IPickerViewData
  * </pre>
  */
 
-@Entity(tableName = "player_record")
-data class Player @JvmOverloads constructor(
+@Entity(tableName = "player_record",indices = arrayOf(Index("name",unique = true)))
+data class Player constructor(
         @PrimaryKey(autoGenerate = true) var id: Int? = null
         , var name: String = ""                   //名字
         , @ColumnInfo(name = "total_games") var totalGames: Int = 0               //总局数

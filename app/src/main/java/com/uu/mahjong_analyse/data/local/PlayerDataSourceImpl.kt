@@ -1,9 +1,7 @@
 package com.uu.mahjong_analyse.data.local
 
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.ToastUtils
 import com.uu.mahjong_analyse.data.entity.Player
-import io.reactivex.Flowable
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -22,7 +20,7 @@ class PlayerDataSourceImpl(val playerDao: PlayerDao) : PlayerDataSource {
         playerDao.deleteALL(list)
     }
 
-    override fun selectPlayer(name: String): Flowable<Player> = playerDao.selectPlayer(name)
+    override fun selectPlayer(name: String): Single<Player> = playerDao.selectPlayer(name)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
@@ -31,23 +29,18 @@ class PlayerDataSourceImpl(val playerDao: PlayerDao) : PlayerDataSource {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-    override fun insertPlayer(name: String) {
-        Single.just(name)
-                .subscribeOn(Schedulers.io())
-                .subscribe({
-                    playerDao.insertPlayer(Player().apply { this.name = it })
-                    ToastUtils.showShort("新建用户成功")
-                }, { LogUtils.d(it.message) })
-    }
+    override fun insertPlayer(name: String) =
+            Completable.fromAction {
+                playerDao.insertPlayer(Player(name = name))
+            }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
 
 
-    override fun updatePlayer(player: Player) {
-        Single.just(player)
-                .subscribeOn(Schedulers.io())
-                .subscribe({ playerDao.updatePlayer(it)
-                ToastUtils.showShort("更新用户信息成功")
-                }, { ToastUtils.showShort(it.message) })
-    }
+    override fun updatePlayer(player: Player) =
+            Completable.fromAction { playerDao.updatePlayer(player) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
 
 
     companion object {

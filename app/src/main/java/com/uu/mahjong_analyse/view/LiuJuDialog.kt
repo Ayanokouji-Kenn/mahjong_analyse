@@ -7,7 +7,6 @@ import com.blankj.rxbus.RxBus
 import com.uu.mahjong_analyse.R
 import com.uu.mahjong_analyse.bean.LiujuResult
 import com.uu.mahjong_analyse.data.GameModle
-import java.util.*
 
 /**
  * @auther xuzijian
@@ -42,47 +41,64 @@ class LiuJuDialog(private val mContext: Context) : DialogInterface.OnClickListen
                     .setPositiveButton(mContext.getString(R.string.confirm)) { _, _ ->
                         val tingPaiList = mTingPais.filter { it }
 //                        不听罚符
-                        val punishPoint =  when(tingPaiList.size) {
-                            1-> 1000
-                            2-> 1500
-                            3-> 3000
-                            else -> 0
+                        var punishPoint = 0
+                        var earnPoint = 0
+                        when (tingPaiList.size) {
+                            1 -> {
+                                punishPoint = 1000
+                                earnPoint = 3000
+                            }
+                            2 -> {
+                                punishPoint = 1500
+                                earnPoint = 1500
+                            }
+                            3 -> {
+                                punishPoint = 3000
+                                earnPoint = 1000
+                            }
                         }
                         for (i in 0..3) {
                             when (i) {
                                 0 -> {
-                                    if(mRichis[i]) GameModle.getInstance().east -= 1000
-                                    if(mTingPais[i]) {
-                                        GameModle.getInstance().east+=punishPoint
-                                    }else {
-                                        GameModle.getInstance().east-=punishPoint
+                                    if (mRichis[i]) GameModle.getInstance().east -= 1000
+                                    if (mTingPais[i]) {
+                                        GameModle.getInstance().east += earnPoint
+                                    } else {
+                                        GameModle.getInstance().east -= punishPoint
                                     }
                                 }
                                 1 -> {
-                                    if(mRichis[i]) GameModle.getInstance().south -= 1000
-                                    if(mTingPais[i]) {
-                                        GameModle.getInstance().south+=punishPoint
-                                    }else {
-                                        GameModle.getInstance().south-=punishPoint
+                                    if (mRichis[i]) GameModle.getInstance().south -= 1000
+                                    if (mTingPais[i]) {
+                                        GameModle.getInstance().south += earnPoint
+                                    } else {
+                                        GameModle.getInstance().south -= punishPoint
                                     }
                                 }
                                 2 -> {
-                                    if(mRichis[i]) GameModle.getInstance().west -= 1000
-                                    if(mTingPais[i]) {
-                                        GameModle.getInstance().west+=punishPoint
-                                    }else {
-                                        GameModle.getInstance().west-=punishPoint
+                                    if (mRichis[i]) GameModle.getInstance().west -= 1000
+                                    if (mTingPais[i]) {
+                                        GameModle.getInstance().west += earnPoint
+                                    } else {
+                                        GameModle.getInstance().west -= punishPoint
                                     }
                                 }
                                 3 -> {
-                                    if(mRichis[i]) GameModle.getInstance().north -= 1000
-                                    if(mTingPais[i]) {
-                                        GameModle.getInstance().north+=punishPoint
-                                    }else {
-                                        GameModle.getInstance().north-=punishPoint
+                                    if (mRichis[i]) GameModle.getInstance().north -= 1000
+                                    if (mTingPais[i]) {
+                                        GameModle.getInstance().north += earnPoint
+                                    } else {
+                                        GameModle.getInstance().north -= punishPoint
                                     }
                                 }
                             }
+                        }
+                        if (mTingPais[(GameModle.getInstance().chang / 10 - 1) % 4]) {
+//                            庄家听牌,连庄，个位+1
+                            GameModle.getInstance().chang += 1
+                        } else {
+//                            庄家不听，下庄，十位+1
+                            GameModle.getInstance().chang += (10 - GameModle.getInstance().chang % 10)
                         }
                         RxBus.getDefault().post(LiujuResult())
                     }

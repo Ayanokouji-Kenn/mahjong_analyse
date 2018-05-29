@@ -40,11 +40,31 @@ class MainVM(app: Application) : BaseVM(app) {
      * 恢复数据。从数据库中读取临时对局数据，如果有的话
      */
     fun recover() {
-        gameInfoRepository.fetchList()
-                .subscribe({
-                    GameModle.set(it.last())
-                }, {
-                    //没有数据就不管了，需要用的时候掉GameModle.getInstance会初始化
-                })
+        mComposite.add(
+                gameInfoRepository.fetchList()
+                        .subscribe({
+                            //没有数据就不管了，需要用的时候掉GameModle.getInstance会初始化
+                            if(it.isNotEmpty())
+                            GameModle.set(it.last())
+                        }, {
+                        }))
+    }
+
+    /**
+     * 处理流局
+     */
+    fun liuju() {
+        mComposite.add(
+                gameInfoRepository.add(GameModle.getInstance())
+                        .subscribe()
+                )
+    }
+
+    /**
+     * 清除掉上一句的tempGameDo
+     */
+    fun clearTempData() {
+        GameModle.init()
+        gameInfoRepository.clear()
     }
 }

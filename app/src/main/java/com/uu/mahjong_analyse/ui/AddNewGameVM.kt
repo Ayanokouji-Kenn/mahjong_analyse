@@ -1,12 +1,14 @@
 package com.uu.mahjong_analyse.ui
 
 import android.app.Application
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.uu.mahjong_analyse.base.BaseVM
 import com.uu.mahjong_analyse.data.entity.Player
 import com.uu.mahjong_analyse.data.local.MajongDatabase
 import com.uu.mahjong_analyse.data.local.PlayerDao
 import com.uu.mahjong_analyse.utils.SingleLiveEvent
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -26,23 +28,25 @@ class AddNewGameVM(app:Application) : BaseVM(app) {
     val players = mutableListOf<Player>()
     val selectPlayers = arrayOfNulls<Player>(4)
     fun addPlayer(name:String) {
-        Single.just(name)
-                .subscribeOn(Schedulers.io())
-                .subscribe( {
-                    playDao.insertPlayer(Player(name = name))
+        mComposite.add(
+        playerRepository.insertPlayer(name)
+                .subscribe({
                     ToastUtils.showShort("新增玩家成功")
-                    if(players.isEmpty()) getPlayers()
-                },{ToastUtils.showShort(it.message)})
+                    getPlayers()
+                },{ToastUtils.showShort("有重名 请重新输入")})
+        )
     }
 
     fun getPlayers() {
-        playDao.getPlayerList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        mComposite.add(
+        playerRepository.getPlayers()
                 .subscribe {
-                    players.clear()
-                    players.addAll(it)
-                    showPickerLiveData.call()
+                    if(it.isNotEmpty()) {
+                        players.clear()
+                        players.addAll(it)
+                        showPickerLiveData.call()
+                    }
                 }
+        )
     }
 }

@@ -118,6 +118,11 @@ class AddNewGameFragment : BaseFragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        vm.mComposite.dispose()
+    }
+
 
     companion object {
         fun getInstance() = AddNewGameFragment()
