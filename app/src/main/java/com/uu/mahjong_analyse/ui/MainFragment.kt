@@ -2,6 +2,7 @@ package com.uu.mahjong_analyse.ui
 
 import android.animation.ObjectAnimator
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.text.TextUtils
@@ -15,10 +16,11 @@ import com.blankj.utilcode.util.ToastUtils
 import com.romainpiel.shimmer.Shimmer
 import com.romainpiel.shimmer.ShimmerTextView
 import com.uu.mahjong_analyse.R
-import com.uu.mahjong_analyse.base.BaseActivity
 import com.uu.mahjong_analyse.base.BaseFragment
 import com.uu.mahjong_analyse.bean.LiujuResult
+import com.uu.mahjong_analyse.bean.RichiEvent
 import com.uu.mahjong_analyse.data.GameModle
+import com.uu.mahjong_analyse.data.entity.Player
 import com.uu.mahjong_analyse.databinding.FragMainBinding
 import com.uu.mahjong_analyse.utils.ConvertHelper
 import com.uu.mahjong_analyse.utils.MagicFileChooser
@@ -48,10 +50,13 @@ class MainFragment : BaseFragment() {
 
 
     private fun initObserver() {
-        RxBus.getDefault().subscribe<LiujuResult>(this,RxBus.Callback {
+        RxBus.getDefault().subscribe<LiujuResult>(this, RxBus.Callback {
+            vm.liuju()
             refreshView()
             nextChang()
-            vm.liuju()
+        })
+        RxBus.getDefault().subscribe<RichiEvent>(this,RxBus.Callback {
+            startActivity(Intent(activity,SetScoreActivity::class.java))
         })
     }
 
@@ -93,135 +98,6 @@ class MainFragment : BaseFragment() {
         textViews.add(mBinding.tvWest)
         textViews.add(mBinding.tvNorth)
     }
-
-//    override fun initEvent() {
-//        //和牌后先谈选择立直的框，回调在这里
-//        RxBus.getInstance().toObservable(ArrayList<*>::class.java, Constant.RX_RICHI_RESULT)
-//                .subscribe { arrayList ->
-//                    handleRichi(arrayList)
-//                    val intent = Intent(activity, GetScoreActivity::class.java)
-//                    intent.putExtra("player", hePlayer)
-//                    intent.putExtra("oya", getOyaName())
-//                    intent.putExtra("gong", gong)
-//                    intent.putExtra("benchang", benchang)
-//                    if (isStart) {
-////                        (activity as BaseActivity).openPage(true, RC_GET_SCORE, intent)
-//                    }
-//                }
-//        //流局逻辑全在这里
-//        RxBus.getInstance().toObservable(LiujuResult::class.java, Constant.RX_LIUJU_RESULT)
-//                .compose<LiujuResult>(this.bindToLifecycle<LiujuResult>())
-//                .subscribe { liujuResult ->
-//                    //处理流局立直的数据
-//                    handleRichi(liujuResult.richiPlayers)
-//                    //处理流局听牌的数据
-//                    //如果庄家没听牌，那么进行下一场,否则本场+1
-//                    if (!liujuResult.tingpaiPlayers.contains(getOyaName())) {
-//                        nextChang()
-//                    } else {
-//                        mBinding.tvChang.setText(SpanUtils().append(changMap.get(chang)).append((++benchang).toString() + "本场").setFontSize(14, true).create())
-//                    }
-//                    val players = playerTvMap.keys
-//                    when (liujuResult.tingpaiPlayers.size) {
-//                        1 -> for (player in players) {
-//                            val tv = playerTvMap[player]
-//                            if (TextUtils.equals(player, liujuResult.tingpaiPlayers[0])) {
-//                                val score = SPUtils.getInt(player, Integer.MIN_VALUE)
-//                                tv.setText((score + 3000).toString())
-//                                SPUtils.putInt(player, score + 3000)
-//                            } else {
-//                                val score = SPUtils.getInt(player, Integer.MIN_VALUE)
-//                                tv.setText((score - 1000).toString())
-//                                SPUtils.putInt(player, score - 1000)
-//                            }
-//                        }
-//                        2 -> for (player in players) {
-//                            val tv = playerTvMap[player]
-//                            if (liujuResult.tingpaiPlayers.contains(player)) {
-//                                val score = SPUtils.getInt(player, Integer.MIN_VALUE)
-//                                tv.setText((score + 1500).toString())
-//                                SPUtils.putInt(player, score + 1500)
-//                            } else {
-//                                val score = SPUtils.getInt(player, Integer.MIN_VALUE)
-//                                tv.setText((score - 1500).toString())
-//                                SPUtils.putInt(player, score - 1500)
-//                            }
-//                        }
-//                        3 -> for (player in players) {
-//                            val tv = playerTvMap[player]
-//                            if (!liujuResult.tingpaiPlayers.contains(player)) {
-//                                val score = SPUtils.getInt(player, Integer.MIN_VALUE)
-//                                tv.setText((score - 3000).toString())
-//                                SPUtils.putInt(player, score - 3000)
-//                            } else {
-//                                val score = SPUtils.getInt(player, Integer.MIN_VALUE)
-//                                tv.setText((score + 1000).toString())
-//                                SPUtils.putInt(player, score + 1000)
-//                            }
-//                        }
-//                        else   //剩下的是0和4的情况，即所有人都听 或所有人都不听，那么不处理
-//                        -> {
-//                        }
-//                    }
-//                }
-//
-//    }
-
-    /**
-     * 遍历立直玩家集合，取出当前分数，扣掉1000，存回sp，供托+1000
-     */
-    private fun handleRichi(richiPlayers: ArrayList<String>) {
-//        for (richiPlayer in richiPlayers) {
-//            val tv = playerTvMap[richiPlayer]
-//            val score = SPUtils.getInt(richiPlayer, Integer.MIN_VALUE)
-//            tv?.text = (score - 1000).toString()
-//            SPUtils.putInt(richiPlayer, score - 1000)
-//            mBinding.vm?.gong?.set(mBinding.vm?.gong?.get()!!+1000)
-//        }
-    }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == RC_PLAYERS && resultCode == Activity.RESULT_OK && data != null) {
-//            playerTvMap.put(mPlayers!![0], mBinding.tvEastPoint)
-//            playerTvMap.put(mPlayers!![1], mBinding.tvSouthPoint)
-//            playerTvMap.put(mPlayers!![2], mBinding.tvWestPoint)
-//            playerTvMap.put(mPlayers!![3], mBinding.tvNorthPoint)
-//
-//            startGame()
-//            SnackbarUtils.with(mBinding.llChang)
-//                    .setMessage("谁和牌就点击谁的名字设置点数即可")
-//                    .setAction("知道了") { }.show()
-//        } else if (requestCode == RC_GET_SCORE && resultCode == Activity.RESULT_OK) {
-//            //设置完分数，不是庄家则chang+1
-//            if (!TextUtils.equals(hePlayer, getOyaName())) {
-//                //改变场风和庄家闪光效果
-//                nextChang()
-//            } else {
-//                mBinding.tvChang.setText(SpanUtils().append(changMap.get(chang)).append((++benchang).toString() + "本场").setFontSize(14, true).create())
-//            }
-//            //供托要清零
-//            gong = 0
-//            mBinding.tvGong.setText(null)
-//            //改变四家分数
-//            for (player in mPlayers!!) {
-//                playerTvMap[player]?.setText(SPUtils.getInt(player, Integer.MIN_VALUE).toString())
-//            }
-//        } else if (requestCode == MagicFileChooser.ACTIVITY_FILE_CHOOSER) {
-//            if (resultCode == Activity.RESULT_OK) {
-//                if (magicFileChooser!!.onActivityResult(requestCode, resultCode, data)) {
-//                    val files = magicFileChooser!!.chosenFiles
-//                    if (files.size != 0) {
-//                        val bitmap = BitmapUtils.compressBitmap(activity, files[0].absolutePath, ScreenUtils.getScreenWidth(), ScreenUtils
-//                                .getScreenHeight())
-//                        mBinding.rlTable.setBackground(BitmapDrawable(resources, bitmap))
-//                    }
-//                }
-//            } else {
-//                mBinding.rlTable.setBackground(null)
-//            }
-//        }
-//    }
 
     /**
      * 庄家下庄，进行下一场了
@@ -266,10 +142,10 @@ class MainFragment : BaseFragment() {
 
     private fun refreshView() {
 //        玩家姓名
-        mBinding.tvEast.text = GameModle.getInstance().eastName
-        mBinding.tvWest.text = GameModle.getInstance().westName
-        mBinding.tvNorth.text = GameModle.getInstance().northName
-        mBinding.tvSouth.text = GameModle.getInstance().southName
+        mBinding.tvEast.text = GameModle.getInstance().eastPlayer?.name
+        mBinding.tvWest.text = GameModle.getInstance().westPlayer?.name
+        mBinding.tvNorth.text = GameModle.getInstance().northPlayer?.name
+        mBinding.tvSouth.text = GameModle.getInstance().southPlayer?.name
 
 //        玩家点数
         mBinding.tvEastPoint.text = GameModle.getInstance().east.toString()
@@ -279,16 +155,17 @@ class MainFragment : BaseFragment() {
 
 //        场
         mBinding.tvChang.text = ConvertHelper.parseChang(GameModle.getInstance().chang)
+//        供托
+        mBinding.tvGong.text = GameModle.getInstance().gong.toString()
     }
 
-    private fun openScorePage(player: String?) {
-        if (TextUtils.isEmpty(player)) {
+    private fun openScorePage(player: Player?) {
+        if (player == null) {
             Toast.makeText(activity, "人都还没选呢", Toast.LENGTH_SHORT).show()
             return
         }
-//        hePlayer = player
-//        RichiDialog(activity, mPlayers).show()
-        //        点击对话框的确定和取消后跳转到GetScoreActivity，逻辑在initEvent（）里
+        GameModle.getInstance().heName = player.name
+        RichiDialog(activity).show()
     }
 
 
@@ -304,24 +181,24 @@ class MainFragment : BaseFragment() {
      */
     private var mListener: View.OnClickListener = View.OnClickListener { v ->
         when (v.id) {
-
-//            R.id.ll_east -> openScorePage(if (mPlayers == null) null else mPlayers!![0])
-//            R.id.ll_south -> openScorePage(if (mPlayers == null) null else mPlayers!![1])
-//            R.id.ll_west -> openScorePage(if (mPlayers == null) null else mPlayers!![2])
-//            R.id.ll_north -> openScorePage(if (mPlayers == null) null else mPlayers!![3])
+            R.id.ll_chang -> nextChang()
+            R.id.ll_east -> openScorePage(GameModle.getInstance().eastPlayer)
+            R.id.ll_south -> openScorePage(GameModle.getInstance().southPlayer)
+            R.id.ll_west -> openScorePage(GameModle.getInstance().westPlayer)
+            R.id.ll_north -> openScorePage(GameModle.getInstance().northPlayer)
             R.id.fab_select_player -> if (vm.isStart) {
                 ToastUtils.showShort(getString(R.string.cant_change_players_finish_this_game))
             } else {
                 startForResult(AddNewGameFragment.getInstance(), RC_PLAYERS)
             }
             R.id.fab_start -> {
-                if(GameModle.getInstance().eastName.isEmpty()
-                ||GameModle.getInstance().westName.isEmpty()
-                ||GameModle.getInstance().northName.isEmpty()
-                ||GameModle.getInstance().southName.isEmpty()){
+                if (GameModle.getInstance().eastPlayer == null
+                        || GameModle.getInstance().westPlayer == null
+                        || GameModle.getInstance().southPlayer == null
+                        || GameModle.getInstance().northPlayer == null) {
                     ToastUtils.showShort(getString(R.string.no_players))
                     return@OnClickListener
-                }else {
+                } else {
                     startGame();
                 }
             }

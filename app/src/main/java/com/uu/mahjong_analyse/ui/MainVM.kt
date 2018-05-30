@@ -5,9 +5,11 @@ import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
 import android.databinding.ObservableInt
 import android.os.Bundle
+import android.os.Environment
 import com.uu.mahjong_analyse.base.BaseVM
 import com.uu.mahjong_analyse.data.GameModle
 import com.uu.mahjong_analyse.data.entity.Player
+import com.uu.mahjong_analyse.utils.ScoreCalcHelper
 
 /**
  * @description
@@ -54,10 +56,27 @@ class MainVM(app: Application) : BaseVM(app) {
      * 处理流局
      */
     fun liuju() {
+//        处理数据
+        ScoreCalcHelper.handleLiuju()
+//        数据完成后，存进数据库
         mComposite.add(
                 gameInfoRepository.add(GameModle.getInstance())
                         .subscribe()
                 )
+//        立直数该+1的加，所有人总局数+1
+        GameModle.getInstance().eastPlayer?.run {
+            mComposite.add(playerRepository.updatePlayer(this).subscribe())
+        }
+        GameModle.getInstance().southPlayer?.run {
+            mComposite.add(playerRepository.updatePlayer(this).subscribe())
+        }
+        GameModle.getInstance().northPlayer?.run {
+            mComposite.add(playerRepository.updatePlayer(this).subscribe())
+        }
+        GameModle.getInstance().westPlayer?.run {
+            mComposite.add(playerRepository.updatePlayer(this).subscribe())
+        }
+
     }
 
     /**

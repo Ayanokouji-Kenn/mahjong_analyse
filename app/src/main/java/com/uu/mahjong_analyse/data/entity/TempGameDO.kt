@@ -30,9 +30,11 @@ data class TempGameDO(
         var chong :String? = null, //isTsumo为false 这个字段才有值,表示放铳的人
         var chang: Int = 10,   //当前局数，10表示东一，11表示东一，82表示南四二本场，该字段既可以表示当前局数，也可以由本场算出本场棒是多少
         var gong: Int = 0, //供托，流局后存放立直棒
-        @Ignore var eastName:String="",
-        @Ignore var westName:String="",
-        @Ignore var southName:String="",
-        @Ignore var northName:String=""
+        @Ignore var eastPlayer:Player?=null,
+        @Ignore var westPlayer :Player?=null,
+        @Ignore var southPlayer:Player?=null,
+        @Ignore var northPlayer:Player?=null,
+        @Ignore var richi:Int=0,//后四位bit表示东南西北是否立直比如，15=0b1111 就是四家都立直了，下面的听牌同理
+        @Ignore var tingPai:Int=0
         ) {
 }

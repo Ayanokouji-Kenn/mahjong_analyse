@@ -29,19 +29,19 @@ class AddNewGameFragment : BaseFragment() {
             when (selectTvId) {
                 R.id.tv_east -> {
                     mBinding.tvEast.text = selectPlayer.name
-                    GameModle.getInstance().eastName = selectPlayer.name
+                    GameModle.getInstance().eastPlayer = selectPlayer
                 }
                 R.id.tv_south -> {
                     mBinding.tvSouth.text = selectPlayer.name
-                    GameModle.getInstance().southName = selectPlayer.name
+                    GameModle.getInstance().southPlayer = selectPlayer
                 }
                 R.id.tv_west -> {
                     mBinding.tvWest.text = selectPlayer.name
-                    GameModle.getInstance().westName = selectPlayer.name
+                    GameModle.getInstance().westPlayer = selectPlayer
                 }
                 R.id.tv_north -> {
                     mBinding.tvNorth.text = selectPlayer.name
-                    GameModle.getInstance().northName = selectPlayer.name
+                    GameModle.getInstance().northPlayer = selectPlayer
                 }
             }
         })
@@ -52,10 +52,10 @@ class AddNewGameFragment : BaseFragment() {
     private val mListener: View.OnClickListener = View.OnClickListener { v ->
         val id = v.id
         if (id == R.id.tv_ok) {
-            if (GameModle.getInstance().eastName.isEmpty()
-                    || GameModle.getInstance().westName.isEmpty()
-                    || GameModle.getInstance().southName.isEmpty()
-                    || GameModle.getInstance().northName.isEmpty()
+            if (GameModle.getInstance().eastPlayer == null
+                    || GameModle.getInstance().westPlayer == null
+                    || GameModle.getInstance().southPlayer == null
+                    || GameModle.getInstance().northPlayer == null
             ) {
                 ToastUtils.showShort(getString(R.string.players_num_must_be_4))
                 return@OnClickListener

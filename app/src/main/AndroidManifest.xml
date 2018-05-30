@@ -61,7 +61,7 @@
             android:name=".ui.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity android:name=".ui.SetGameScoreActiivty"/>
-        <activity android:name=".ui.GetScoreActivity"/>
+        <activity android:name=".ui.SetScoreActivity"/>
         <activity android:name=".ui.PlayerInfoActivity"/>
         <activity android:name=".ui.GameRecordActivity"/>
         <activity android:name=".ui.ModifyDbActivity"/>

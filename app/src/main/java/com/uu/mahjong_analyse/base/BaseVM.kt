@@ -14,7 +14,15 @@ import io.reactivex.disposables.CompositeDisposable
 
 open class BaseVM(@field:SuppressLint("StaticFieldLeak")
                   protected val mApp: Application) : AndroidViewModel(mApp){
-    val playerRepository = PlayerRepository.getInstance(PlayerDataSourceImpl.getInstance(MajongDatabase.getInstance(mApp).playerDao()))
-    val gameInfoRepository = TempGameInfoRepository.getInstance(TempGameInfoDataSourceImpl.getInstance(MajongDatabase.getInstance(mApp).tempGameInfoDao()))
+    val playerRepository = PlayerRepository.getInstance(
+            PlayerDataSourceImpl
+                    .getInstance(MajongDatabase
+                            .getInstance(mApp)
+                            .playerDao()))
+    val gameInfoRepository = TempGameInfoRepository.getInstance(
+            TempGameInfoDataSourceImpl
+                    .getInstance(MajongDatabase
+                            .getInstance(mApp)
+                            .tempGameInfoDao()))
     val mComposite=CompositeDisposable()
 }
