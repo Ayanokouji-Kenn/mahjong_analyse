@@ -13,10 +13,11 @@ import android.os.Parcelable
  * @author:xzj
  * @date: 2018/5/22 10:21
  */
-@Entity(tableName = "temp_game")
-data class TempGameDO(
+@Entity(tableName = "game_detail")
+data class GameDetailDO(
         @PrimaryKey(autoGenerate = true)
-        var id: Int? = null,
+        var id: Long? = null,
+        var gameId:Long=0,
         var east: Int = 25000,
         var south: Int = 25000,
         var west: Int = 25000,

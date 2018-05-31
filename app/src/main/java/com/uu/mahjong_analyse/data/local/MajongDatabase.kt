@@ -6,9 +6,9 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.migration.Migration
 import android.content.Context
+import com.uu.mahjong_analyse.data.entity.GameDetailDO
 import com.uu.mahjong_analyse.data.entity.GameRecord
 import com.uu.mahjong_analyse.data.entity.Player
-import com.uu.mahjong_analyse.data.entity.TempGameDO
 
 /**
  * <pre>
@@ -18,10 +18,10 @@ import com.uu.mahjong_analyse.data.entity.TempGameDO
  * </pre>
  */
 
-@Database(entities = arrayOf(Player::class, GameRecord::class,TempGameDO::class), version = 1)
+@Database(entities = arrayOf(Player::class, GameRecord::class,GameDetailDO::class), version = 1)
 abstract class MajongDatabase : RoomDatabase() {
     abstract fun playerDao(): PlayerDao
-    abstract fun tempGameInfoDao(): TempGameInfoDao
+    abstract fun gameDetailDao(): GameDetailDao
 
     companion object {
         val migration_1_2: Migration = object : Migration(1, 2) {

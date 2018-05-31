@@ -13,7 +13,7 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity(tableName = "game_record")
 data class GameRecord constructor(
-        @PrimaryKey(autoGenerate = true) var id:Int=0,
+        @PrimaryKey(autoGenerate = true) var id:Long=0,
         var date:String="",
         var top:String="",
         var second:String="",
