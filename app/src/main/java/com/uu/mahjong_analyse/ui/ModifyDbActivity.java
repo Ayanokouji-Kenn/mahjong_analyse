@@ -42,14 +42,12 @@ public class ModifyDbActivity extends BaseActivity {
         while (cursor.moveToNext()) {
             ModifyDBFfragment fragment = new ModifyDBFfragment();
             Bundle bundle = new Bundle();
-            bundle.putString(Constant.Table.TABLE_NAME,cursor.getString(0));
+            bundle.putString(Constant.Table.INSTANCE.getTABLE_NAME(),cursor.getString(0));
             fragment.setArguments(bundle);
             tableFragments.add(fragment);
         }
         cursor.close();
         db.close();
-
-
         mBinding.viewpager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager(),tableFragments));
         mBinding.tablayout.setupWithViewPager(mBinding.viewpager);
     }

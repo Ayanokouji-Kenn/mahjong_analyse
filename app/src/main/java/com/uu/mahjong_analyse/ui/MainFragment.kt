@@ -1,6 +1,7 @@
 package com.uu.mahjong_analyse.ui
 
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.blankj.rxbus.RxBus
+import com.blankj.utilcode.util.ConvertUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.romainpiel.shimmer.Shimmer
 import com.romainpiel.shimmer.ShimmerTextView
@@ -24,6 +26,7 @@ import com.uu.mahjong_analyse.data.entity.Player
 import com.uu.mahjong_analyse.databinding.FragMainBinding
 import com.uu.mahjong_analyse.utils.ConvertHelper
 import com.uu.mahjong_analyse.utils.MagicFileChooser
+import com.uu.mahjong_analyse.utils.ScoreCalcHelper
 import com.uu.mahjong_analyse.view.LiuJuDialog
 import com.uu.mahjong_analyse.view.RichiDialog
 import me.yokeyword.fragmentation.ISupportFragment
@@ -53,10 +56,11 @@ class MainFragment : BaseFragment() {
         RxBus.getDefault().subscribe<LiujuResult>(this, RxBus.Callback {
             vm.liuju()
             refreshView()
-            nextChang()
+            nextChang(true)
         })
         RxBus.getDefault().subscribe<RichiEvent>(this,RxBus.Callback {
-            startActivity(Intent(activity,SetScoreActivity::class.java))
+            ScoreCalcHelper.handleRichi()
+            startActivityForResult(Intent(activity,SetScoreActivity::class.java), RC_SET_SCORE)
         })
     }
 
@@ -102,7 +106,16 @@ class MainFragment : BaseFragment() {
     /**
      * 庄家下庄，进行下一场了
      */
-    private fun nextChang() {
+    private fun nextChang(isLiuju:Boolean) {
+//        流局的情况已经自动判断过了，这里需要处理一下上一把和牌的人中有没有庄家
+        if(!isLiuju) {
+            if(SetScoreActivity.heNames.contains(ConvertHelper.getOyaPlayer()?.name?:"")){
+                ScoreCalcHelper.nextChang(true)
+            }else {
+                ScoreCalcHelper.nextChang(false)
+            }
+        }
+        SetScoreActivity.heNames.clear()
         if (mShimmer.isAnimating) {
             mShimmer.cancel()
         }
@@ -181,7 +194,7 @@ class MainFragment : BaseFragment() {
      */
     private var mListener: View.OnClickListener = View.OnClickListener { v ->
         when (v.id) {
-            R.id.ll_chang -> nextChang()
+            R.id.ll_chang -> nextChang(false)
             R.id.ll_east -> openScorePage(GameModle.getInstance().eastPlayer)
             R.id.ll_south -> openScorePage(GameModle.getInstance().southPlayer)
             R.id.ll_west -> openScorePage(GameModle.getInstance().westPlayer)
@@ -216,9 +229,16 @@ class MainFragment : BaseFragment() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode== RC_SET_SCORE && resultCode == Activity.RESULT_OK){
+            refreshView()
+        }
+    }
+
     companion object {
         private val RC_PLAYERS = 1
-        private val RC_GET_SCORE = 2
+        private val RC_SET_SCORE = 2
         private val RC_ALBUM = 3
         fun newInstance() = MainFragment()
 

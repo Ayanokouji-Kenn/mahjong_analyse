@@ -2,31 +2,21 @@ package com.uu.mahjong_analyse.ui
 
 import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
-import android.content.ContentValues
-import android.content.Intent
 import android.databinding.DataBindingUtil
-import android.support.annotation.IdRes
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.util.ArrayMap
 import android.view.MenuItem
 import android.view.View
-import android.widget.RadioGroup
 import android.widget.Toast
-
 import com.bigkoo.pickerview.OptionsPickerView
-import com.iflytek.cloud.ui.RecognizerDialog
 import com.uu.mahjong_analyse.R
 import com.uu.mahjong_analyse.base.BaseActivity
-import com.uu.mahjong_analyse.bean.PlayerRecord
 import com.uu.mahjong_analyse.data.GameModle
 import com.uu.mahjong_analyse.data.entity.Player
 import com.uu.mahjong_analyse.databinding.ActivityGetscoreBinding
-import com.uu.mahjong_analyse.db.DBDao
-import com.uu.mahjong_analyse.utils.Constant
-import com.uu.mahjong_analyse.utils.SPUtils
-
-import java.util.ArrayList
+import com.uu.mahjong_analyse.utils.*
+import java.util.*
 
 /**
  * 设置每局和了的数据  一炮双响的话，供托头跳
@@ -34,26 +24,63 @@ import java.util.ArrayList
  */
 class SetScoreActivity : BaseActivity() {
 
-    private var mPlayers: MutableList<String>? = null
-    private var mChongPlayer: String? = null
-    private var mPlayer: String? = null
     private var mFan: String? = null
-    private var mPoint_int: Int = 0
-    private var oyaName: String? = null
-    private var gong: Int = 0
-    private var benchang: Int = 0
-    private var isOya: Boolean = false
 
     private lateinit var mBinding: ActivityGetscoreBinding
-    private lateinit var vm:SetScoreVM
-    private val chongPicker : OptionsPickerView<Player> by lazy {
-        val builder = OptionsPickerView.Builder(this,{options1, options2, options3, v ->
+    private lateinit var vm: SetScoreVM
+    //    选择放铳人的选择器
+    private val chongPicker: OptionsPickerView<Player> by lazy {
+        val builder = OptionsPickerView.Builder(this, { options1, options2, options3, v ->
             GameModle.getInstance().chong = vm.players[options1]?.name
-            mBinding.tvChong.text = GameModle.getInstance().chong
+            mBinding.tvChong.text = "放铳人:${GameModle.getInstance().chong}"
         })
-        OptionsPickerView<Player>(builder).apply { setPicker(GameModle.getInstance().run {
-            listOf(eastPlayer,southPlayer,westPlayer,northPlayer)
-        }) }
+                .setSubmitColor(resources.getColor(R.color.colorAccent))
+                .setCancelColor(resources.getColor(R.color.colorAccent))
+        OptionsPickerView<Player>(builder).apply {
+            setPicker(GameModle.getInstance().run {
+                listOf(eastPlayer, southPlayer, westPlayer, northPlayer)
+            })
+        }
+    }
+    //    选择番符
+    private val fanPicker: OptionsPickerView<String> by lazy {
+        val builder = OptionsPickerView.Builder(this, { options1, options2, options3, v ->
+            val key: String
+            //满贯以下,需要记录多少符
+            if (options1 == 0) {
+                key = mFuList[options1][options2] + mFanlist2[options1][options2][options3] //这里取出来的应该是  110符1翻 这种字符串
+            } else {
+//                满贯以上直接记录
+                key = mFanList[options1]
+            }
+            if (TextUtils.equals("25符2翻", key) && mBinding.rbTsumo.isChecked) {
+                com.blankj.utilcode.util.ToastUtils.showShort("2翻的七对子不可能自摸哦~")
+            } else {
+                var pointInt = 0
+                if (ConvertHelper.isOya(GameModle.getInstance().heName ?: "")) {
+                    if (mBinding.rbTsumo.isChecked) {
+                        pointInt = qinTsumoMap[key]!!
+                    } else if (mBinding.rbRonn.isChecked) {
+                        pointInt = qinRonnMap[key]!!
+                    }
+                } else {
+                    if (mBinding.rbTsumo.isChecked) {
+                        pointInt = ziTsumoMap[key]!!
+                    } else if (mBinding.rbRonn.isChecked) {
+                        pointInt = ziRonnMap[key]!!
+                    }
+                }
+                //hepoint后面保存数据的时候，如果是自摸的话 需要分别计算其他三家失点，所以暂时不加上供托和本场棒
+                GameModle.getInstance().hePoint = pointInt
+                mFan = key
+                mBinding.tvFan.text = "番数:$mFan"
+//                显示的是加上供托的
+                mBinding.etPoint.setText((GameModle.getInstance().hePoint + GameModle.getInstance().chang % 10 * 300 + GameModle.getInstance().gong).toString())
+            }
+        })
+                .setSubmitColor(resources.getColor(R.color.colorAccent))
+                .setCancelColor(resources.getColor(R.color.colorAccent))
+        OptionsPickerView<String>(builder).apply { setPicker(mFanList, mFuList, mFanlist2) }
     }
 
     internal val mListener: View.OnClickListener = View.OnClickListener { v ->
@@ -67,19 +94,37 @@ class SetScoreActivity : BaseActivity() {
             }
 //            选择和的番数
             R.id.tv_fan -> if (mBinding.rbRonn.isChecked || mBinding.rbTsumo.isChecked) {
-                showFanDialog()
+                fanPicker.show()
             } else {
                 com.blankj.utilcode.util.ToastUtils.showShort("请选点击自摸或荣和")
             }
 //            存数据
             R.id.btn_confirm -> if (checkData()) {
-//                saveData()
+                heNames.add(GameModle.getInstance().heName!!)
+                saveData()
             }
         }
     }
 
     override fun initData() {
         vm = ViewModelProviders.of(this).get(SetScoreVM::class.java)
+        handleRichiByDialog()
+    }
+
+    /**
+     * 根据跳转之前的立直框，判定当前用户是否立直，并刷新页面
+     */
+    private fun handleRichiByDialog() {
+        //        前面点击的时候确认过这里和的人是谁了，立直的弹框也将richi改变了，如果前面勾选了该人立直，此页面默认勾上
+
+        val isRichi = when (ConvertHelper.getSeat(GameModle.getInstance().heName ?: "")) {
+            EAST -> GameModle.getInstance().richi and 0b1000 == 0b1000
+            SOUTH -> GameModle.getInstance().richi and 0b0100 == 0b0100
+            WEST -> GameModle.getInstance().richi and 0b0010 == 0b0010
+            NORTH -> GameModle.getInstance().richi and 0b0001 == 0b0001
+            else -> false
+        }
+        mBinding.cbRichi.isChecked = isRichi
     }
 
     override fun initView() {
@@ -93,214 +138,159 @@ class SetScoreActivity : BaseActivity() {
 
     override fun initEvent() {
         mBinding.rgHepai.setOnCheckedChangeListener { group, checkedId ->
+            //            自摸的话，隐藏放铳项
             if (checkedId == R.id.rb_tsumo) {
                 mBinding.tvChong.visibility = View.GONE
-                mChongPlayer = ""
+                GameModle.getInstance().isTsumo = true
+                GameModle.getInstance().chong = null
             } else {
                 mBinding.tvChong.visibility = View.VISIBLE
+                GameModle.getInstance().isTsumo = false
             }
         }
-        //        initVoiceDialog();
     }
 
     private fun checkData(): Boolean {
-        if (mBinding.rbRonn.isChecked && TextUtils.isEmpty(mChongPlayer)) {
+        if (mBinding.rbRonn.isChecked && GameModle.getInstance().chong==null) {
             com.blankj.utilcode.util.ToastUtils.showShort("没有选择放铳人")
             return false
         } else if (TextUtils.isEmpty(mFan)) {
             com.blankj.utilcode.util.ToastUtils.showShort("没有选择番种")
             return false
-        } else if (mBinding.etPoint.text.length == 0) {
+        } else if (mBinding.etPoint.text.isEmpty()) {
             com.blankj.utilcode.util.ToastUtils.showShort("没有输入点数")
             return false
         }
         return true
     }
 
-    private fun showFanDialog() {
-
-        val optionsPickerView = OptionsPickerView.Builder(mContext, OptionsPickerView.OnOptionsSelectListener { options1, options2, options3, v ->
-            val key: String
-            //满贯以下
-            if (options1 == 0) {
-                key = mFuList[options1][options2] + mFanlist2[options1][options2][options3] //这里取出来的应该是  110符1翻 这种字符串
-            } else {
-                key = mFanList[options1]
-            }
-            if (TextUtils.equals("25符2翻", key) && mBinding.rbTsumo.isChecked) {
-                com.blankj.utilcode.util.ToastUtils.showShort("2翻的七对子不可能自摸哦~")
-                return@OnOptionsSelectListener
-            }
-            if (isOya) {
-                if (mBinding.rbTsumo.isChecked) {
-                    mPoint_int = qinTsumoMap[key]!!
-                } else if (mBinding.rbRonn.isChecked) {
-                    mPoint_int = qinRonnMap[key]!!
-                }
-            } else {
-                if (mBinding.rbTsumo.isChecked) {
-
-                    mPoint_int = ziTsumoMap[key]!!
-                } else if (mBinding.rbRonn.isChecked) {
-                    mPoint_int = ziRonnMap[key]!!
-                }
-            }
-
-            GameModle.getInstance().hePoint = mPoint_int
-            setFan(key)
-            mBinding.etPoint.setText(mPoint_int.toString())
-        })
-                .setSubmitColor(resources.getColor(R.color.colorAccent))
-                .setCancelColor(resources.getColor(R.color.colorAccent))
-                .build()
-        optionsPickerView.setPicker(mFanList, mFuList, mFanlist2)
-        optionsPickerView.show()
-
-        //
-        //        final WheelViewDialog<String> dialog = new WheelViewDialog<>(this);
-        //        dialog.setTitle("选择番数").setItems(fan).setButtonText("确定").setDialogStyle(Color
-        //                .parseColor("#fc97a9")).setCount(5).show();
-        //        dialog.setOnDialogItemClickListener(new WheelViewDialog.OnDialogItemClickListener<String>() {
-        //            @Override
-        //            public void onItemClick(int position, String s) {
-        //                setFan(s);
-        //            }
-        //        });
-
-    }
-
-
-    private fun setFan(s: String) {
-        mFan = s
-        mBinding.tvFan.text = "番数：$mFan"
-    }
-
-
-//    private fun saveData() {
-//        val playerRecord = DBDao.selectPlayer(mPlayer)
-//        val cv = ContentValues()
+    private fun saveData() {
+        val player = ConvertHelper.getPlayerByName(GameModle.getInstance().heName) ?: return
+//        不单独设置和牌人的立直了，根据richi所有人统一设置
 //        if (mBinding.cbRichi.isChecked) {  //立直
-//            cv.put("richi_count", playerRecord.richi_count + 1)
+//            player.richiCount++
 //        }
-//        if (mBinding.rbTsumo.isChecked) {  //自摸
-//            cv.put("tsumo", playerRecord.tsumo + 1)
-//            if (mBinding.cbRichi.isChecked) {  //立直和了
-//                cv.put("richi_he", playerRecord.richi_he + 1)
-//            }
-//            cv.put("he_count", playerRecord.he_count + 1)
-//        }
-//        if (mBinding.rbRonn.isChecked) {   //荣和
-//            cv.put("ronn", playerRecord.ronn + 1)
-//            if (mBinding.cbRichi.isChecked) {  //立直和了
-//                cv.put("richi_he", playerRecord.richi_he + 1)
-//            }
-//            cv.put("he_count", playerRecord.he_count + 1)
-//        }
-//        if (mBinding.cbIhhatsu.isChecked) {    //一发
-//            cv.put("ihhatsu_count", playerRecord.ihhatsu_count + 1)
-//        }
-//
-//        if (mFan != null) {
-//            //            no_manguan integer" +          //满贯以下
-//            //            ",manguan integer" +             //满贯
-//            //                    ",tiaoman integer" +             //跳满
-//            //                    ",beiman integer" +              //倍满
-//            //                    ",sanbeiman integer" +           //三倍满
-//            //                    ",yakuman integer" +
-//            when (mFan) {
-//                "满贯以下" -> cv.put("no_manguan", playerRecord.no_manguan + 1)
-//                "满贯" -> cv.put("manguan", playerRecord.manguan + 1)
-//                "跳满" -> cv.put("tiaoman", playerRecord.tiaoman + 1)
-//                "倍满" -> cv.put("beiman", playerRecord.beiman + 1)
-//                "三倍满" -> cv.put("sanbeiman", playerRecord.sanbeiman + 1)
-//
-//                "役满" -> cv.put("yakuman", playerRecord.yakuman + 1)
-//            }
-//        }
-//
-//        val point = mBinding.etPoint.text.toString().trim { it <= ' ' }
-//        if (!TextUtils.isEmpty(point)) {
-//            mPoint_int = Integer.parseInt(point)
-//            //            和牌最大值要加上供托的
-//            if (playerRecord.he_point_max < mPoint_int + gong + benchang * 300) {
-//                cv.put("he_point_max", mPoint_int + gong + benchang * 300)
-//            }
-//
-//            cv.put("he_point_sum", playerRecord.he_point_sum + mPoint_int + gong + benchang * 300)
-//        }
-//
-//        DBDao.updatePlayerData(mPlayer, cv)
-//
-//
-//        if (!TextUtils.isEmpty(mChongPlayer)) {
-//            //存储放铳人数据
-//            val chongPlayer = DBDao.selectPlayer(mChongPlayer)
-//            val cv_chong = ContentValues()
-//            cv_chong.put("chong_count", chongPlayer.chong_count + 1)
-//            cv_chong.put("chong_point_sum", chongPlayer.chong_point_sum + mPoint_int)
-//            DBDao.updatePlayerData(mChongPlayer, cv_chong)
-//        }
-//
-//        //当有人自摸或者荣和的话，所有人的发牌次数都要+1
-//
-//        if (mBinding.rbTsumo.isChecked || mBinding.rbRonn.isChecked) {
-//            for (player in mPlayers) {
-//                val playerRecord1 = DBDao.selectPlayer(player)
-//                val cv1 = ContentValues()
-//                cv1.put("total_deal", playerRecord1.total_deal + 1)
-//                DBDao.updatePlayerData(player, cv1)
-//            }
-//        }
-//
-//        //改变点数
-//        //和牌人点数
-//        SPUtils.putInt(mPlayer, SPUtils.getInt(mPlayer, Integer.MIN_VALUE) + mPoint_int + gong + benchang * 300)
-//        //如果放铳的话，放铳人点数变化
-//        if (mBinding.rbRonn.isChecked && !TextUtils.isEmpty(mChongPlayer)) {
-//            SPUtils.putInt(mChongPlayer, SPUtils.getInt(mChongPlayer, Integer.MIN_VALUE) - mPoint_int - benchang * 300)
-//        } else {
-//            //亲家自摸，那么其他三家平分点数
-//            if (TextUtils.equals(oyaName, mPlayer)) {
-//                for (player in mPlayers) {
-//                    if (!TextUtils.equals(player, mPlayer)) {
-//                        SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - mPoint_int / 3 - benchang * 100)
-//                    }
-//                }
-//            } else {
-//                //子家自摸，亲家付二分之一，另2家各付四分之一。
-//                // 这里有点小问题，比如40符1番，荣和是1300，自摸1500是700/400，并不是按照公式的750/350---已解决
-//                for (player in mPlayers) {
-//                    if (!TextUtils.equals(player, mPlayer)) {
-//                        when (mPoint_int) {
-//                            1100  //30符1翻
-//                            -> setZiJiaTsumo(player, 500, 300)
-//                            1500  //40符1翻  20符2翻
-//                            -> setZiJiaTsumo(player, 700, 400)
-//                            2700  //80符1翻  40符2翻  20符3翻
-//                            -> setZiJiaTsumo(player, 1300, 700)
-//                            3100  //90符1翻
-//                            -> setZiJiaTsumo(player, 1500, 800)
-//                            4700  //70符2翻
-//                            -> setZiJiaTsumo(player, 2300, 1200)
-//                            5900  //90符2翻
-//                            -> setZiJiaTsumo(player, 2900, 1500)
-//                            else -> setZiJiaTsumo(player, mPoint_int / 2, mPoint_int / 4)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        Toast.makeText(this, "该场数据保存成功", Toast.LENGTH_SHORT).show()
-//        setResult(Activity.RESULT_OK)
-//        finish()
-//    }
-
-    private fun setZiJiaTsumo(player: String, oyaPoint: Int, ziPoint: Int) {
-        if (TextUtils.equals(oyaName, player)) {
-            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - oyaPoint - benchang * 100)
-        } else {
-            SPUtils.putInt(player, SPUtils.getInt(player, Integer.MIN_VALUE) - ziPoint - benchang * 100)
+        player.heCount++
+        if (mBinding.rbTsumo.isChecked) {  //自摸
+            player.tsumo++
+            if (mBinding.cbRichi.isChecked) {  //立直和了
+                player.richiHe++
+            }
         }
+        if (mBinding.rbRonn.isChecked) {   //荣和
+            player.ronn++
+            if (mBinding.cbRichi.isChecked) {  //立直和了
+                player.richiHe++
+            }
+        }
+        if (mBinding.cbIhhatsu.isChecked) {    //一发
+            player.ihhatsuCount++
+        }
+
+        if (mFan != null) {
+            when (mFan) {
+                Constant.MANN_GANN -> player.manguan++
+                Constant.HANE_MANN -> player.tiaoman++
+                Constant.BAI_MANN -> player.beiman++
+                Constant.SANN_BAI_MANN -> player.sanbeiman++
+                Constant.YAKUMAN -> player.yakuman++
+                else -> player.noManguan++
+            }
+        }
+
+//        point是真正的得点 加上供托 本场和 hePoint的结果
+        val point = mBinding.etPoint.text.toString().toIntOrNull()
+//        设置和点最大值 和点总值
+        point?.run {
+            if (player.hePointMax < point) {
+                player.hePointMax = point
+            }
+            player.hePointSum += (point ?: 0)
+            when (ConvertHelper.getSeat(GameModle.getInstance().heName ?: "")) {
+                EAST -> GameModle.getInstance().east += point
+                SOUTH -> GameModle.getInstance().south += point
+                WEST -> GameModle.getInstance().west += point
+                NORTH -> GameModle.getInstance().north += point
+            }
+        }
+
+        val players = GameModle.getInstance().run { listOf<Player?>(eastPlayer, southPlayer, westPlayer, northPlayer) }
+        //存储放铳人数据
+        GameModle.getInstance().chong?.run {
+            val chongPlayer = ConvertHelper.getPlayerByName(GameModle.getInstance().chong)
+            if (chongPlayer != null) {
+                chongPlayer.chongCount++
+                chongPlayer.chongPointSum += GameModle.getInstance().hePoint
+            }
+//            放铳人不需要支付供托
+            val chongPoint = GameModle.getInstance().hePoint + GameModle.getInstance().chang % 10 * 300
+            when (this) {
+                GameModle.getInstance().eastPlayer?.name -> GameModle.getInstance().east -= chongPoint
+                GameModle.getInstance().southPlayer?.name -> GameModle.getInstance().south -= chongPoint
+                GameModle.getInstance().westPlayer?.name -> GameModle.getInstance().west -= chongPoint
+                GameModle.getInstance().northPlayer?.name -> GameModle.getInstance().north -= chongPoint
+            }
+        }
+
+
+        //所有人的发牌次数都要+1
+        GameModle.getInstance().eastPlayer?.totalDeal?.plus(1)
+        GameModle.getInstance().southPlayer?.totalDeal?.plus(1)
+        GameModle.getInstance().westPlayer?.totalDeal?.plus(1)
+        GameModle.getInstance().northPlayer?.totalDeal?.plus(1)
+
+
+        //和牌人 和 放铳人之前算过了，下面处理自摸的情况
+
+        //亲家自摸，那么其他三家平分点数
+        if (GameModle.getInstance().isTsumo == true) {
+            if (ConvertHelper.isOya(GameModle.getInstance().heName ?: "")) {
+                if (GameModle.getInstance().eastPlayer?.name != GameModle.getInstance().heName)
+                    GameModle.getInstance().east -= (GameModle.getInstance().hePoint / 3)
+                if (GameModle.getInstance().southPlayer?.name != GameModle.getInstance().heName)
+                    GameModle.getInstance().south -= (GameModle.getInstance().hePoint / 3)
+                if (GameModle.getInstance().westPlayer?.name != GameModle.getInstance().heName)
+                    GameModle.getInstance().west -= (GameModle.getInstance().hePoint / 3)
+                if (GameModle.getInstance().northPlayer?.name != GameModle.getInstance().heName)
+                    GameModle.getInstance().north -= (GameModle.getInstance().hePoint / 3)
+            } else {
+                //子家自摸，亲家付二分之一，另2家各付四分之一。
+                // 这里有点小问题，比如40符1番，荣和是1300，自摸1500是700/400，并不是按照公式的750/350---已解决
+                val oyaName = ConvertHelper.getOyaPlayer()?.name
+//                自摸需要被其他三家平分的点数
+                val tsumoPoint = GameModle.getInstance().hePoint + ConvertHelper.getBenchang() * 300
+                val pair = ScoreCalcHelper.getTsumoPointPair(tsumoPoint)
+                if (GameModle.getInstance().eastPlayer?.name != GameModle.getInstance().heName) {
+                    GameModle.getInstance().east -= if (GameModle.getInstance().eastPlayer?.name == oyaName) pair.first
+                    else pair.second
+                }
+                if (GameModle.getInstance().southPlayer?.name != GameModle.getInstance().heName) {
+                    GameModle.getInstance().south -= if (GameModle.getInstance().eastPlayer?.name == oyaName) pair.first
+                    else pair.second
+                }
+                if (GameModle.getInstance().westPlayer?.name != GameModle.getInstance().heName) {
+                    GameModle.getInstance().west -= if (GameModle.getInstance().eastPlayer?.name == oyaName) pair.first
+                    else pair.second
+                }
+                if (GameModle.getInstance().northPlayer?.name != GameModle.getInstance().heName) {
+                    GameModle.getInstance().north -= if (GameModle.getInstance().eastPlayer?.name == oyaName) pair.first
+                    else pair.second
+                }
+            }
+        }
+//        存进数据库
+        vm.saveJu()
+        vm.savePlayer()
+//        清除相应的数据
+        GameModle.clearJuData()
+        Toast.makeText(this, "该场数据保存成功", Toast.LENGTH_SHORT).show()
+        setResult(Activity.RESULT_OK)
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        vm.mComposite.dispose()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -311,6 +301,9 @@ class SetScoreActivity : BaseActivity() {
     }
 
     companion object {
+//        用来记录和牌的人，当开始下一局的时候清空，用来判断下一场是连庄还是下庄的，庄家和就连庄
+        val heNames = mutableListOf<String>()
+
         private val qinRonnMap = ArrayMap<String, Int>()
         private val qinTsumoMap = ArrayMap<String, Int>()
         private val ziRonnMap = ArrayMap<String, Int>()

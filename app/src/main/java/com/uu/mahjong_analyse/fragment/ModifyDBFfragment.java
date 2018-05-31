@@ -37,7 +37,7 @@ public class ModifyDBFfragment extends Fragment {
     }
 
     public GridView getGridData() {
-        String table = getArguments().getString(Constant.Table.TABLE_NAME);
+        String table = getArguments().getString(Constant.Table.INSTANCE.getTABLE_NAME());
         GridView gridView = new GridView(getContext());
         SQLiteDatabase db = DBDao.getDataBase();
         Cursor cursor = db.query(table, null, null, null,null, null, null);
@@ -48,11 +48,11 @@ public class ModifyDBFfragment extends Fragment {
             gridView.setNumColumns(columnNames.length);
             gridView.setGravity(Gravity.CENTER);
             while (cursor.moveToNext()) {
-                if (TextUtils.equals(table, Constant.Table.TABLE_GAME_RECORD)) {
+                if (TextUtils.equals(table, Constant.Table.INSTANCE.getTABLE_GAME_RECORD())) {
                     for (String column : cursor.getColumnNames()) {
                         datas.add(cursor.getString(cursor.getColumnIndex(column)));
                     }
-                } else if (TextUtils.equals(table, Constant.Table.TABLE_PLAYER_RECORD)) {
+                } else if (TextUtils.equals(table, Constant.Table.INSTANCE.getTABLE_PLAYER_RECORD())) {
                     for (String column : cursor.getColumnNames()) {
                         if (TextUtils.equals(column, "name")) {
                             datas.add(cursor.getString(cursor.getColumnIndex(column)));

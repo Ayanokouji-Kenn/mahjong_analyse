@@ -24,7 +24,7 @@ public class DBDao {
 
     public static void insertGame(ContentValues cv) {
         SQLiteDatabase db = getDataBase();
-        db.insert(Constant.Table.TABLE_GAME_RECORD, null, cv);
+        db.insert(Constant.Table.INSTANCE.getTABLE_GAME_RECORD(), null, cv);
         db.close();
     }
 
@@ -88,7 +88,7 @@ public class DBDao {
     public static PlayerRecord selectPlayer(String name) {
 
         SQLiteDatabase db = getDataBase();
-        String sql = "select * from " + Constant.Table.TABLE_PLAYER_RECORD + " where name = ?;";
+        String sql = "select * from " + Constant.Table.INSTANCE.getTABLE_PLAYER_RECORD() + " where name = ?;";
         Cursor cursor = db.rawQuery(sql, new String[]{name});
 
         if(cursor.moveToNext()) {
@@ -143,7 +143,7 @@ public class DBDao {
 
     public static boolean updatePlayerData(String name,ContentValues cv) {
         SQLiteDatabase dataBase = getDataBase();
-        int update = dataBase.update(Constant.Table.TABLE_PLAYER_RECORD, cv, "name = ?", new String[]{name});
+        int update = dataBase.update(Constant.Table.INSTANCE.getTABLE_PLAYER_RECORD(), cv, "name = ?", new String[]{name});
         dataBase.close();
         return update != -1;
     }
@@ -152,7 +152,7 @@ public class DBDao {
     public static List<GameRecord> getGameRecord() {
         List<GameRecord> list = new ArrayList<>();
         SQLiteDatabase db = getDataBase();
-        Cursor cursor = db.query(Constant.Table.TABLE_GAME_RECORD, null, null, null, null, null, "date desc");
+        Cursor cursor = db.query(Constant.Table.INSTANCE.getTABLE_GAME_RECORD(), null, null, null, null, null, "date desc");
         while (cursor.moveToNext()) {
             GameRecord gr = new GameRecord();
             gr.date = cursor.getString(cursor.getColumnIndex("date"));

@@ -33,6 +33,6 @@ public class MyViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return fragments.get(position).getArguments().getString(Constant.Table.TABLE_NAME);
+        return fragments.get(position).getArguments().getString(Constant.Table.INSTANCE.getTABLE_NAME());
     }
 }
