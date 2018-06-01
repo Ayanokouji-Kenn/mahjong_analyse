@@ -1,6 +1,7 @@
 package com.uu.mahjong_analyse.data.local
 
 import com.uu.mahjong_analyse.data.entity.GameRecord
+import io.reactivex.Completable
 
 /**
  * <pre>
@@ -12,13 +13,16 @@ import com.uu.mahjong_analyse.data.entity.GameRecord
 
 
 class GameRecordReposity(val gameRecordDataSourceImpl: GameRecordDataSourceImpl): GameRecordDataSource {
-    override fun getGameRecordList(getGameRecordListCallBack: GameRecordDataSource.GetGameRecordListCallBack) {
-        gameRecordDataSourceImpl.getGameRecordList(getGameRecordListCallBack)
+    override fun update(gameRecord: GameRecord): Completable {
+        return gameRecordDataSourceImpl.update(gameRecord)
     }
 
-    override fun insertGameRecord(gameRecord: GameRecord) {
-        gameRecordDataSourceImpl.insertGameRecord(gameRecord)
+    override fun add(gameRecord: GameRecord): Completable {
+        return gameRecordDataSourceImpl.add(gameRecord)
     }
+
+    override fun getGameRecordList() =gameRecordDataSourceImpl.getGameRecordList()
+
 
     companion object {
         private var INSTANCE : GameRecordReposity?=null

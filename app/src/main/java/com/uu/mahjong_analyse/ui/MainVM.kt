@@ -5,9 +5,11 @@ import android.databinding.ObservableArrayList
 import android.databinding.ObservableField
 import android.databinding.ObservableInt
 import android.os.Bundle
-import android.os.Environment
+import com.blankj.utilcode.util.LogUtils
 import com.uu.mahjong_analyse.base.BaseVM
 import com.uu.mahjong_analyse.data.GameModle
+import com.uu.mahjong_analyse.data.GameRecordModle
+import com.uu.mahjong_analyse.data.entity.GameRecord
 import com.uu.mahjong_analyse.data.entity.Player
 import com.uu.mahjong_analyse.utils.ScoreCalcHelper
 
@@ -43,11 +45,11 @@ class MainVM(app: Application) : BaseVM(app) {
      */
     fun recover() {
         mComposite.add(
-                gameInfoRepository.fetchList()
+                gameDetailRepository.fetchList()
                         .subscribe({
                             //没有数据就不管了，需要用的时候掉GameModle.getInstance会初始化
-                            if(it.isNotEmpty())
-                            GameModle.set(it.last())
+                            if (it.isNotEmpty())
+                                GameModle.set(it.last())
                         }, {
                         }))
     }
@@ -60,9 +62,9 @@ class MainVM(app: Application) : BaseVM(app) {
         ScoreCalcHelper.handleLiuju()
 //        数据完成后，存进数据库
         mComposite.add(
-                gameInfoRepository.add(GameModle.getInstance())
+                gameDetailRepository.add(GameModle.getInstance())
                         .subscribe()
-                )
+        )
 //        立直数该+1的加，所有人总局数+1
         GameModle.getInstance().eastPlayer?.run {
             mComposite.add(playerRepository.updatePlayer(this).subscribe())
@@ -84,6 +86,35 @@ class MainVM(app: Application) : BaseVM(app) {
      */
     fun clearTempData() {
         GameModle.init()
-        gameInfoRepository.clear()
+        gameDetailRepository.clear()
+    }
+
+    fun startNewGame() {
+        mComposite.add(gameRecordRepository.add(GameRecord()).doFinally {
+            gameRecordRepository.getGameRecordList().subscribe({
+                //                点击开始，新建半庄记录，拿到id，赋值给当前的gameModle，用来建立1对多的关系
+//                一条半庄记录的id对用详情表里的至少8条记录（东一到南四）
+                if (it.isNotEmpty()) {
+                    val gameId = it.last().id
+                    GameModle.getInstance().gameId = gameId
+                    GameRecordModle.getInstance().id = gameId
+                }
+            }, {
+                LogUtils.e("开启新游戏后，没有找到刚创建的新记录")
+            })
+        }.subscribe()
+        )
+    }
+
+    /**
+     * 结束需要统计一下马点和顺位
+     */
+    fun stopGame() {
+        ScoreCalcHelper.handleGameOver()
+        mComposite.add(gameRecordRepository.update(GameRecordModle.getInstance()).subscribe())
+        mComposite.add(playerRepository.updatePlayer(GameModle.getInstance().eastPlayer!!).subscribe())
+        mComposite.add(playerRepository.updatePlayer(GameModle.getInstance().southPlayer!!).subscribe())
+        mComposite.add(playerRepository.updatePlayer(GameModle.getInstance().westPlayer!!).subscribe())
+        mComposite.add(playerRepository.updatePlayer(GameModle.getInstance().northPlayer!!).subscribe())
     }
 }

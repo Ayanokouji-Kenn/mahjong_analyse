@@ -185,7 +185,7 @@
 //                    }
 //
 //                    if(TextUtils.equals(shunwei, "top")) {
-//                        player.score -= mSum;       //sum一般情况下应该是-20，这里就是加上了头名赏，如果有误差则抹平了
+//                        player.score -= mSum;  //sum一般情况下应该是-20，这里就是加上了头名赏，如果有误差则抹平了
 //                    }
 //                    String result = player.name + ": " + player.score;
 //                    cv.put(shunwei,result);
@@ -197,9 +197,6 @@
 //            }
 //        }
 //    }
-//
-//
-//
 //
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {

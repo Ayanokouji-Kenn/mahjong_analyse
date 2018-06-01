@@ -22,6 +22,7 @@ import com.uu.mahjong_analyse.data.entity.Player
 abstract class MajongDatabase : RoomDatabase() {
     abstract fun playerDao(): PlayerDao
     abstract fun gameDetailDao(): GameDetailDao
+    abstract fun gameRecordDao(): GameRecordDao
 
     companion object {
         val migration_1_2: Migration = object : Migration(1, 2) {

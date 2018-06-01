@@ -31,11 +31,11 @@
         android:orderInCategory="100"
         android:title="牌效练习"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/toolbar_change_desk"
-        android:orderInCategory="100"
-        android:title="更改桌面"
-        app:showAsAction="never" />
+    <!--<item-->
+        <!--android:id="@+id/toolbar_change_desk"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="更改桌面"-->
+        <!--app:showAsAction="never" />-->
     <item
         android:id="@+id/toolbar_about"
         android:orderInCategory="100"

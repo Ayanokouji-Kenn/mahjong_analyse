@@ -1,6 +1,8 @@
 package com.uu.mahjong_analyse.data.local
 
 import com.uu.mahjong_analyse.data.entity.GameRecord
+import io.reactivex.Completable
+import io.reactivex.Flowable
 
 /**
  * <pre>
@@ -15,7 +17,7 @@ interface GameRecordDataSource {
         fun onSuccess(list: List<GameRecord>)
         fun onFailure()
     }
-    fun getGameRecordList(getGameRecordListCallBack: GetGameRecordListCallBack)
-
-    fun insertGameRecord(gameRecord: GameRecord)
+    fun getGameRecordList():Flowable<List<GameRecord>>
+    fun update(gameRecord: GameRecord):Completable
+    fun add(gameRecord: GameRecord):Completable
 }

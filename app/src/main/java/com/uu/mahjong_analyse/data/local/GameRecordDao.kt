@@ -1,10 +1,8 @@
 package com.uu.mahjong_analyse.data.local
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import com.uu.mahjong_analyse.data.entity.GameRecord
+import io.reactivex.Flowable
 
 /**
  * <pre>
@@ -17,6 +15,6 @@ import com.uu.mahjong_analyse.data.entity.GameRecord
 @Dao
 interface GameRecordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE) fun insert(gameRecord: GameRecord)
-
-    @Query("SELECT * FROM game_record") fun selectList():List<GameRecord>
+    @Update fun update(gameRecord:GameRecord)
+    @Query("SELECT * FROM game_record") fun selectList():Flowable< List<GameRecord>>
 }

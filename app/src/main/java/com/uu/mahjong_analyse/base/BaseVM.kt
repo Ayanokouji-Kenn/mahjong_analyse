@@ -19,10 +19,14 @@ open class BaseVM(@field:SuppressLint("StaticFieldLeak")
                     .getInstance(MajongDatabase
                             .getInstance(mApp)
                             .playerDao()))
-    val gameInfoRepository = TempGameInfoRepository.getInstance(
-            TempGameInfoDataSourceImpl
+    val gameDetailRepository = GameDetailRepository.getInstance(
+            GameDetailDataSourceImpl
                     .getInstance(MajongDatabase
                             .getInstance(mApp)
-                            .tempGameInfoDao()))
+                            .gameDetailDao()))
+    val gameRecordRepository = GameRecordReposity.getInstance(
+            GameRecordDataSourceImpl.getInstance(MajongDatabase.getInstance(mApp)
+                    .gameRecordDao())
+    )
     val mComposite=CompositeDisposable()
 }

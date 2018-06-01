@@ -1,6 +1,10 @@
 package com.uu.mahjong_analyse.data.local
 
 import com.uu.mahjong_analyse.data.entity.GameRecord
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * <pre>
@@ -12,17 +16,26 @@ import com.uu.mahjong_analyse.data.entity.GameRecord
 
 
 class GameRecordDataSourceImpl(val gameRecordDao: GameRecordDao): GameRecordDataSource {
-    override fun getGameRecordList(getGameRecordListCallBack: GameRecordDataSource.GetGameRecordListCallBack) {
-        val list = gameRecordDao.selectList()
-        if (list.isEmpty()) {
-            getGameRecordListCallBack.onFailure()
-        }else {
-            getGameRecordListCallBack.onSuccess(list)
-        }
+    override fun getGameRecordList(): Flowable<List<GameRecord>> {
+        return gameRecordDao.selectList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun insertGameRecord(gameRecord: GameRecord) {
-        gameRecordDao.insert(gameRecord)
+    override fun update(gameRecord: GameRecord):Completable {
+       return Completable.fromAction{
+            gameRecordDao.update(gameRecord)
+        }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun add(gameRecord: GameRecord):Completable {
+        return Completable.fromAction {
+            gameRecordDao.insert(gameRecord)
+        }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
     }
 
     companion object {

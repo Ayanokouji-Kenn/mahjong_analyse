@@ -4,12 +4,16 @@ import android.animation.ObjectAnimator
 import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.text.TextUtils
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.blankj.rxbus.RxBus
@@ -18,17 +22,21 @@ import com.blankj.utilcode.util.ToastUtils
 import com.romainpiel.shimmer.Shimmer
 import com.romainpiel.shimmer.ShimmerTextView
 import com.uu.mahjong_analyse.R
+import com.uu.mahjong_analyse.base.BaseActivity
 import com.uu.mahjong_analyse.base.BaseFragment
 import com.uu.mahjong_analyse.bean.LiujuResult
 import com.uu.mahjong_analyse.bean.RichiEvent
 import com.uu.mahjong_analyse.data.GameModle
 import com.uu.mahjong_analyse.data.entity.Player
+import com.uu.mahjong_analyse.databinding.ActivityMainBinding
 import com.uu.mahjong_analyse.databinding.FragMainBinding
 import com.uu.mahjong_analyse.utils.ConvertHelper
 import com.uu.mahjong_analyse.utils.MagicFileChooser
 import com.uu.mahjong_analyse.utils.ScoreCalcHelper
+import com.uu.mahjong_analyse.utils.setupActionBar
 import com.uu.mahjong_analyse.view.LiuJuDialog
 import com.uu.mahjong_analyse.view.RichiDialog
+import kotlinx.android.synthetic.main.layout_toolbar.*
 import me.yokeyword.fragmentation.ISupportFragment
 import java.util.*
 
@@ -42,6 +50,10 @@ import java.util.*
 
 
 class MainFragment : BaseFragment() {
+
+    private val mLiujuDialog: LiuJuDialog by lazy {
+        LiuJuDialog(context)
+    }
     private lateinit var mBinding: FragMainBinding
     private lateinit var vm: MainVM
     private val tvArr = arrayOfNulls<ShimmerTextView>(4)
@@ -131,12 +143,9 @@ class MainFragment : BaseFragment() {
         }
     }
 
-
-    private var mLiujuDialog: LiuJuDialog? = null
-
-
     private fun startGame() {
         if (!vm.isStart) {
+            vm.startNewGame()
             mBinding.fabStart.title = "结束对局"
             mBinding.fabStart.setIcon(R.drawable.stop)
             vm.isStart = true
@@ -150,6 +159,7 @@ class MainFragment : BaseFragment() {
             mBinding.fabStart.setIcon(R.mipmap.start_game)
             vm.isStart = false
             mShimmer.cancel()
+            vm.stopGame()
         }
     }
 
@@ -186,7 +196,85 @@ class MainFragment : BaseFragment() {
 
     override fun onSupportVisible() {
         super.onSupportVisible()
-        (activity as MainActivity).supportActionBar?.title = getString(R.string.app_name)
+        initToolbar()
+    }
+
+    private fun initToolbar() {
+        (activity as AppCompatActivity).setupActionBar(R.id.toolbar, {
+            setTitle("日麻分析")
+            setHasOptionsMenu(true)
+            setDisplayHomeAsUpEnabled(false)
+        })
+        toolbar.popupTheme = R.style.PopupMenu
+//        activity.findViewById<Toolbar>(R.id.toolbar).setNavigationOnClickListener { pop() }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?,inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.menu_main, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+
+        when (item.itemId) {
+        //            设置对局数据
+            R.id.toolbar_game_record -> {
+                start(GameRecordListFragment.newInstance())
+                return true
+            }
+        //            查看个人数据
+            R.id.toolbar_persional_record -> startActivity(Intent(context, PlayerInfoActivity::class.java))
+        //直接修改数据库，暂不提供该功能
+        //            case R.id.toolbar_modify_record:
+        //                (activity as BaseActivity).openPage(true, -1, ModifyDbActivity.class);
+        //                break;
+        //变更背景
+//            R.id.toolbar_change_desk -> {
+//                magicFileChooser = MagicFileChooser(activity)
+//                magicFileChooser!!.showFileChooser("image/*")
+//            }
+        //            流局
+            R.id.toolbar_liuju ->
+                //开始对局了才可以点击流局
+                if (vm.isStart) {
+                    mLiujuDialog.show()
+                } else {
+                    ToastUtils.showShort(R.string.game_not_start)
+                }
+        //            点数早见表
+            R.id.toolbar_point -> startActivity(Intent(context, ScanPointActivity::class.java))
+            R.id.toolbar_practice -> startActivity(Intent(context, PracticeActivity::class.java))
+            R.id.toolbar_about -> {
+                if (feedbackDialog == null) {
+                    val feedbackView = View.inflate(context, R.layout.dialog_feedback, null)
+                    val etFeedback = feedbackView.findViewById<View>(R.id.et_feedback) as EditText
+                    val tv = feedbackView.findViewById<View>(R.id.tv) as TextView
+                    val pm = activity.packageManager
+                    var pi: PackageInfo? = null
+                    try {
+                        pi = pm.getPackageInfo(activity.getPackageName(), 0)
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        e.printStackTrace()
+                    }
+
+                    tv.text = "当前版本：v" + pi!!.versionName
+                    feedbackDialog = AlertDialog.Builder(context, R.style.Theme_AppCompat_Light_Dialog_Alert).setTitle(R.string.welcome_feedback)
+                            .setView(feedbackView)
+                            .setPositiveButton(getString(R.string.confirm)) { dialog, which ->
+                                val data = Intent(Intent.ACTION_SENDTO)
+                                data.data = Uri.parse("mailto:nishino8818@qq.com")
+                                data.putExtra(Intent.EXTRA_SUBJECT, "日麻分析反馈")
+                                data.putExtra(Intent.EXTRA_TEXT, etFeedback.text.toString())
+                                startActivity(data)
+                            }.create()
+                }
+                feedbackDialog!!.show()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     /**
